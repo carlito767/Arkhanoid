@@ -85,12 +85,9 @@ class Game {
         bricks.push({ x:(x + 1) * (BRICK_WIDTH + 3) + 22, y:(y + 2) * (BRICK_HEIGHT + 3) });
       }
     }
-  }
 
-  @:allow(Main)
-  function load():Void {
-      Scheduler.addTimeTask(update, 0, 1 / 60);
-      System.notifyOnFrames(render);
+    Scheduler.addTimeTask(update, 0, 1 / 60);
+    System.notifyOnFrames(render);
   }
 
   function update():Void {
