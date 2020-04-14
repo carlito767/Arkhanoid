@@ -1,7 +1,3 @@
-#### STATUS : Abandoned
-
-[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
-
 # Arkhanoid
 
 Arkanoid clone in [Haxe](https://haxe.org/) with [Kha](http://kha.tech/)
