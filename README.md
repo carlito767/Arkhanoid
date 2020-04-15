@@ -2,7 +2,7 @@
 
 Arkanoid clone in [Haxe](https://haxe.org/) with [Kha](http://kha.tech/)
 
-Inspired by [Arkanoid clone in 160~ lines of code](https://www.youtube.com/watch?v=_4K3tsKa1Uc) from [Vittorio Romeo](https://vittorioromeo.info/)
+Inspired by [Arkanoid](https://github.com/wkeeling/arkanoid) from [Will Keeling](https://github.com/wkeeling)
 
 # How to run
 
