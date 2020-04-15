@@ -3,7 +3,13 @@ import kha.Scheduler;
 import kha.System;
 
 class Game {
+  var mouse:Mouse;
+
   public function new() {
+    // Hide mouse
+    var mouse = new Mouse();
+    mouse.lock();
+
     Scheduler.addTimeTask(update, 0, 1 / FPS);
     System.notifyOnFrames(render);
   }
