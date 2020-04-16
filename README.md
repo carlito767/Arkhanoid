@@ -4,7 +4,7 @@ Arkanoid clone in [Haxe](https://haxe.org/) with [Kha](http://kha.tech/)
 
 Inspired by [Arkanoid](https://github.com/wkeeling/arkanoid) from [Will Keeling](https://github.com/wkeeling)
 
-# How to run
+## How to run
 
 * Clone this repository:
 ```
@@ -24,3 +24,10 @@ node Kha/make --server
 ```
 
 * Launch a web browser at this address: http://localhost:8080/
+
+## Credits
+* [The Spriters Resource](http://www.spriters-resource.com/) for the majority of the graphics.
+* [Positech Games](http://www.positech.co.uk/content/explosion/explosiongenerator.html) for the enemy explosion graphics.
+* [Geronimo](http://www.dafont.com/paradox-fontworks.d5233) for the Generation font used in the game.
+* [Pixel Sagas](http://www.dafont.com/optimus.font) for the Optimus font used in the game.
+* Taito Corporation for the original Arkanoid game.
