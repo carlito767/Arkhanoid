@@ -4,16 +4,27 @@ import kha.Framebuffer;
 import kha.Scheduler;
 import kha.System;
 
+import screens.Screen;
+import screens.StartScreen;
+
 class Game {
-  final MAIN_FONT = Assets.fonts.generation;
-  final ALT_FONT = Assets.fonts.optimus;
+  public static var ME:Game;
+
+  public final MAIN_FONT = Assets.fonts.generation;
+  public final ALT_FONT = Assets.fonts.optimus;
 
   var mouse:Mouse;
 
   var settings:SettingsData;
   var playerScore:Int;
 
+  var startScreen:StartScreen;
+
+  var screen:Screen;
+
   public function new() {
+    ME = this;
+
     // Hide mouse
     var mouse = new Mouse();
     mouse.lock();
@@ -25,11 +36,18 @@ class Game {
     // Initialize player score
     playerScore = 0;
 
+    // Initialize screens
+    startScreen = new StartScreen();
+
+    // Initialize current screen;
+    screen = startScreen;
+
     Scheduler.addTimeTask(update, 0, 1 / FPS);
     System.notifyOnFrames(render);
   }
 
   function update():Void {
+    screen.update();
   }
 
   function render(framebuffers:Array<Framebuffer>):Void {
@@ -55,6 +73,9 @@ class Game {
     var highScoreString = Std.string(settings.highScore);
     var highScoreWidth = g2.font.width(g2.fontSize, highScoreString);
     g2.drawString(highScoreString, WIDTH - highScoreWidth - 10, 100);
+
+    // Display screen
+    screen.render(g2);
 
     g2.end();
   }
