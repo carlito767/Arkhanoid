@@ -3,6 +3,7 @@ package screens;
 import kha.Assets;
 import kha.Color;
 import kha.graphics2.Graphics;
+import kha.input.KeyCode;
 
 typedef PowerupData = {
   anim:AnimationData,
@@ -12,12 +13,14 @@ typedef PowerupData = {
 
 class StartScreen extends Screen {
   var displayCount:Int;
+  var round:Int;
   var powerups:Array<PowerupData>;
 
   public function new() {
     super();
 
     displayCount = 0;
+    round = 0;
     powerups = [
         { anim:Animation.fromSequence('powerup_laser'), name:'laser', desc:'enables the vaus\nto fire a laser' },
         { anim:Animation.fromSequence('powerup_slow'), name:'slow', desc:'slow down the\nenergy ball' },
@@ -26,6 +29,25 @@ class StartScreen extends Screen {
         { anim:Animation.fromSequence('powerup_catch'), name:'catch', desc:'catches the energy\nball' },
         { anim:Animation.fromSequence('powerup_duplicate'), name:'duplicate', desc:'duplicates the energy\nball' },
     ];
+  }
+
+  override function update():Void {
+    if (game.keyboard.isPressed(KeyCode.Space) || game.keyboard.isPressed(KeyCode.Return)) {
+      if (round == 0) {
+        round = 1;
+      }
+      game.switchTo(round);
+    }
+    var n = game.keyboard.numberPressed();
+    if (n != null && (n > 0 || round > 0)) {
+      var r = round * 10 + n;
+      if (r <= game.MAX_ROUND) {
+        round = r;
+      }
+    }
+    if (game.keyboard.isPressed(KeyCode.Backspace) && round > 0) {
+      round = Std.int(round / 10);
+    }
   }
 
   override function render(g2:Graphics):Void {
@@ -82,6 +104,16 @@ class StartScreen extends Screen {
     var instruction2X = (WIDTH - instruction2Width) / 2;
     g2.color = (switchColor) ? Color.White : Color.Red;
     g2.drawString(instruction2, instruction2X, 575);
+
+    // Level
+    if (round > 0) {
+      g2.fontSize = 54;
+      var level = Std.string(round);
+      var levelWidth = g2.font.width(g2.fontSize, level);
+      var levelX = (WIDTH - levelWidth) / 2;
+      g2.color = Color.White;
+      g2.drawString(level, levelX, 625);
+    }
 
     // Taito
     g2.color = Color.fromBytes(128, 128, 128);

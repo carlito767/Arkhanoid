@@ -4,6 +4,7 @@ import kha.Framebuffer;
 import kha.Scheduler;
 import kha.System;
 
+import screens.Round1;
 import screens.Screen;
 import screens.StartScreen;
 
@@ -13,12 +14,14 @@ class Game {
   public final MAIN_FONT = Assets.fonts.generation;
   public final ALT_FONT = Assets.fonts.optimus;
 
-  var mouse:Mouse;
+  // TODO: determine dynamically
+  public final MAX_ROUND = 33;
+
+  public var keyboard:Keyboard = new Keyboard();
+  public var mouse:Mouse = new Mouse();
 
   var settings:SettingsData;
   var playerScore:Int;
-
-  var startScreen:StartScreen;
 
   var screen:Screen;
 
@@ -26,7 +29,6 @@ class Game {
     ME = this;
 
     // Hide mouse
-    var mouse = new Mouse();
     mouse.lock();
 
     // Read settings
@@ -36,18 +38,25 @@ class Game {
     // Initialize player score
     playerScore = 0;
 
-    // Initialize screens
-    startScreen = new StartScreen();
-
     // Initialize current screen;
-    screen = startScreen;
+    switchTo(0);
 
     Scheduler.addTimeTask(update, 0, 1 / FPS);
     System.notifyOnFrames(render);
   }
 
+  public function switchTo(round:Int):Void {
+    screen = switch round {
+      case 1:
+        new Round1();
+      case _:
+        new StartScreen();
+    };
+  }
+
   function update():Void {
     screen.update();
+    keyboard.update();
   }
 
   function render(framebuffers:Array<Framebuffer>):Void {
