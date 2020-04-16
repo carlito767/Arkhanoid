@@ -1,15 +1,29 @@
 import kha.Assets;
+import kha.Color;
 import kha.Framebuffer;
 import kha.Scheduler;
 import kha.System;
 
 class Game {
+  final MAIN_FONT = Assets.fonts.generation;
+  final ALT_FONT = Assets.fonts.optimus;
+
   var mouse:Mouse;
+
+  var settings:SettingsData;
+  var playerScore:Int;
 
   public function new() {
     // Hide mouse
     var mouse = new Mouse();
     mouse.lock();
+
+    // Read settings
+    settings = Settings.read();
+    settings.highScore = 99999;
+
+    // Initialize player score
+    playerScore = 0;
 
     Scheduler.addTimeTask(update, 0, 1 / FPS);
     System.notifyOnFrames(render);
@@ -22,7 +36,25 @@ class Game {
     final g2 = framebuffers[0].g2;
     g2.begin();
 
+    // Display logo
+    g2.color = Color.White;
     g2.drawImage(Assets.images.logo, 5, 0);
+
+    // Display scores
+    g2.font = MAIN_FONT;
+    g2.fontSize = 18;
+
+    g2.color = Color.fromBytes(230, 0, 0);
+    g2.drawString('1UP', WIDTH - 70, 10);
+    g2.drawString('HIGH SCORE', WIDTH - 205, 75);
+
+    g2.color = Color.White;
+    var playerScoreString = Std.string(playerScore);
+    var playerScoreWidth = g2.font.width(g2.fontSize, playerScoreString);
+    g2.drawString(playerScoreString, WIDTH - playerScoreWidth - 10, 35);
+    var highScoreString = Std.string(settings.highScore);
+    var highScoreWidth = g2.font.width(g2.fontSize, highScoreString);
+    g2.drawString(highScoreString, WIDTH - highScoreWidth - 10, 100);
 
     g2.end();
   }
