@@ -89,30 +89,22 @@ class StartScreen extends Screen {
     // Display instructions
     var switchColor = (displayCount % 30) > 14;
 
-    g2.fontSize = 65;
     var instruction1 = 'SPACEBAR TO START';
-    var instruction1Width = g2.font.width(g2.fontSize, instruction1);
-    var instruction1X = (WIDTH - instruction1Width) / 2;
+    g2.fontSize = 65;
     g2.color = Color.fromBytes(220, 220, 220);
-    g2.drawString(instruction1, instruction1X + 3, 503);
+    g2.centerString(instruction1, 503, 3);
     g2.color = (switchColor) ? Color.Yellow : Color.White;
-    g2.drawString(instruction1, instruction1X, 500);
+    g2.centerString(instruction1, 500);
 
     g2.fontSize = 43;
-    var instruction2 = 'OR ENTER LEVEL';
-    var instruction2Width = g2.font.width(g2.fontSize, instruction2);
-    var instruction2X = (WIDTH - instruction2Width) / 2;
     g2.color = (switchColor) ? Color.White : Color.Red;
-    g2.drawString(instruction2, instruction2X, 575);
+    g2.centerString('OR ENTER LEVEL', 575);
 
     // Level
     if (round > 0) {
-      g2.fontSize = 54;
-      var level = Std.string(round);
-      var levelWidth = g2.font.width(g2.fontSize, level);
-      var levelX = (WIDTH - levelWidth) / 2;
       g2.color = Color.White;
-      g2.drawString(level, levelX, 625);
+      g2.fontSize = 54;
+      g2.centerString(Std.string(round), 625);
     }
 
     // Taito
@@ -120,8 +112,7 @@ class StartScreen extends Screen {
     g2.fontSize = 32;
     var taito = [ 'Based on original Arkanoid game', 'by Taito Corporation 1986' ];
     for (i in 0...taito.length) {
-      var taitoWidth = g2.font.width(g2.fontSize, taito[i]);
-      g2.drawString(taito[i], (WIDTH - taitoWidth) / 2, 700 + (i * g2.fontSize));
+      g2.centerString(taito[i], 700 + (i * g2.fontSize));
     }
 
     // Update display count
