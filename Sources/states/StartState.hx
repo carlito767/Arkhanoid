@@ -1,4 +1,4 @@
-package screens;
+package states;
 
 import kha.Assets;
 import kha.Color;
@@ -11,16 +11,15 @@ typedef PowerupData = {
   desc:String,
 }
 
-class StartScreen extends Screen {
+class StartState implements IState {
   var displayCount:Int;
-  var round:Int;
+
   var powerups:Array<PowerupData>;
+  var roundId:Int;
 
   public function new() {
-    super();
-
     displayCount = 0;
-    round = 0;
+
     powerups = [
         { anim:Animation.fromSequence('powerup_laser'), name:'laser', desc:'enables the vaus\nto fire a laser' },
         { anim:Animation.fromSequence('powerup_slow'), name:'slow', desc:'slow down the\nenergy ball' },
@@ -29,31 +28,32 @@ class StartScreen extends Screen {
         { anim:Animation.fromSequence('powerup_catch'), name:'catch', desc:'catches the energy\nball' },
         { anim:Animation.fromSequence('powerup_duplicate'), name:'duplicate', desc:'duplicates the energy\nball' },
     ];
+    roundId = 0;
   }
 
-  override function update():Void {
+  public function update(game:Game):Void {
     if (game.keyboard.isPressed(KeyCode.Space) || game.keyboard.isPressed(KeyCode.Return)) {
-      if (round == 0) {
-        round = 1;
+      if (roundId == 0) {
+        roundId = 1;
       }
-      game.switchTo(round);
+      game.switchToRound(roundId);
     }
     var n = game.keyboard.numberPressed();
-    if (n != null && (n > 0 || round > 0)) {
-      var r = round * 10 + n;
-      if (r <= game.maxRound) {
-        round = r;
+    if (n != null && (n > 0 || roundId > 0)) {
+      var r = roundId * 10 + n;
+      if (r <= game.rounds.length) {
+        roundId = r;
       }
     }
-    if (game.keyboard.isPressed(KeyCode.Backspace) && round > 0) {
-      round = Std.int(round / 10);
+    if (game.keyboard.isPressed(KeyCode.Backspace) && roundId > 0) {
+      roundId = Std.int(roundId / 10);
     }
   }
 
-  override function render(g2:Graphics):Void {
+  public function render(game:Game, g2:Graphics):Void {
     g2.font = game.ALT_FONT;
 
-    // Display Powerups
+    // Display powerups
     g2.color = Color.White;
     g2.fontSize = 46;
     g2.drawString('POWERUPS', 210, 200);
@@ -100,14 +100,14 @@ class StartScreen extends Screen {
     g2.color = (switchColor) ? Color.White : Color.Red;
     g2.centerString('OR ENTER LEVEL', 575);
 
-    // Level
-    if (round > 0) {
+    // Display level
+    if (roundId > 0) {
       g2.color = Color.White;
       g2.fontSize = 54;
-      g2.centerString(Std.string(round), 625);
+      g2.centerString(Std.string(roundId), 625);
     }
 
-    // Taito
+    // Display Taito
     g2.color = Color.fromBytes(128, 128, 128);
     g2.fontSize = 32;
     var taito = [ 'Based on original Arkanoid game', 'by Taito Corporation 1986' ];
