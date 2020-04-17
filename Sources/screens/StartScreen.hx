@@ -41,7 +41,7 @@ class StartScreen extends Screen {
     var n = game.keyboard.numberPressed();
     if (n != null && (n > 0 || round > 0)) {
       var r = round * 10 + n;
-      if (r <= game.MAX_ROUND) {
+      if (r <= game.maxRound) {
         round = r;
       }
     }

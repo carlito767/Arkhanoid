@@ -14,14 +14,15 @@ class Game {
   public final MAIN_FONT = Assets.fonts.generation;
   public final ALT_FONT = Assets.fonts.optimus;
 
-  // TODO: determine dynamically
-  public final MAX_ROUND = 33;
+  public var maxRound(get,never):Int; inline function get_maxRound() return rounds.length - 1;
 
   public var keyboard:Keyboard = new Keyboard();
   public var mouse:Mouse = new Mouse();
 
   var settings:SettingsData;
   var playerScore:Int;
+
+  var rounds:Array<Class<Screen>>;
 
   var screen:Screen;
 
@@ -38,6 +39,12 @@ class Game {
     // Initialize player score
     playerScore = 0;
 
+    // Initialize rounds
+    rounds = [
+      StartScreen,
+      Round1,
+    ];
+
     // Initialize current screen;
     switchTo(0);
 
@@ -46,12 +53,11 @@ class Game {
   }
 
   public function switchTo(round:Int):Void {
-    screen = switch round {
-      case 1:
-        new Round1();
-      case _:
-        new StartScreen();
-    };
+    if (round >= rounds.length) {
+      round = 0;
+    }
+    var roundClass = rounds[round];
+    screen = Type.createInstance(roundClass, []);
   }
 
   function update():Void {
