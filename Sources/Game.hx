@@ -4,7 +4,11 @@ import kha.Framebuffer;
 import kha.Scheduler;
 import kha.System;
 
-import screens.Round1;
+import rounds.IRound;
+import rounds.Round1;
+import rounds.RoundFactory;
+
+import screens.GameScreen;
 import screens.Screen;
 import screens.StartScreen;
 
@@ -14,7 +18,7 @@ class Game {
   public final MAIN_FONT = Assets.fonts.generation;
   public final ALT_FONT = Assets.fonts.optimus;
 
-  public var maxRound(get,never):Int; inline function get_maxRound() return rounds.length - 1;
+  public var maxRound(get,never):Int; inline function get_maxRound() return rounds.length;
 
   public var keyboard:Keyboard = new Keyboard();
   public var mouse:Mouse = new Mouse();
@@ -22,8 +26,7 @@ class Game {
   var settings:SettingsData;
   var playerScore:Int;
 
-  var rounds:Array<Class<Screen>>;
-
+  var rounds:Array<RoundFactory>;
   var screen:Screen;
 
   public function new() {
@@ -40,12 +43,12 @@ class Game {
     playerScore = 0;
 
     // Initialize rounds
+    // https://haxe.org/blog/codingtips-new/
     rounds = [
-      StartScreen,
-      Round1,
+      Round1.new,
     ];
 
-    // Initialize current screen;
+    // Initialize current screen
     switchTo(0);
 
     Scheduler.addTimeTask(update, 0, 1 / FPS);
@@ -53,11 +56,13 @@ class Game {
   }
 
   public function switchTo(round:Int):Void {
-    if (round >= rounds.length) {
-      round = 0;
+    if (round <= 0 || round > rounds.length) {
+      screen = new StartScreen();
     }
-    var roundClass = rounds[round];
-    screen = Type.createInstance(roundClass, []);
+    else {
+      var roundFactory = rounds[round - 1];
+      screen = new GameScreen(roundFactory);
+    }
   }
 
   function update():Void {
