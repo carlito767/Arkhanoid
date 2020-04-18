@@ -4,7 +4,7 @@ import kha.Framebuffer;
 import kha.Scheduler;
 import kha.System;
 
-import rounds.IRound;
+import rounds.Round;
 import rounds.Round1;
 import rounds.RoundFactory;
 
@@ -19,7 +19,7 @@ class Game {
   public var mouse(default, never):Mouse = new Mouse();
 
   public var rounds(default, null):Array<RoundFactory>;
-  public var round:Null<IRound>;
+  public var round:Null<Round>;
 
   var settings:SettingsData;
 

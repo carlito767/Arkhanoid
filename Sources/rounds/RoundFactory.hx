@@ -1,3 +1,3 @@
 package rounds;
 
-typedef RoundFactory = Void->IRound;
+typedef RoundFactory = Void->Round;
