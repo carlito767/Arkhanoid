@@ -1,4 +1,4 @@
-package screens;
+package states;
 
 import kha.Assets;
 import kha.Color;
@@ -11,15 +11,13 @@ typedef PowerupData = {
   desc:String,
 }
 
-class StartScreen implements IScreen {
-  var displayCount:Int;
+class StartState implements IProcess {
+  var displayCount:Int = 0;
 
   var powerups:Array<PowerupData>;
   var roundId:Int;
 
   public function new() {
-    displayCount = 0;
-
     powerups = [
         { anim:Animation.fromSequence('powerup_laser'), name:'laser', desc:'enables the vaus\nto fire a laser' },
         { anim:Animation.fromSequence('powerup_slow'), name:'slow', desc:'slow down the\nenergy ball' },
