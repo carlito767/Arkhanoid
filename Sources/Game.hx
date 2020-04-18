@@ -58,7 +58,8 @@ class Game {
     }
     else {
       var roundFactory = rounds[roundId - 1];
-      round = roundFactory();
+      var lives = (round == null) ? LIVES : round.lives;
+      round = roundFactory(lives);
       state = new GameStartState();
     }
   }

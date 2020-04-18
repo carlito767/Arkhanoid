@@ -11,9 +11,13 @@ class Round {
   public var name:String = '';
   public var backgroundColor:Color = Color.Black;
 
+  public var lives:Int;
+
   var edges:EdgesSprites;
 
-  public function new() {
+  public function new(lives:Int) {
+    this.lives = lives;
+
     createEdges();
   }
 
@@ -23,6 +27,16 @@ class Round {
       if (edge.visible) {
         g2.drawImage(edge.image, edge.x, edge.y);
       }
+    }
+  }
+
+  public function drawLives(g2:Graphics):Void {
+    var paddleLife = Assets.images.paddle_life;
+    var x = edges.left.image.width;
+    g2.color = Color.White;
+    for (i in 1...lives) {
+      g2.drawImage(paddleLife, x, HEIGHT - paddleLife.height - 5);
+      x += paddleLife.width + 5;
     }
   }
 

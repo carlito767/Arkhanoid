@@ -20,6 +20,9 @@ class GameStartState implements IProcess {
     // Display edges
     game.round.drawEdges(g2);
 
+    // Display lives
+    game.round.drawLives(g2);
+
     // Display round name
     if (displayCount > 100) {
       g2.color = Color.White;
