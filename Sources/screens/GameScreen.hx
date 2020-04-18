@@ -1,14 +1,20 @@
-package states;
+package screens;
 
 import kha.Color;
 import kha.graphics2.Graphics;
 import kha.input.KeyCode;
 
-class GameStartState implements IState {
+import rounds.IRound;
+
+class GameScreen implements IScreen {
   var displayCount:Int;
 
-  public function new() {
+  var round:IRound;
+
+  public function new(round:IRound) {
     displayCount = 0;
+
+    this.round = round;
   }
 
   public function update(game:Game):Void {
@@ -18,14 +24,14 @@ class GameStartState implements IState {
   }
 
   public function render(game:Game, g2:Graphics):Void {
-    g2.color = game.round.backgroundColor;
+    g2.color = round.backgroundColor;
     g2.fillRect(0, 150, WIDTH, HEIGHT - 150);
   
     if (displayCount > 100) {
       g2.color = Color.White;
       g2.font = game.MAIN_FONT;
       g2.fontSize = 18;
-      g2.centerString(game.round.name, 600);
+      g2.centerString(round.name, 600);
     }
 
     // Update display count

@@ -8,9 +8,9 @@ import rounds.IRound;
 import rounds.Round1;
 import rounds.RoundFactory;
 
-import states.IState;
-import states.StartState;
-import states.GameStartState;
+import screens.IScreen;
+import screens.StartScreen;
+import screens.GameScreen;
 
 class Game {
   public final MAIN_FONT = Assets.fonts.generation;
@@ -20,13 +20,12 @@ class Game {
   public var mouse(default, never):Mouse = new Mouse();
 
   public var rounds(default, null):Array<RoundFactory>;
-  public var round(default, null):Null<IRound>;
 
   var settings:SettingsData;
 
   var score:Int;
 
-  var state:IState;
+  var screen:IScreen;
 
   public function new() {
     // Hide mouse
@@ -45,7 +44,7 @@ class Game {
       Round1.new,
     ];
 
-    // Initialize state
+    // Initialize screen
     switchToRound(0);
 
     Scheduler.addTimeTask(update, 0, 1 / FPS);
@@ -54,18 +53,17 @@ class Game {
 
   public function switchToRound(roundId:Int):Void {
     if (roundId <= 0 || roundId > rounds.length) {
-      round = null;
-      state = new StartState();
+      screen = new StartScreen();
     }
     else {
       var roundFactory = rounds[roundId - 1];
-      round = roundFactory();
-      state = new GameStartState();
+      var round = roundFactory();
+      screen = new GameScreen(round);
     }
   }
 
   function update():Void {
-    state.update(this);
+    screen.update(this);
     keyboard.update();
   }
 
@@ -93,8 +91,8 @@ class Game {
     var highScoreWidth = g2.font.width(g2.fontSize, highScoreString);
     g2.drawString(highScoreString, WIDTH - highScoreWidth - 10, 100);
 
-    // Display state
-    state.render(this, g2);
+    // Display screen
+    screen.render(this, g2);
 
     g2.end();
   }

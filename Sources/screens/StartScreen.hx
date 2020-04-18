@@ -1,4 +1,4 @@
-package states;
+package screens;
 
 import kha.Assets;
 import kha.Color;
@@ -11,7 +11,7 @@ typedef PowerupData = {
   desc:String,
 }
 
-class StartState implements IState {
+class StartScreen implements IScreen {
   var displayCount:Int;
 
   var powerups:Array<PowerupData>;
