@@ -17,10 +17,6 @@ class GameStartState implements IProcess {
   }
 
   public function render(game:Game, g2:Graphics):Void {
-    // Display background
-    g2.color = game.round.backgroundColor;
-    g2.fillRect(0, 150, WIDTH, HEIGHT - 150);
-
     // Display round name
     if (displayCount > 100) {
       g2.color = Color.White;
