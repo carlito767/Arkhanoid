@@ -6,33 +6,39 @@ import kha.input.KeyCode;
 
 import rounds.IRound;
 
-class GameScreen implements IScreen {
-  var displayCount:Int;
+import states.IState;
+import states.GameStartState;
 
-  var round:IRound;
+class GameScreen implements IScreen {
+  public var displayCount(default, null):Int;
+
+  public var round(default, null):IRound;
+
+  var state:IState;
 
   public function new(round:IRound) {
     displayCount = 0;
 
     this.round = round;
+    state = new GameStartState();
   }
 
   public function update(game:Game):Void {
     if (game.keyboard.isPressed(KeyCode.Space)) {
       game.switchToRound(0);
     }
+
+    // Update state
+    state.update(this, game);
   }
 
   public function render(game:Game, g2:Graphics):Void {
+    // Display background
     g2.color = round.backgroundColor;
     g2.fillRect(0, 150, WIDTH, HEIGHT - 150);
   
-    if (displayCount > 100) {
-      g2.color = Color.White;
-      g2.font = game.MAIN_FONT;
-      g2.fontSize = 18;
-      g2.centerString(round.name, 600);
-    }
+    // Display state
+    state.render(this, game, g2);
 
     // Update display count
     displayCount++;
