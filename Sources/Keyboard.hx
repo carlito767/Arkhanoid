@@ -35,12 +35,12 @@ class Keyboard {
   }
 
   public function numberPressed():Null<Int> {
-    for (keyCode in [ KeyCode.Zero, KeyCode.One, KeyCode.Two, KeyCode.Three, KeyCode.Four, KeyCode.Five, KeyCode.Six, KeyCode.Seven, KeyCode.Eight, KeyCode.Nine ]) {
+    for (keyCode in [KeyCode.Zero, KeyCode.One, KeyCode.Two, KeyCode.Three, KeyCode.Four, KeyCode.Five, KeyCode.Six, KeyCode.Seven, KeyCode.Eight, KeyCode.Nine]) {
       if (isPressed(keyCode)) {
         return keyCode - KeyCode.Zero;
       }
     }
-    for (keyCode in [ KeyCode.Numpad0, KeyCode.Numpad1, KeyCode.Numpad2, KeyCode.Numpad3, KeyCode.Numpad4, KeyCode.Numpad5, KeyCode.Numpad6, KeyCode.Numpad7, KeyCode.Numpad8, KeyCode.Numpad9 ]) {
+    for (keyCode in [KeyCode.Numpad0, KeyCode.Numpad1, KeyCode.Numpad2, KeyCode.Numpad3, KeyCode.Numpad4, KeyCode.Numpad5, KeyCode.Numpad6, KeyCode.Numpad7, KeyCode.Numpad8, KeyCode.Numpad9]) {
       if (isPressed(keyCode)) {
         return keyCode - KeyCode.Numpad0;
       }

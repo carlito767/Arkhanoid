@@ -103,13 +103,13 @@ class Round {
   }
 
   function createEdges():Edges {
-    var edge_left = Assets.images.edge_left;
-    var edge_right = Assets.images.edge_right;
-    var edge_top = Assets.images.edge_top;
+    var edgeLeft = Assets.images.edge_left;
+    var edgeRight = Assets.images.edge_right;
+    var edgeTop = Assets.images.edge_top;
     return {
-      left:{ image:edge_left, x:0, y:TOP_OFFSET },
-      right:{ image:edge_right, x:WIDTH - edge_right.width, y:TOP_OFFSET },
-      top:{ image:edge_top, x:edge_left.width, y:TOP_OFFSET },
+      left:{ image:edgeLeft, x:0, y:TOP_OFFSET },
+      right:{ image:edgeRight, x:WIDTH - edgeRight.width, y:TOP_OFFSET },
+      top:{ image:edgeTop, x:edgeLeft.width, y:TOP_OFFSET },
     };
   }
 
