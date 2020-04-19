@@ -116,17 +116,11 @@ class Round {
   function createPaddle():Paddle {
     var paddle = Assets.images.paddle;
     var bottomOffset = 30;
-    return pos({
+    return {
       image:paddle,
-      x:Std.int((area.width - paddle.width) / 2),
-      y:area.height - paddle.height - bottomOffset,
+      x:area.x + Std.int((area.width - paddle.width) / 2),
+      y:area.y + area.height - paddle.height - bottomOffset,
       visible:false,
-    });
-  }
-
-  final function pos<T:(Sprite)>(sprite:T):T {
-    sprite.x += area.x;
-    sprite.y += area.y;
-    return sprite;
+    };
   }
 }

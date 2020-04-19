@@ -21,12 +21,12 @@ class Round1 extends Round {
     for (color in colors) {
       var image = Assets.images.get('brick_${color}');
       for (c in 0...13) {
-        bricks.push(pos({
+        bricks.push({
           color:color,
           image:image,
-          x:c * image.width,
-          y:r * image.height,
-        }));
+          x:area.x + c * image.width,
+          y:area.y + r * image.height,
+        });
       }
       r++;
     }
