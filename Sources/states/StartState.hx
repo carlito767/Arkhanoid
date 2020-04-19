@@ -8,7 +8,7 @@ import kha.input.KeyCode;
 import states.State;
 
 typedef PowerupData = {
-  anim:AnimationData,
+  anim:Animation,
   name:String,
   desc:String,
 }
@@ -21,12 +21,12 @@ class StartState implements State {
 
   public function new() {
     powerups = [
-        { anim:Animation.fromSequence('powerup_laser'), name:'laser', desc:'enables the vaus\nto fire a laser' },
-        { anim:Animation.fromSequence('powerup_slow'), name:'slow', desc:'slow down the\nenergy ball' },
-        { anim:Animation.fromSequence('powerup_life'), name:'extra life', desc:'gain an additional\nvaus' },
-        { anim:Animation.fromSequence('powerup_expand'), name:'expand', desc:'expands the vaus' },
-        { anim:Animation.fromSequence('powerup_catch'), name:'catch', desc:'catches the energy\nball' },
-        { anim:Animation.fromSequence('powerup_duplicate'), name:'duplicate', desc:'duplicates the energy\nball' },
+        { anim:AnimationManager.fromSequence('powerup_laser'), name:'laser', desc:'enables the vaus\nto fire a laser' },
+        { anim:AnimationManager.fromSequence('powerup_slow'), name:'slow', desc:'slow down the\nenergy ball' },
+        { anim:AnimationManager.fromSequence('powerup_life'), name:'extra life', desc:'gain an additional\nvaus' },
+        { anim:AnimationManager.fromSequence('powerup_expand'), name:'expand', desc:'expands the vaus' },
+        { anim:AnimationManager.fromSequence('powerup_catch'), name:'catch', desc:'catches the energy\nball' },
+        { anim:AnimationManager.fromSequence('powerup_duplicate'), name:'duplicate', desc:'duplicates the energy\nball' },
     ];
     roundId = 0;
   }
@@ -62,7 +62,7 @@ class StartState implements State {
     var top = 270;
     for (powerup in powerups) {
         if (displayCount % 4 == 0) {
-          Animation.next(powerup.anim);
+          AnimationManager.next(powerup.anim);
         }
         // Sprite
         var sprite = Assets.images.get(powerup.anim.sequence[powerup.anim.current]);

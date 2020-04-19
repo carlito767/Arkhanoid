@@ -22,7 +22,7 @@ class Game {
   public var rounds(default, null):Array<RoundFactory>;
   public var round:Null<Round>;
 
-  var settings:SettingsData;
+  var settings:Settings;
 
   var score:Int;
 
@@ -33,7 +33,7 @@ class Game {
     mouse.lock();
 
     // Read settings
-    settings = Settings.read();
+    settings = SettingsManager.read();
     settings.highScore = 99999;
 
     // Initialize game
