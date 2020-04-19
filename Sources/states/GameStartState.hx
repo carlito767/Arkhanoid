@@ -28,12 +28,20 @@ class GameStartState implements State {
     // Display lives
     game.round.drawLives(g2);
 
+    // Display paddle
+    game.round.drawPaddle(g2);
+
+    g2.color = Color.White;
+    g2.font = game.MAIN_FONT;
+    g2.fontSize = 18;
     // Display round name
     if (displayCount > 100) {
-      g2.color = Color.White;
-      g2.font = game.MAIN_FONT;
-      g2.fontSize = 18;
       g2.centerString(game.round.name, 600);
+    }
+    // Display 'ready'
+    if (displayCount > 200) {
+      g2.centerString('ready', 650);
+      game.round.paddle.visible = true;
     }
 
     // Update display count
