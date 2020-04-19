@@ -4,6 +4,7 @@ import kha.Assets;
 import kha.Color;
 import kha.graphics2.Graphics;
 
+import sprites.Ball;
 import sprites.Brick;
 import sprites.BrickColor;
 import sprites.Edges;
@@ -22,6 +23,8 @@ class Round {
   public var backgroundColor:Color = Color.Black;
 
   public var lives:Int;
+
+  public var ball:Ball;
   public var paddle:Paddle;
 
   var bricks:Array<Brick>;
@@ -44,6 +47,14 @@ class Round {
 
     bricks = createBricks();
     paddle = createPaddle();
+    ball = createBall();
+  }
+
+  public function drawBall(g2:Graphics):Void {
+    if (ball.visible) {
+      g2.color = Color.White;
+      g2.drawImage(ball.image, ball.x, ball.y);
+    }
   }
 
   public function drawBricks(g2:Graphics):Void {
@@ -75,6 +86,16 @@ class Round {
       g2.color = Color.White;
       g2.drawImage(paddle.image, paddle.x, paddle.y);
     }
+  }
+
+  function createBall():Ball {
+    var ball = Assets.images.ball;
+    return {
+      image:ball,
+      x:paddle.x + Std.int(paddle.image.width / 2),
+      y:paddle.y - ball.height,
+      visible:false,
+    };
   }
 
   function createBricks():Array<Brick> {

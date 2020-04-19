@@ -31,6 +31,9 @@ class RoundStartState implements State {
     // Display paddle
     game.round.drawPaddle(g2);
 
+    // Display ball
+    game.round.drawBall(g2);
+
     g2.color = Color.White;
     g2.font = game.MAIN_FONT;
     g2.fontSize = 18;
@@ -42,6 +45,7 @@ class RoundStartState implements State {
     if (displayCount > 200) {
       g2.centerString('ready', 650);
       game.round.paddle.visible = true;
+      game.round.ball.visible = true;
     }
 
     // Update display count
