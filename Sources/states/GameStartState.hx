@@ -4,7 +4,9 @@ import kha.Color;
 import kha.graphics2.Graphics;
 import kha.input.KeyCode;
 
-class GameStartState implements IProcess {
+import states.State;
+
+class GameStartState implements State {
   var displayCount:Int = 0;
 
   public function new() {

@@ -5,13 +5,15 @@ import kha.Color;
 import kha.graphics2.Graphics;
 import kha.input.KeyCode;
 
+import states.State;
+
 typedef PowerupData = {
   anim:AnimationData,
   name:String,
   desc:String,
 }
 
-class StartState implements IProcess {
+class StartState implements State {
   var displayCount:Int = 0;
 
   var powerups:Array<PowerupData>;

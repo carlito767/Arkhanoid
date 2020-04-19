@@ -10,6 +10,7 @@ import rounds.RoundFactory;
 
 import states.GameStartState;
 import states.StartState;
+import states.State;
 
 class Game {
   public final MAIN_FONT = Assets.fonts.generation;
@@ -25,7 +26,7 @@ class Game {
 
   var score:Int;
 
-  var state:IProcess;
+  var state:State;
 
   public function new() {
     // Hide mouse
