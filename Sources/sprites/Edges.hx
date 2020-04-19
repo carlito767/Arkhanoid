@@ -1,6 +1,6 @@
 package sprites;
 
-typedef EdgesSprites = {
+typedef Edges = {
   left:Sprite,
   right:Sprite,
   top:Sprite,

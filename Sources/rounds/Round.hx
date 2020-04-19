@@ -4,7 +4,7 @@ import kha.Assets;
 import kha.Color;
 import kha.graphics2.Graphics;
 
-import sprites.EdgesSprites;
+import sprites.Edges;
 import sprites.Sprite;
 
 class Round {
@@ -13,7 +13,7 @@ class Round {
 
   public var lives:Int;
 
-  var edges:EdgesSprites;
+  var edges:Edges;
 
   public function new(lives:Int) {
     this.lives = lives;
