@@ -2,12 +2,9 @@ package sprites;
 
 import kha.Image;
 
-@:structInit
-class Sprite {
-  public var image:Null<Image> = null;
+typedef Sprite = {
+  image:Image,
 
-  public var x:Float = 0.0;
-  public var y:Float = 0.0; 
-
-  public var visible:Bool = true;
+  x:Int,
+  y:Int,
 }

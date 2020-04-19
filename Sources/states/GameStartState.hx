@@ -20,6 +20,9 @@ class GameStartState implements IProcess {
     // Display edges
     game.round.drawEdges(g2);
 
+    // Display bricks
+    game.round.drawBricks(g2);
+
     // Display lives
     game.round.drawLives(g2);
 
