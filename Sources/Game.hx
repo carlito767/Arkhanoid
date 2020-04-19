@@ -8,7 +8,7 @@ import rounds.Round;
 import rounds.Round1;
 import rounds.RoundFactory;
 
-import states.GameStartState;
+import states.RoundStartState;
 import states.StartState;
 import states.State;
 
@@ -61,7 +61,7 @@ class Game {
       var roundFactory = rounds[roundId - 1];
       var lives = (round == null) ? LIVES : round.lives;
       round = roundFactory(lives);
-      state = new GameStartState();
+      state = new RoundStartState();
     }
   }
 

@@ -6,7 +6,7 @@ import kha.input.KeyCode;
 
 import states.State;
 
-class GameStartState implements State {
+class RoundStartState implements State {
   var displayCount:Int = 0;
 
   public function new() {
