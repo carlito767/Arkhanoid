@@ -28,7 +28,6 @@ class Round {
 
   public var ball:Ball;
   public var paddle:Paddle;
-  public var paddleState:Null<PaddleState>;
 
   var bricks:Array<Brick>;
   var edges:Edges;
@@ -51,13 +50,11 @@ class Round {
     bricks = createBricks();
     paddle = createPaddle();
     ball = createBall();
-
-    paddleState = null;
   }
 
   public function update():Void {
-    if (paddleState != null) {
-      paddleState.update(paddle);
+    if (paddle.state != null) {
+      paddle.state.update(paddle);
     }
   }
 

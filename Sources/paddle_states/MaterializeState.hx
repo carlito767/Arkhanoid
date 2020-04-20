@@ -17,7 +17,7 @@ class MaterializeState implements PaddleState {
     if (updateCount % 2 == 0) {
       var image = AnimationManager.next(animation);
       if (image == null) {
-        // TODO: transition to NormalState
+        PaddleStateManager.transition(paddle, new NormalState());
       }
       else {
         paddle.image = image;
