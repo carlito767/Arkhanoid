@@ -61,17 +61,14 @@ class StartState implements State {
     var left = 30;
     var top = 270;
     for (powerup in powerups) {
-        if (displayCount % 4 == 0) {
-          AnimationManager.next(powerup.anim);
-        }
-        // Sprite
-        var sprite = Assets.images.get(powerup.anim.sequence[powerup.anim.current]);
+        // Image
+        var image = (displayCount % 4 == 0) ? AnimationManager.next(powerup.anim) : AnimationManager.current(powerup.anim);
         g2.color = Color.White;
-        g2.drawImage(sprite, left, top);
+        g2.drawImage(image, left, top);
         // Name
         g2.color = Color.White;
         g2.fontSize = 29;
-        g2.drawString(powerup.name.toUpperCase(), left + sprite.width + 20, top - 3);
+        g2.drawString(powerup.name.toUpperCase(), left + image.width + 20, top - 3);
         // Description
         g2.fontSize = 20;
         var desc = powerup.desc.split('\n');

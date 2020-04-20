@@ -4,6 +4,8 @@ import kha.Color;
 import kha.graphics2.Graphics;
 import kha.input.KeyCode;
 
+import paddle_states.MaterializeState;
+
 import states.State;
 
 class RoundStartState implements State {
@@ -15,7 +17,10 @@ class RoundStartState implements State {
   public function update(game:Game):Void {
     if (game.keyboard.isPressed(KeyCode.Space)) {
       game.switchToRound(0);
+      return;
     }
+
+    game.round.update();
   }
 
   public function render(game:Game, g2:Graphics):Void {
@@ -46,6 +51,10 @@ class RoundStartState implements State {
       g2.centerString('ready', 650);
       game.round.paddle.visible = true;
       game.round.ball.visible = true;
+    }
+    if (displayCount == 201) {
+      // Animate the paddle materializing onto the screen
+      game.round.paddleState = new MaterializeState();
     }
 
     // Update display count

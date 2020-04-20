@@ -4,6 +4,8 @@ import kha.Assets;
 import kha.Color;
 import kha.graphics2.Graphics;
 
+import paddle_states.PaddleState;
+
 import sprites.Ball;
 import sprites.Brick;
 import sprites.BrickColor;
@@ -26,6 +28,7 @@ class Round {
 
   public var ball:Ball;
   public var paddle:Paddle;
+  public var paddleState:Null<PaddleState>;
 
   var bricks:Array<Brick>;
   var edges:Edges;
@@ -48,6 +51,14 @@ class Round {
     bricks = createBricks();
     paddle = createPaddle();
     ball = createBall();
+
+    paddleState = null;
+  }
+
+  public function update():Void {
+    if (paddleState != null) {
+      paddleState.update(paddle);
+    }
   }
 
   public function drawBall(g2:Graphics):Void {

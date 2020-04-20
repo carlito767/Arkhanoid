@@ -1,4 +1,6 @@
+import kha.Image;
+
 typedef Animation = {
-  sequence:Array<String>,
+  sequence:Array<Image>,
   current:Int,
 }
