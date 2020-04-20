@@ -22,11 +22,11 @@ class Game {
   public var rounds(default, null):Array<RoundFactory>;
   public var round:Null<Round>;
 
+  public var state:State;
+
   var settings:Settings;
 
   var score:Int;
-
-  var state:State;
 
   public function new() {
     // Hide mouse
@@ -93,12 +93,6 @@ class Game {
     var highScoreString = Std.string(settings.highScore);
     var highScoreWidth = g2.font.width(g2.fontSize, highScoreString);
     g2.drawString(highScoreString, WIDTH - highScoreWidth - 10, 100);
-
-    // Display background
-    if (round != null) {
-      g2.color = round.backgroundColor;
-      g2.fillRect(0, TOP_OFFSET, WIDTH, HEIGHT - TOP_OFFSET);
-    }
 
     // Display state
     state.render(this, g2);

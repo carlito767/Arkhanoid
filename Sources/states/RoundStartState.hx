@@ -14,7 +14,7 @@ class RoundStartState implements State {
   }
 
   public function update(game:Game):Void {
-    if (game.keyboard.isPressed(KeyCode.Space)) {
+    if (game.keyboard.isPressed(KeyCode.Escape)) {
       game.switchToRound(0);
       return;
     }
@@ -23,20 +23,7 @@ class RoundStartState implements State {
   }
 
   public function render(game:Game, g2:Graphics):Void {
-    // Display edges
-    game.round.drawEdges(g2);
-
-    // Display bricks
-    game.round.drawBricks(g2);
-
-    // Display lives
-    game.round.drawLives(g2);
-
-    // Display paddle
-    game.round.drawPaddle(g2);
-
-    // Display ball
-    game.round.drawBall(g2);
+    game.round.render(g2);
 
     g2.color = Color.White;
     g2.font = game.MAIN_FONT;
@@ -54,6 +41,10 @@ class RoundStartState implements State {
     if (displayCount == 201) {
       // Animate the paddle materializing onto the screen
       PaddleStateManager.transition(game.round.paddle, new MaterializeState());
+    }
+    if (displayCount == 340) {
+      // Normal gameplay begins
+      game.state = new RoundPlayState();
     }
 
     // Update display count

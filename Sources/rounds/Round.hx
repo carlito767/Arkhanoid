@@ -58,43 +58,27 @@ class Round {
     }
   }
 
-  public function drawBall(g2:Graphics):Void {
-    if (ball.visible) {
-      g2.color = Color.White;
-      g2.drawImage(ball.image, ball.x, ball.y);
-    }
+  public function render(g2:Graphics):Void {
+    drawBackground(g2);
+    drawEdges(g2);
+    drawBricks(g2);
+    drawLives(g2);
+    drawPaddle(g2);
+    drawBall(g2);
   }
 
-  public function drawBricks(g2:Graphics):Void {
-    g2.color = Color.White;
-    for (brick in bricks) {
-      g2.drawImage(brick.image, brick.x, brick.y);
-    }
+  //
+  // Background
+  //
+
+  function drawBackground(g2:Graphics):Void {
+    g2.color = backgroundColor;
+    g2.fillRect(0, TOP_OFFSET, WIDTH, HEIGHT - TOP_OFFSET);
   }
 
-  public function drawEdges(g2:Graphics):Void {
-    g2.color = Color.White;
-    for (edge in [edges.left, edges.right, edges.top]) {
-      g2.drawImage(edge.image, edge.x, edge.y);
-    }
-  }
-
-  public function drawLives(g2:Graphics):Void {
-    var paddleLife = Assets.images.paddle_life;
-    var x = edges.left.image.width;
-    g2.color = Color.White;
-    for (i in 1...lives) {
-      g2.drawImage(paddleLife, x, area.y + area.height - paddleLife.height - 5);
-      x += paddleLife.width + 5;
-    }
-  }
-
-  public function drawPaddle(g2:Graphics):Void {
-    if (paddle.visible) {
-      g2.color = Color.White;
-      g2.drawImage(paddle.image, paddle.x, paddle.y);
-    }
-  }
+  //
+  // Ball
+  //
 
   function createBall():Ball {
     var ball = Assets.images.ball;
@@ -106,9 +90,31 @@ class Round {
     };
   }
 
+  function drawBall(g2:Graphics):Void {
+    if (ball.visible) {
+      g2.color = Color.White;
+      g2.drawImage(ball.image, ball.x, ball.y);
+    }
+  }
+
+  //
+  // Bricks
+  //
+
   function createBricks():Array<Brick> {
     return [];
   }
+
+  function drawBricks(g2:Graphics):Void {
+    g2.color = Color.White;
+    for (brick in bricks) {
+      g2.drawImage(brick.image, brick.x, brick.y);
+    }
+  }
+
+  //
+  // Edges
+  //
 
   function createEdges():Edges {
     var edgeLeft = Assets.images.edge_left;
@@ -121,6 +127,31 @@ class Round {
     };
   }
 
+  function drawEdges(g2:Graphics):Void {
+    g2.color = Color.White;
+    for (edge in [edges.left, edges.right, edges.top]) {
+      g2.drawImage(edge.image, edge.x, edge.y);
+    }
+  }
+
+  //
+  // Lives
+  //
+
+  function drawLives(g2:Graphics):Void {
+    var paddleLife = Assets.images.paddle_life;
+    var x = edges.left.image.width;
+    g2.color = Color.White;
+    for (i in 1...lives) {
+      g2.drawImage(paddleLife, x, area.y + area.height - paddleLife.height - 5);
+      x += paddleLife.width + 5;
+    }
+  }
+
+  //
+  // Paddle
+  //
+
   function createPaddle():Paddle {
     var paddle = Assets.images.paddle;
     var bottomOffset = 30;
@@ -130,5 +161,12 @@ class Round {
       y:area.y + area.height - paddle.height - bottomOffset,
       visible:false,
     };
+  }
+
+  function drawPaddle(g2:Graphics):Void {
+    if (paddle.visible) {
+      g2.color = Color.White;
+      g2.drawImage(paddle.image, paddle.x, paddle.y);
+    }
   }
 }
