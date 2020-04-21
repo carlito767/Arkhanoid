@@ -4,11 +4,15 @@ import kha.Framebuffer;
 import kha.Scheduler;
 import kha.System;
 
+import input.Input;
+import input.InputEventType;
+
 import rounds.Round;
 import rounds.Round1;
+import rounds.Round2;
 import rounds.RoundFactory;
 
-import states.RoundStartState;
+import states.GameStartState;
 import states.StartState;
 import states.State;
 
@@ -16,8 +20,7 @@ class Game {
   public final MAIN_FONT = Assets.fonts.generation;
   public final ALT_FONT = Assets.fonts.optimus;
 
-  public var keyboard(default, never):Keyboard = new Keyboard();
-  public var mouse(default, never):Mouse = new Mouse();
+  public var input(default, null):Input = new Input();
 
   public var rounds(default, null):Array<RoundFactory>;
   public var round:Null<Round>;
@@ -30,7 +33,9 @@ class Game {
 
   public function new() {
     // Hide mouse
-    mouse.lock();
+    if (input.mouse != null) {
+      input.mouse.lock();
+    }
 
     // Read settings
     settings = SettingsManager.read();
@@ -43,6 +48,7 @@ class Game {
     // https://haxe.org/blog/codingtips-new/
     rounds = [
       Round1.new,
+      Round2.new,
     ];
 
     // Initialize state
@@ -55,19 +61,19 @@ class Game {
   public function switchToRound(roundId:Int):Void {
     if (roundId <= 0 || roundId > rounds.length) {
       round = null;
-      state = new StartState();
+      state = new StartState(this);
     }
     else {
       var roundFactory = rounds[roundId - 1];
       var lives = (round == null) ? LIVES : round.lives;
       round = roundFactory(lives);
-      state = new RoundStartState();
+      state = new GameStartState(this);
     }
   }
 
   function update():Void {
-    state.update(this);
-    keyboard.update();
+    input.update();
+    state.update();
   }
 
   function render(framebuffers:Array<Framebuffer>):Void {
@@ -95,8 +101,27 @@ class Game {
     g2.drawString(highScoreString, WIDTH - highScoreWidth - 10, 100);
 
     // Display state
-    state.render(this, g2);
+    state.render(g2);
 
     g2.end();
+  }
+
+  //
+  // Input bindings
+  //
+
+  public function backToTitle(type:InputEventType):Void {
+    switchToRound(0);
+  }
+
+  public function switchMouseLock(type:InputEventType):Void {
+    if (input.mouse != null) {
+      if (input.mouse.isLocked()) {
+        input.mouse.unlock();
+      }
+      else {
+        input.mouse.lock();
+      }
+    }
   }
 }

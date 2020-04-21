@@ -3,20 +3,16 @@ package states;
 import kha.graphics2.Graphics;
 import kha.input.KeyCode;
 
-class RoundPlayState implements State {
-  public function new() {
+class RoundPlayState extends State {
+  public function new(game:Game) {
+    super(game);
   }
 
-  public function update(game:Game):Void {
-    if (game.keyboard.isPressed(KeyCode.Escape)) {
-      game.switchToRound(0);
-      return;
-    }
-
+  override function update():Void {
     game.round.update();
   }
 
-  public function render(game:Game, g2:Graphics):Void {
+  override function render(g2:Graphics):Void {
     game.round.render(g2);
   }
 }

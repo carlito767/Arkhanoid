@@ -7,22 +7,18 @@ import kha.input.KeyCode;
 import paddle_states.MaterializeState;
 import paddle_states.PaddleStateManager;
 
-class RoundStartState implements State {
+class RoundStartState extends State {
   var displayCount:Int = 0;
 
-  public function new() {
+  public function new(game:Game) {
+    super(game);
   }
 
-  public function update(game:Game):Void {
-    if (game.keyboard.isPressed(KeyCode.Escape)) {
-      game.switchToRound(0);
-      return;
-    }
-
+  override function update():Void {
     game.round.update();
   }
 
-  public function render(game:Game, g2:Graphics):Void {
+  override function render(g2:Graphics):Void {
     game.round.render(g2);
 
     g2.color = Color.White;
@@ -44,7 +40,7 @@ class RoundStartState implements State {
     }
     if (displayCount == 340) {
       // Normal gameplay begins
-      game.state = new RoundPlayState();
+      game.state = new RoundPlayState(game);
     }
 
     // Update display count

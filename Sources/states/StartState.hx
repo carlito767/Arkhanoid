@@ -5,19 +5,23 @@ import kha.Color;
 import kha.graphics2.Graphics;
 import kha.input.KeyCode;
 
+import input.InputEventType;
+
 typedef PowerupData = {
   anim:Animation,
   name:String,
   desc:String,
 }
 
-class StartState implements State {
+class StartState extends State {
   var displayCount:Int = 0;
 
   var powerups:Array<PowerupData>;
   var roundId:Int;
 
-  public function new() {
+  public function new(game:Game) {
+    super(game);
+
     powerups = [
         { anim:AnimationManager.cycle('powerup_laser'), name:'laser', desc:'enables the vaus\nto fire a laser' },
         { anim:AnimationManager.cycle('powerup_slow'), name:'slow', desc:'slow down the\nenergy ball' },
@@ -27,28 +31,33 @@ class StartState implements State {
         { anim:AnimationManager.cycle('powerup_duplicate'), name:'duplicate', desc:'duplicates the energy\nball' },
     ];
     roundId = 0;
-  }
 
-  public function update(game:Game):Void {
-    if (game.keyboard.isPressed(KeyCode.Space) || game.keyboard.isPressed(KeyCode.Return)) {
+    // Input bindings
+    game.input.clearBindings();
+    game.input.bind(Mouse(Middle), game.switchMouseLock);
+    game.input.bind(Key(Backspace), function(type:InputEventType) {
+      if (roundId > 0) {
+        roundId = Std.int(roundId / 10);
+      }
+    });
+    game.input.bindMulti([Key(Space), Key(Return)], function(type:InputEventType) {
       if (roundId == 0) {
         roundId = 1;
       }
       game.switchToRound(roundId);
-    }
-    var n = game.keyboard.numberPressed();
-    if (n != null && (n > 0 || roundId > 0)) {
-      var r = roundId * 10 + n;
-      if (r <= game.rounds.length) {
-        roundId = r;
+    });
+    game.input.bindMulti(numericTypes(), function(type:InputEventType) {
+      var n = number(type);
+      if (n != null && (n > 0 || roundId > 0)) {
+        var r = roundId * 10 + n;
+        if (r <= game.rounds.length) {
+          roundId = r;
+        }
       }
-    }
-    if (game.keyboard.isPressed(KeyCode.Backspace) && roundId > 0) {
-      roundId = Std.int(roundId / 10);
-    }
+    });
   }
 
-  public function render(game:Game, g2:Graphics):Void {
+  override function render(g2:Graphics):Void {
     g2.font = game.ALT_FONT;
 
     // Display powerups
@@ -112,5 +121,33 @@ class StartState implements State {
 
     // Update display count
     displayCount++;
+  }
+
+  //
+  // Numeric Event Types
+  //
+
+  function numericTypes():Array<InputEventType> {
+    return [
+      Key(Zero), Key(One), Key(Two), Key(Three), Key(Four), Key(Five), Key(Six), Key(Seven), Key(Eight), Key(Nine),
+      Key(Numpad0), Key(Numpad1), Key(Numpad2), Key(Numpad3), Key(Numpad4), Key(Numpad5), Key(Numpad6), Key(Numpad7), Key(Numpad8), Key(Numpad9),
+    ];
+  }
+
+  function number(type:InputEventType):Null<Int> {
+    switch (type) {
+      case Key(key):
+        switch (key) {
+          case Zero | One | Two | Three | Four | Five | Six | Seven | Eight | Nine:
+            return key - Zero;
+          case Numpad0 | Numpad1 | Numpad2 | Numpad3 | Numpad4 | Numpad5 | Numpad6 | Numpad7 | Numpad8 | Numpad9:
+            return key - Numpad0;
+          case _:
+            return null;
+        }
+        return null;
+      case _:
+        return null;
+    }
   }
 }
