@@ -50,11 +50,20 @@ class Round {
     bricks = createBricks();
     paddle = createPaddle();
     ball = createBall();
+    anchorBall();
   }
 
   public function update():Void {
     if (paddle.state != null) {
       paddle.state.update(paddle);
+    }
+
+    var moveLeft = paddle.moveLeft && !paddle.moveRight;
+    var moveRight = paddle.moveRight && !paddle.moveLeft;
+    if (moveLeft || moveRight) {
+      paddle.x = (moveLeft) ? Std.int(Math.max(area.x, paddle.x - paddle.speed))
+                            : Std.int(Math.min(area.x + area.width - paddle.image.width, paddle.x + paddle.speed));
+      anchorBall();
     }
   }
 
@@ -80,12 +89,12 @@ class Round {
   // Ball
   //
 
-  function createBall():Ball {
-    var ball = Assets.images.ball;
+  function createBall(x:Int = 0, y:Int = 0):Ball {
+    var image = Assets.images.ball;
     return {
-      image:ball,
-      x:paddle.x + Std.int(paddle.image.width / 2),
-      y:paddle.y - ball.height,
+      image:image,
+      x:x,
+      y:y,
       visible:false,
     };
   }
@@ -95,6 +104,11 @@ class Round {
       g2.color = Color.White;
       g2.drawImage(ball.image, ball.x, ball.y);
     }
+  }
+
+  function anchorBall():Void {
+    ball.x = paddle.x + Std.int(paddle.image.width / 2);
+    ball.y = paddle.y - ball.image.height;
   }
 
   //
@@ -152,13 +166,16 @@ class Round {
   // Paddle
   //
 
-  function createPaddle():Paddle {
-    var paddle = Assets.images.paddle;
+  function createPaddle(speed:Int = PADDLE_SPEED):Paddle {
+    var image = Assets.images.paddle;
     var bottomOffset = 30;
     return {
-      image:paddle,
-      x:area.x + Std.int((area.width - paddle.width) / 2),
-      y:area.y + area.height - paddle.height - bottomOffset,
+      image:image,
+      x:area.x + Std.int((area.width - image.width) / 2),
+      y:area.y + area.height - image.height - bottomOffset,
+      moveLeft:false,
+      moveRight:false,
+      speed:speed,
       visible:false,
     };
   }

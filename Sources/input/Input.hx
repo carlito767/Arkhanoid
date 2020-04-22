@@ -11,11 +11,14 @@ typedef InputEvent = {
   handler:InputHandler,
 }
 
+typedef Bindings = Map<InputEventType, InputHandler>;
+
 class Input {
   public var keyboard(default, null):Null<KhaKeyboard> = null;
   public var mouse(default, null):Null<KhaMouse> = null;
 
-  var bindings:Map<InputEventType, InputHandler> = new Map();
+  var bindingsDown:Bindings = new Bindings();
+  var bindingsUp:Bindings = new Bindings();
   var events:List<InputEvent> = new List();
 
   public function new() {
@@ -43,20 +46,44 @@ class Input {
   // Bindings
   //
 
-  public function bind(type:InputEventType, handler:InputHandler):Void {
-    bindings.set(type, handler);
+  public function bind(type:InputEventType, ?handlerDown:InputHandler, ?handlerUp:InputHandler):Void {
+    if (handlerDown != null) {
+      bindingsDown.set(type, handlerDown);
+    }
+    if (handlerUp != null) {
+      bindingsUp.set(type, handlerUp);
+    }
   }
 
-  public function bindMulti(types:Array<InputEventType>, handler:InputHandler):Void {
-    for (type in types) {
-      bind(type, handler);
+  public function bindMulti(types:Array<InputEventType>, ?handlerDown:InputHandler, ?handlerUp:InputHandler):Void {
+    if (handlerDown != null) {
+      for (type in types) {
+        bindingsDown.set(type, handlerDown);
+      }
+    }
+    if (handlerUp != null) {
+      for (type in types) {
+        bindingsUp.set(type, handlerUp);
+      }
     }
   }
 
   public function clearBindings():Void {
     // TODO: update Kha for Map.clear()
     // https://github.com/HaxeFoundation/haxe/issues/2550
-    bindings = new Map();
+    bindingsDown = new Bindings();
+    bindingsUp = new Bindings();
+  }
+
+  //
+  // Events
+  //
+
+  inline function addEvent(type:InputEventType, bindings:Bindings):Void {
+    var handler = bindings.get(type);
+    if (handler != null) {
+      events.add({type:type, handler:handler});
+    }
   }
 
   //
@@ -64,13 +91,11 @@ class Input {
   //
 
   function onKeyDown(key:KeyCode):Void {
-    var handler = bindings.get(Key(key));
-    if (handler != null) {
-      events.add({type:Key(key), handler:handler});
-    }
+    addEvent(Key(key), bindingsDown);
   }
 
   function onKeyUp(key:KeyCode):Void {
+    addEvent(Key(key), bindingsUp);
   }
 
   //
@@ -78,13 +103,11 @@ class Input {
   //
 
   function onMouseDown(button:Int, x:Int, y:Int):Void {
-    var handler = bindings.get(Mouse(button));
-    if (handler != null) {
-      events.add({type:Mouse(button), handler:handler});
-    }
+    addEvent(Mouse(button), bindingsDown);
   }
 
   function onMouseUp(button:Int, x:Int, y:Int):Void {
+    addEvent(Mouse(button), bindingsUp);
   }
 
   function onMouseMove(x:Int, y:Int, movementX:Int, movementY:Int):Void {
