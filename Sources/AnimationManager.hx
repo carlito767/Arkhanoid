@@ -2,61 +2,55 @@ import kha.Assets;
 import kha.Image;
 
 class AnimationManager {
-  public static function load(id:String):Animation {
-    var sequence = new List<Image>();
+  public static function load(id:String):Images {
+    var anim = new Images();
+    var image = Assets.images.get(id);
+    if (image != null) {
+      anim.add(image);
+    }
+    return anim;
+  }
+
+  public static function loadSequence(id:String):Images {
+    var anim = new Images();
     while (true) {
-      var image = Assets.images.get('${id}_${sequence.length + 1}');
+      var image = Assets.images.get('${id}_${anim.length + 1}');
       if (image == null) {
         break;
       }
-      sequence.add(image);
+      anim.add(image);
     }
-    if (sequence.length == 0) {
-      throw 'No image for "$id"';
-    }
-    return {
-      sequence:sequence,
-    }
+    return anim;
   }
 
-  public static function cycle(id:String):Animation {
-    var animation = load(id);
-    animation.cycle = true;
-    return animation;
-  }
+  public static function cycle(animation:Images):Null<Image> {
+    if (animation.length == 1) {
+      return animation.first();
+    }
 
-  public static function next(animation:Animation):Null<Image> {
-    var image = animation.sequence.pop();
-    if (image != null && animation.cycle == true) {
-      animation.sequence.add(image);
+    var image = animation.pop();
+    if (image != null) {
+      animation.add(image);
     }
     return image;
   }
 
-  public static function current(animation:Animation):Null<Image> {
-    return animation.sequence.first();
+  public static function reverse(animation:Images):Images {
+    var anim = new Images();
+    for (image in animation) {
+      anim.push(image);
+    }
+    return anim;
   }
 
-  public static function reverse(animation:Animation):Animation {
-    var sequence = new List<Image>();
-    for (image in animation.sequence) {
-      sequence.push(image);
+  public static function chain(animation1:Images, animation2:Images):Images {
+    var anim = new Images();
+    for (image in animation1) {
+      anim.add(image);
     }
-    return {
-      sequence:sequence,
+    for (image in animation2) {
+      anim.add(image);
     }
-  }
-
-  public static function chain(animation1:Animation, animation2:Animation):Animation {
-    var sequence = new List<Image>();
-    for (image in animation1.sequence) {
-      sequence.add(image);
-    }
-    for (image in animation2.sequence) {
-      sequence.add(image);
-    }
-    return {
-      sequence:sequence,
-    }
+    return anim;
   }
 }
