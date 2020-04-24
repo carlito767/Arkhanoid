@@ -21,6 +21,9 @@ typedef Area = {
 }
 
 class Round {
+  public static inline var PADDLE_SPEED = 10;
+  public static inline var TOP_OFFSET = 150;
+
   public var name:String = '';
   public var backgroundColor:Color = Color.Black;
 
@@ -46,7 +49,7 @@ class Round {
       x:x,
       y:y,
       width:edges.right.x - x,
-      height:HEIGHT - y,
+      height:Game.HEIGHT - y,
     };
 
     bricks = createBricks();
@@ -78,7 +81,7 @@ class Round {
   public function render(g2:Graphics):Void {
     // Draw background
     g2.color = backgroundColor;
-    g2.fillRect(0, TOP_OFFSET, WIDTH, HEIGHT - TOP_OFFSET);
+    g2.fillRect(0, TOP_OFFSET, Game.WIDTH, Game.HEIGHT - TOP_OFFSET);
 
     // Draw edges
     g2.color = Color.White;
@@ -145,7 +148,7 @@ class Round {
     var edgeTop = Assets.images.edge_top;
     return {
       left:{ image:edgeLeft, x:0, y:TOP_OFFSET },
-      right:{ image:edgeRight, x:WIDTH - edgeRight.width, y:TOP_OFFSET },
+      right:{ image:edgeRight, x:Game.WIDTH - edgeRight.width, y:TOP_OFFSET },
       top:{ image:edgeTop, x:edgeLeft.width, y:TOP_OFFSET },
     };
   }

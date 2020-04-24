@@ -5,7 +5,7 @@ import kha.System;
 
 class Main {
   public static function main() {
-    System.start({ title:TITLE, width:WIDTH, height:HEIGHT, framebuffer:{ samplesPerPixel:4 } }, function(_) {
+    System.start({ title:Game.TITLE, width:Game.WIDTH, height:Game.HEIGHT, framebuffer:{ samplesPerPixel:4 } }, function(_) {
       System.notifyOnFrames(renderLoadingScreen);
       Assets.loadEverything(function() {
         System.removeFramesListener(renderLoadingScreen);

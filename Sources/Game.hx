@@ -17,6 +17,13 @@ import states.StartState;
 import states.State;
 
 class Game {
+  public static inline var TITLE = 'Arkhanoid';
+  public static inline var WIDTH = 600;
+  public static inline var HEIGHT = 800;
+  public static inline var FPS = 60;
+
+  public static inline var LIVES = 3;
+
   public final MAIN_FONT = Assets.fonts.generation;
   public final ALT_FONT = Assets.fonts.optimus;
 
