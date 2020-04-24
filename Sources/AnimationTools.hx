@@ -2,8 +2,8 @@ import kha.Assets;
 import kha.Image;
 
 class AnimationTools {
-  public static function load(id:String):Images {
-    var anim = new Images();
+  public static function load(id:String):Animation {
+    var anim = new Animation();
     var image = Assets.images.get(id);
     if (image != null) {
       anim.add(image);
@@ -11,8 +11,8 @@ class AnimationTools {
     return anim;
   }
 
-  public static function loadSequence(id:String):Images {
-    var anim = new Images();
+  public static function loadSequence(id:String):Animation {
+    var anim = new Animation();
     while (true) {
       var image = Assets.images.get('${id}_${anim.length + 1}');
       if (image == null) {
@@ -23,7 +23,7 @@ class AnimationTools {
     return anim;
   }
 
-  public static function cycle(animation:Images):Null<Image> {
+  public static function cycle(animation:Animation):Null<Image> {
     if (animation.length == 1) {
       return animation.first();
     }
@@ -35,16 +35,16 @@ class AnimationTools {
     return image;
   }
 
-  public static function reverse(animation:Images):Images {
-    var anim = new Images();
+  public static function reverse(animation:Animation):Animation {
+    var anim = new Animation();
     for (image in animation) {
       anim.push(image);
     }
     return anim;
   }
 
-  public static function chain(animation1:Images, animation2:Images):Images {
-    var anim = new Images();
+  public static function chain(animation1:Animation, animation2:Animation):Animation {
+    var anim = new Animation();
     for (image in animation1) {
       anim.add(image);
     }

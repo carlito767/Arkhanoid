@@ -8,7 +8,7 @@ import kha.input.KeyCode;
 import input.InputEventType;
 
 typedef PowerupData = {
-  anim:Images,
+  anim:Animation,
   name:String,
   desc:String,
 }

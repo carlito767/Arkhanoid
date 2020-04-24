@@ -5,9 +5,9 @@ import sprites.Paddle;
 class PaddlePulsator {
   var updateCount:Int = 0;
 
-  var animation:Null<Images> = null;
-  var animation1:Images;
-  var animation2:Images;
+  var animation:Animation;
+  var animation1:Animation;
+  var animation2:Animation;
 
   public function new(id:String) {
     animation1 = AnimationTools.loadSequence(id);
