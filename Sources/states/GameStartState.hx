@@ -13,7 +13,7 @@ class GameStartState extends State {
 
     // Input bindings
     game.input.clearBindings();
-    game.input.bind(Mouse(Middle), game.switchMouseLock);
+    game.input.bind(Mouse(Left), game.switchMouseLock);
     game.input.bind(Key(Escape), game.backToTitle);
   }
 
