@@ -24,14 +24,16 @@ class Round {
   public var name:String = '';
   public var backgroundColor:Color = Color.Black;
 
+  public var moveLeft:Bool = false;
+  public var moveRight:Bool = false;
+
   public var lives:Int;
 
-  public var ball:Ball;
-  public var paddle:Paddle;
+  var balls:Array<Ball> = [];
+  var bricks:Array<Brick> = [];
+  var paddle:Null<Paddle> = null;
 
-  var bricks:Array<Brick>;
   var edges:Edges;
-
   var area:Area;
 
   public function new(lives:Int) {
@@ -48,22 +50,28 @@ class Round {
     };
 
     bricks = createBricks();
-    paddle = createPaddle();
-    ball = createBall();
-    anchorBall();
   }
 
   public function update():Void {
-    if (paddle.state != null) {
-      paddle.state.update(paddle);
-    }
+    if (paddle != null) {
+      if (paddle.state != null) {
+        paddle.state.update(paddle);
+      }
 
-    var moveLeft = paddle.moveLeft && !paddle.moveRight;
-    var moveRight = paddle.moveRight && !paddle.moveLeft;
-    if (moveLeft || moveRight) {
-      paddle.x = (moveLeft) ? Std.int(Math.max(area.x, paddle.x - paddle.speed))
-                            : Std.int(Math.min(area.x + area.width - paddle.image.width, paddle.x + paddle.speed));
-      anchorBall();
+      var left = moveLeft && !moveRight;
+      var right = moveRight && !moveLeft;
+      if (left || right) {
+        var x = (left) ? Std.int(Math.max(area.x, paddle.x - paddle.speed))
+                       : Std.int(Math.min(area.x + area.width - paddle.image.width, paddle.x + paddle.speed));
+        var dx = x - paddle.x;
+        paddle.x = x;
+
+        for (ball in balls) {
+          if (ball.anchored) {
+            ball.x += dx;
+          }
+        }
+      }
     }
   }
 
@@ -92,12 +100,12 @@ class Round {
     }
 
     // Draw paddle
-    if (paddle.visible) {
+    if (paddle != null) {
       g2.drawImage(paddle.image, paddle.x, paddle.y);
     }
 
     // Draw ball
-    if (ball.visible) {
+    for (ball in balls) {
       g2.drawImage(ball.image, ball.x, ball.y);
     }
   }
@@ -106,19 +114,17 @@ class Round {
   // Ball
   //
 
-  function createBall(x:Int = 0, y:Int = 0):Ball {
+  @:allow(states.State)
+  function createBall():Ball {
     var image = Assets.images.ball;
-    return {
+    var ball:Ball = {
       image:image,
-      x:x,
-      y:y,
-      visible:false,
+      x:0,
+      y:0,
+      anchored:false,
     };
-  }
-
-  function anchorBall():Void {
-    ball.x = paddle.x + Std.int(paddle.image.width / 2);
-    ball.y = paddle.y - ball.image.height;
+    balls.push(ball);
+    return ball;
   }
 
   //
@@ -148,17 +154,15 @@ class Round {
   // Paddle
   //
 
+  @:allow(states.State)
   function createPaddle(speed:Int = PADDLE_SPEED):Paddle {
     var image = Assets.images.paddle;
-    var bottomOffset = 30;
-    return {
+    paddle = {
       image:image,
-      x:area.x + Std.int((area.width - image.width) / 2),
-      y:area.y + area.height - image.height - bottomOffset,
-      moveLeft:false,
-      moveRight:false,
+      x:area.x + Std.int((area.width - image.width) * 0.5),
+      y:area.y + area.height - image.height - 30,
       speed:speed,
-      visible:false,
     };
+    return paddle;
   }
 }

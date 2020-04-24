@@ -31,12 +31,19 @@ class RoundStartState extends State {
     // Display 'ready'
     if (displayCount > 200 && displayCount < 311) {
       g2.centerString('ready', 650);
-      game.round.paddle.visible = true;
-      game.round.ball.visible = true;
     }
     if (displayCount == 201) {
+      // Create paddle
+      var paddle = game.round.createPaddle();
+
+      // Create ball
+      var ball = game.round.createBall();
+      ball.x = paddle.x + Std.int(paddle.image.width * 0.5);
+      ball.y = paddle.y - ball.image.height;
+      ball.anchored = true;
+
       // Animate the paddle materializing onto the screen
-      PaddleStateManager.transition(game.round.paddle, new MaterializeState());
+      PaddleStateManager.transition(paddle, new MaterializeState());
     }
     if (displayCount == 340) {
       // Normal gameplay begins

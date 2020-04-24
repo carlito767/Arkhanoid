@@ -12,18 +12,18 @@ class RoundPlayState extends State {
     // Input bindings
     game.input.bind(Key(Left),
       function(type:InputEventType) {
-        game.round.paddle.moveLeft = true;
+        game.round.moveLeft = true;
       },
       function(type:InputEventType) {
-        game.round.paddle.moveLeft = false;
+        game.round.moveLeft = false;
       }
     );
     game.input.bind(Key(Right),
       function(type:InputEventType) {
-        game.round.paddle.moveRight = true;
+        game.round.moveRight = true;
       },
       function(type:InputEventType) {
-        game.round.paddle.moveRight = false;
+        game.round.moveRight = false;
       }
     );
   }
