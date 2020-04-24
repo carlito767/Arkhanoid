@@ -3,9 +3,11 @@ import kha.Color;
 import kha.Framebuffer;
 import kha.System;
 
+import haxe.macro.Compiler;
+
 class Main {
   public static function main() {
-    System.start({ title:Game.TITLE, width:Game.WIDTH, height:Game.HEIGHT, framebuffer:{ samplesPerPixel:4 } }, function(_) {
+    System.start({ title:title(), width:Game.WIDTH, height:Game.HEIGHT, framebuffer:{ samplesPerPixel:4 } }, function(_) {
       System.notifyOnFrames(renderLoadingScreen);
       Assets.loadEverything(function() {
         System.removeFramesListener(renderLoadingScreen);
@@ -23,5 +25,9 @@ class Main {
     g2.color = Color.White;
     g2.fillRect(0, y, width, height);
     g2.end();
+  }
+
+  static function title():String {
+    return Compiler.getDefine('kha_project_name');
   }
 }
