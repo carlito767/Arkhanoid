@@ -46,7 +46,7 @@ class Game {
     }
 
     // Read settings
-    settings = SettingsManager.read(SETTINGS_FILENAME, {
+    settings = Settings.read(SETTINGS_FILENAME, {
       v:1,
       highScore:0,
     });

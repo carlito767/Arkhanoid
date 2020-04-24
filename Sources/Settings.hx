@@ -1,6 +1,6 @@
 import kha.Storage;
 
-class SettingsManager<T> {
+class Settings<T> {
   public static function read<T:{var v:Int;}>(filename:String, defaults:T):T {
     var file = Storage.namedFile(filename);
     var data:T = file.readObject();
