@@ -1,26 +1,17 @@
 import kha.Storage;
 
-class SettingsManager {
-  static inline var FILENAME = 'settings';
-  static inline var VERSION = 1;
-
-  static var defaults:Settings = {
-    v: VERSION,
-    highScore: 0,
-  };
-
-  public static function read():Settings {
-    var file = Storage.namedFile(FILENAME);
-    var data:Settings = file.readObject();
-    if (data != null && data.v == VERSION) {
+class SettingsManager<T> {
+  public static function read<T:{var v:Int;}>(filename:String, defaults:T):T {
+    var file = Storage.namedFile(filename);
+    var data:T = file.readObject();
+    if (data != null && data.v == defaults.v) {
       return data;
     }
     return defaults;
   }
 
-  public static function write(settings:Settings):Void {
-    var file = Storage.namedFile(FILENAME);
-    settings.v = VERSION;
+  public static function write<T:{var v:Int;}>(filename:String, settings:T):Void {
+    var file = Storage.namedFile(filename);
     file.writeObject(settings);
   }
 }

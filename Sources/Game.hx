@@ -21,6 +21,8 @@ class Game {
   public static inline var HEIGHT = 800;
   public static inline var FPS = 60;
 
+  public static inline var SETTINGS_FILENAME = 'settings';
+
   public static inline var LIVES = 3;
 
   public final MAIN_FONT = Assets.fonts.generation;
@@ -33,7 +35,7 @@ class Game {
 
   public var state:State;
 
-  var settings:Settings;
+  var settings:GameSettings;
 
   var score:Int;
 
@@ -44,7 +46,10 @@ class Game {
     }
 
     // Read settings
-    settings = SettingsManager.read();
+    settings = SettingsManager.read(SETTINGS_FILENAME, {
+      v:1,
+      highScore:0,
+    });
     settings.highScore = 99999;
 
     // Initialize game

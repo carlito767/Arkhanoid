@@ -1,4 +1,4 @@
-typedef Settings = {
+typedef GameSettings = {
   v:Int,
   highScore:Int,
 }
