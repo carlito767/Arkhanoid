@@ -1,24 +1,21 @@
 package paddle_states;
 
-import rounds.Round;
 import sprites.Paddle;
 
-class MaterializeState implements PaddleState {
+class MaterializeState extends PaddleState {
   var updateCount:Int = 0;
 
   var animation:Animation = AnimationTools.loadSequence('paddle_materialize');
 
-  public function new() {
+  public function new(paddle:Paddle) {
+    super(paddle);
   }
 
-  public function enter():Void {
-  }
-
-  public function update(paddle:Paddle):Void {
+  override function update():Void {
     if (updateCount % 2 == 0) {
       var image = animation.pop();
       if (image == null) {
-        Round.transition(paddle, new NormalState());
+        PaddleState.transition(paddle, NormalState.new);
       }
       else {
         paddle.image = image;
@@ -26,8 +23,5 @@ class MaterializeState implements PaddleState {
     }
 
     updateCount++;
-  }
-
-  public function exit():Void {
   }
 }

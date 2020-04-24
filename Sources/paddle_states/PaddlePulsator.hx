@@ -9,12 +9,16 @@ class PaddlePulsator {
   var animation1:Animation;
   var animation2:Animation;
 
-  public function new(id:String) {
+  var paddle:Paddle;
+
+  public function new(paddle:Paddle, id:String) {
+    this.paddle = paddle;
+  
     animation1 = AnimationTools.loadSequence(id);
     animation2 = AnimationTools.reverse(animation1);
   }
 
-  public function update(paddle:Paddle) {
+  public function update() {
     if (updateCount % 80 == 0) {
       animation = AnimationTools.chain(animation1, animation2);
       updateCount = 0;

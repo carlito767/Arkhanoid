@@ -5,7 +5,7 @@ import kha.graphics2.Graphics;
 import kha.input.KeyCode;
 
 import paddle_states.MaterializeState;
-import rounds.Round;
+import paddle_states.PaddleState;
 
 class RoundStartState extends State {
   var displayCount:Int = 0;
@@ -43,7 +43,7 @@ class RoundStartState extends State {
       ball.anchored = true;
 
       // Animate the paddle materializing onto the screen
-      Round.transition(paddle, new MaterializeState());
+      PaddleState.transition(paddle, MaterializeState.new);
     }
     if (displayCount == 340) {
       // Normal gameplay begins

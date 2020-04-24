@@ -55,7 +55,7 @@ class Round {
   public function update():Void {
     if (paddle != null) {
       if (paddle.state != null) {
-        paddle.state.update(paddle);
+        paddle.state.update();
       }
 
       var left = moveLeft && !moveRight;
@@ -164,15 +164,5 @@ class Round {
       speed:speed,
     };
     return paddle;
-  }
-
-  @:allow(paddle_states.PaddleState)
-  @:allow(states.State)
-  static function transition(paddle:Paddle, state:PaddleState):Void {
-    if (paddle.state != null) {
-      paddle.state.exit();
-    }
-    state.enter();
-    paddle.state = state;
   }
 }
