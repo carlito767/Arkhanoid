@@ -68,21 +68,38 @@ class Round {
   }
 
   public function render(g2:Graphics):Void {
-    drawBackground(g2);
-    drawEdges(g2);
-    drawBricks(g2);
-    drawLives(g2);
-    drawPaddle(g2);
-    drawBall(g2);
-  }
-
-  //
-  // Background
-  //
-
-  function drawBackground(g2:Graphics):Void {
+    // Draw background
     g2.color = backgroundColor;
     g2.fillRect(0, TOP_OFFSET, WIDTH, HEIGHT - TOP_OFFSET);
+
+    // Draw edges
+    g2.color = Color.White;
+    for (edge in [edges.left, edges.right, edges.top]) {
+      g2.drawImage(edge.image, edge.x, edge.y);
+    }
+
+    // Draw bricks
+    for (brick in bricks) {
+      g2.drawImage(brick.image, brick.x, brick.y);
+    }
+
+    // Draw lives
+    var paddleLife = Assets.images.paddle_life;
+    var x = area.x;
+    for (i in 1...lives) {
+      g2.drawImage(paddleLife, x, area.y + area.height - paddleLife.height - 5);
+      x += paddleLife.width + 5;
+    }
+
+    // Draw paddle
+    if (paddle.visible) {
+      g2.drawImage(paddle.image, paddle.x, paddle.y);
+    }
+
+    // Draw ball
+    if (ball.visible) {
+      g2.drawImage(ball.image, ball.x, ball.y);
+    }
   }
 
   //
@@ -99,13 +116,6 @@ class Round {
     };
   }
 
-  function drawBall(g2:Graphics):Void {
-    if (ball.visible) {
-      g2.color = Color.White;
-      g2.drawImage(ball.image, ball.x, ball.y);
-    }
-  }
-
   function anchorBall():Void {
     ball.x = paddle.x + Std.int(paddle.image.width / 2);
     ball.y = paddle.y - ball.image.height;
@@ -117,13 +127,6 @@ class Round {
 
   function createBricks():Array<Brick> {
     return [];
-  }
-
-  function drawBricks(g2:Graphics):Void {
-    g2.color = Color.White;
-    for (brick in bricks) {
-      g2.drawImage(brick.image, brick.x, brick.y);
-    }
   }
 
   //
@@ -139,27 +142,6 @@ class Round {
       right:{ image:edgeRight, x:WIDTH - edgeRight.width, y:TOP_OFFSET },
       top:{ image:edgeTop, x:edgeLeft.width, y:TOP_OFFSET },
     };
-  }
-
-  function drawEdges(g2:Graphics):Void {
-    g2.color = Color.White;
-    for (edge in [edges.left, edges.right, edges.top]) {
-      g2.drawImage(edge.image, edge.x, edge.y);
-    }
-  }
-
-  //
-  // Lives
-  //
-
-  function drawLives(g2:Graphics):Void {
-    var paddleLife = Assets.images.paddle_life;
-    var x = edges.left.image.width;
-    g2.color = Color.White;
-    for (i in 1...lives) {
-      g2.drawImage(paddleLife, x, area.y + area.height - paddleLife.height - 5);
-      x += paddleLife.width + 5;
-    }
   }
 
   //
@@ -178,12 +160,5 @@ class Round {
       speed:speed,
       visible:false,
     };
-  }
-
-  function drawPaddle(g2:Graphics):Void {
-    if (paddle.visible) {
-      g2.color = Color.White;
-      g2.drawImage(paddle.image, paddle.x, paddle.y);
-    }
   }
 }
