@@ -1,5 +1,6 @@
 package paddle_states;
 
+import rounds.Round;
 import sprites.Paddle;
 
 class MaterializeState implements PaddleState {
@@ -17,7 +18,7 @@ class MaterializeState implements PaddleState {
     if (updateCount % 2 == 0) {
       var image = animation.pop();
       if (image == null) {
-        PaddleStateManager.transition(paddle, new NormalState());
+        Round.transition(paddle, new NormalState());
       }
       else {
         paddle.image = image;
