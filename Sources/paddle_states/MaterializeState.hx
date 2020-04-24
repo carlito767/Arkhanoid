@@ -5,7 +5,7 @@ import sprites.Paddle;
 class MaterializeState implements PaddleState {
   var updateCount:Int = 0;
 
-  var animation:Images = AnimationManager.loadSequence('paddle_materialize');
+  var animation:Images = AnimationTools.loadSequence('paddle_materialize');
 
   public function new() {
   }

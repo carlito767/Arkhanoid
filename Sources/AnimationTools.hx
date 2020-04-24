@@ -1,7 +1,7 @@
 import kha.Assets;
 import kha.Image;
 
-class AnimationManager {
+class AnimationTools {
   public static function load(id:String):Images {
     var anim = new Images();
     var image = Assets.images.get(id);

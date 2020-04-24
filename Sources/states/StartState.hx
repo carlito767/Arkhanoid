@@ -23,12 +23,12 @@ class StartState extends State {
     super(game);
 
     powerups = [
-      { anim:AnimationManager.loadSequence('powerup_laser'), name:'laser', desc:'enables the vaus\nto fire a laser' },
-      { anim:AnimationManager.loadSequence('powerup_slow'), name:'slow', desc:'slow down the\nenergy ball' },
-      { anim:AnimationManager.loadSequence('powerup_life'), name:'extra life', desc:'gain an additional\nvaus' },
-      { anim:AnimationManager.loadSequence('powerup_expand'), name:'expand', desc:'expands the vaus' },
-      { anim:AnimationManager.loadSequence('powerup_catch'), name:'catch', desc:'catches the energy\nball' },
-      { anim:AnimationManager.loadSequence('powerup_duplicate'), name:'duplicate', desc:'duplicates the energy\nball' },
+      { anim:AnimationTools.loadSequence('powerup_laser'), name:'laser', desc:'enables the vaus\nto fire a laser' },
+      { anim:AnimationTools.loadSequence('powerup_slow'), name:'slow', desc:'slow down the\nenergy ball' },
+      { anim:AnimationTools.loadSequence('powerup_life'), name:'extra life', desc:'gain an additional\nvaus' },
+      { anim:AnimationTools.loadSequence('powerup_expand'), name:'expand', desc:'expands the vaus' },
+      { anim:AnimationTools.loadSequence('powerup_catch'), name:'catch', desc:'catches the energy\nball' },
+      { anim:AnimationTools.loadSequence('powerup_duplicate'), name:'duplicate', desc:'duplicates the energy\nball' },
     ];
     roundId = 0;
 
@@ -69,7 +69,7 @@ class StartState extends State {
     var top = 270;
     for (powerup in powerups) {
         // Image
-        var image = (displayCount % 4 == 0) ? AnimationManager.cycle(powerup.anim) : powerup.anim.first();
+        var image = (displayCount % 4 == 0) ? AnimationTools.cycle(powerup.anim) : powerup.anim.first();
         g2.color = Color.White;
         g2.drawImage(image, left, top);
         // Name
