@@ -35,18 +35,18 @@ class StartState extends State {
     // Input bindings
     game.input.clearBindings();
     game.input.bind(Mouse(Left), game.switchMouseLock);
-    game.input.bind(Key(Backspace), function(type:InputEventType) {
+    game.input.bind(Key(Backspace), (_)->{
       if (roundId > 0) {
         roundId = Std.int(roundId / 10);
       }
     });
-    game.input.bindMulti([Key(Space), Key(Return)], function(type:InputEventType) {
+    game.input.bindMulti([Key(Space), Key(Return)], (_)->{
       if (roundId == 0) {
         roundId = 1;
       }
       game.switchToRound(roundId);
     });
-    game.input.bindMulti(numericTypes(), function(type:InputEventType) {
+    game.input.bindMulti(numericTypes(), (type)->{
       var n = number(type);
       if (n != null && (n > 0 || roundId > 0)) {
         var r = roundId * 10 + n;

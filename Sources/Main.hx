@@ -7,7 +7,7 @@ import haxe.macro.Compiler;
 
 class Main {
   public static function main() {
-    System.start({title:title(), width:Game.WIDTH, height:Game.HEIGHT}, function(_) {
+    System.start({title:title(), width:Game.WIDTH, height:Game.HEIGHT}, (_)->{
       System.notifyOnFrames(renderLoadingScreen);
       Assets.loadEverything(function() {
         System.removeFramesListener(renderLoadingScreen);
