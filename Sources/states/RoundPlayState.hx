@@ -8,20 +8,12 @@ class RoundPlayState extends State {
 
     // Input bindings
     game.input.bind(Key(Left),
-      (_)->{
-        game.round.moveLeft = true;
-      },
-      (_)->{
-        game.round.moveLeft = false;
-      }
+      (_)->{ game.round.moveLeft = true; },
+      (_)->{ game.round.moveLeft = false; }
     );
     game.input.bind(Key(Right),
-      (_)->{
-        game.round.moveRight = true;
-      },
-      (_)->{
-        game.round.moveRight = false;
-      }
+      (_)->{ game.round.moveRight = true; },
+      (_)->{ game.round.moveRight = false; }
     );
   }
 

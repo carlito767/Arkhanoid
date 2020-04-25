@@ -5,7 +5,6 @@ import kha.Scheduler;
 import kha.System;
 
 import input.Input;
-import input.InputEventType;
 import rounds.Round;
 import rounds.Round1;
 import rounds.Round2;
@@ -110,15 +109,7 @@ class Game {
     g2.end();
   }
 
-  //
-  // Input bindings
-  //
-
-  public function backToTitle(type:InputEventType):Void {
-    switchToRound(0);
-  }
-
-  public function switchMouseLock(type:InputEventType):Void {
+  public function switchMouseLock():Void {
     if (input.mouse != null) {
       if (input.mouse.isLocked()) {
         input.mouse.unlock();
