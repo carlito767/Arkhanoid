@@ -28,6 +28,7 @@ class Round {
   public var moveRight:Bool = false;
 
   public var lives:Int;
+  public var score:Int = 0;
 
   var balls:Array<Ball> = [];
   var bricks:Array<Brick> = [];

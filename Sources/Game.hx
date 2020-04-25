@@ -27,13 +27,11 @@ class Game {
   public var input(default, null):Input = new Input();
 
   public var rounds(default, null):Array<RoundFactory>;
-  public var round:Null<Round>;
+  public var round:Round;
 
   public var state:State;
 
   var settings:GameSettings;
-
-  var score:Int;
 
   public function new() {
     // Hide mouse
@@ -48,9 +46,6 @@ class Game {
     });
     settings.highScore = 99999;
 
-    // Initialize game
-    score = 0;
-
     // Initialize rounds
     // https://haxe.org/blog/codingtips-new/
     rounds = [
@@ -62,6 +57,7 @@ class Game {
     ];
 
     // Initialize state
+    round = new Round(0);
     switchToRound(0);
 
     Scheduler.addTimeTask(update, 0, 1 / FPS);
@@ -70,13 +66,11 @@ class Game {
 
   public function switchToRound(id:Int):Void {
     if (id <= 0 || id > rounds.length) {
-      round = null;
       state = new StartState(this);
     }
     else {
       var roundFactory = rounds[id - 1];
-      var lives = (round == null) ? null : round.lives;
-      round = roundFactory(id, lives);
+      round = roundFactory(id, round.lives);
       state = new GameStartState(this);
     }
   }
@@ -103,7 +97,7 @@ class Game {
     g2.drawString('HIGH SCORE', WIDTH - 205, 75);
 
     g2.color = Color.White;
-    var scoreString = Std.string(score);
+    var scoreString = Std.string(round.score);
     var scoreWidth = g2.font.width(g2.fontSize, scoreString);
     g2.drawString(scoreString, WIDTH - scoreWidth - 10, 35);
     var highScoreString = Std.string(settings.highScore);
