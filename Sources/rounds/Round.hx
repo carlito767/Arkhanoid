@@ -17,6 +17,7 @@ typedef Area = {
 }
 
 class Round {
+  public static inline var LIVES = 3;
   public static inline var PADDLE_SPEED = 10;
   public static inline var TOP_OFFSET = 150;
 
@@ -35,7 +36,7 @@ class Round {
   var edges:Edges;
   var area:Area;
 
-  public function new(id:Int, lives:Int) {
+  public function new(id:Int, lives:Int = LIVES) {
     this.id = id;
     this.lives = lives;
 

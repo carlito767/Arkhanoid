@@ -21,8 +21,6 @@ class Game {
 
   public static inline var SETTINGS_FILENAME = 'settings';
 
-  public static inline var LIVES = 3;
-
   public final MAIN_FONT = Assets.fonts.generation;
   public final ALT_FONT = Assets.fonts.optimus;
 
@@ -77,7 +75,7 @@ class Game {
     }
     else {
       var roundFactory = rounds[id - 1];
-      var lives = (round == null) ? LIVES : round.lives;
+      var lives = (round == null) ? null : round.lives;
       round = roundFactory(id, lives);
       state = new GameStartState(this);
     }
