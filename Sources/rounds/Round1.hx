@@ -23,8 +23,8 @@ class Round1 extends Round {
         bricks.push({
           color:color,
           image:image,
-          x:area.x + c * image.width,
-          y:area.y + r * image.height,
+          x:boundLeft + c * image.width,
+          y:boundTop + r * image.height,
         });
       }
       r++;
