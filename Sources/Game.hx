@@ -58,6 +58,9 @@ class Game {
     rounds = [
       Round1.new,
       Round2.new,
+      Round.new,
+      Round.new,
+      Round.new,
     ];
 
     // Initialize state
@@ -67,15 +70,15 @@ class Game {
     System.notifyOnFrames(render);
   }
 
-  public function switchToRound(roundId:Int):Void {
-    if (roundId <= 0 || roundId > rounds.length) {
+  public function switchToRound(id:Int):Void {
+    if (id <= 0 || id > rounds.length) {
       round = null;
       state = new StartState(this);
     }
     else {
-      var roundFactory = rounds[roundId - 1];
+      var roundFactory = rounds[id - 1];
       var lives = (round == null) ? LIVES : round.lives;
-      round = roundFactory(lives);
+      round = roundFactory(id, lives);
       state = new GameStartState(this);
     }
   }

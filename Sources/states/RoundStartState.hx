@@ -26,7 +26,7 @@ class RoundStartState extends State {
     g2.fontSize = 18;
     // Display round name
     if (displayCount > 100 && displayCount < 311) {
-      g2.centerString(game.round.name, 600);
+      g2.centerString('Round ${game.round.id}', 600);
     }
     // Display 'ready'
     if (displayCount > 200 && displayCount < 311) {

@@ -7,10 +7,9 @@ import sprites.Brick;
 import sprites.BrickColor;
 
 class Round1 extends Round {
-  public function new(lives:Int) {
-    super(lives);
+  public function new(id:Int, lives:Int) {
+    super(id, lives);
 
-    name = 'Round 1';
     backgroundColor = Color.fromBytes(0, 0, 128);
   }
 
