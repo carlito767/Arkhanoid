@@ -2,10 +2,10 @@ package states;
 
 import kha.Color;
 import kha.graphics2.Graphics;
-import kha.input.KeyCode;
 
 import paddle_states.MaterializeState;
 import paddle_states.PaddleState;
+using Graphics2Extension;
 
 class RoundStartState extends State {
   var displayCount:Int = 0;

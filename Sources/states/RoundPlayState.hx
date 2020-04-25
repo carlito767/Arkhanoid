@@ -1,7 +1,6 @@
 package states;
 
 import kha.graphics2.Graphics;
-import kha.input.KeyCode;
 
 import input.InputEventType;
 

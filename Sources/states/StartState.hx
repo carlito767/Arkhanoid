@@ -1,11 +1,11 @@
 package states;
 
-import kha.Assets;
 import kha.Color;
 import kha.graphics2.Graphics;
 import kha.input.KeyCode;
 
 import input.InputEventType;
+using Graphics2Extension;
 
 typedef PowerupData = {
   anim:Animation,
@@ -23,12 +23,12 @@ class StartState extends State {
     super(game);
 
     powerups = [
-      { anim:AnimationTools.loadSequence('powerup_laser'), name:'laser', desc:'enables the vaus\nto fire a laser' },
-      { anim:AnimationTools.loadSequence('powerup_slow'), name:'slow', desc:'slow down the\nenergy ball' },
-      { anim:AnimationTools.loadSequence('powerup_life'), name:'extra life', desc:'gain an additional\nvaus' },
-      { anim:AnimationTools.loadSequence('powerup_expand'), name:'expand', desc:'expands the vaus' },
-      { anim:AnimationTools.loadSequence('powerup_catch'), name:'catch', desc:'catches the energy\nball' },
-      { anim:AnimationTools.loadSequence('powerup_duplicate'), name:'duplicate', desc:'duplicates the energy\nball' },
+      {anim:AnimationTools.loadSequence('powerup_laser'), name:'laser', desc:'enables the vaus\nto fire a laser'},
+      {anim:AnimationTools.loadSequence('powerup_slow'), name:'slow', desc:'slow down the\nenergy ball'},
+      {anim:AnimationTools.loadSequence('powerup_life'), name:'extra life', desc:'gain an additional\nvaus'},
+      {anim:AnimationTools.loadSequence('powerup_expand'), name:'expand', desc:'expands the vaus'},
+      {anim:AnimationTools.loadSequence('powerup_catch'), name:'catch', desc:'catches the energy\nball'},
+      {anim:AnimationTools.loadSequence('powerup_duplicate'), name:'duplicate', desc:'duplicates the energy\nball'},
     ];
     roundId = 0;
 
@@ -114,7 +114,7 @@ class StartState extends State {
     // Display Taito
     g2.color = Color.fromBytes(128, 128, 128);
     g2.fontSize = 32;
-    var taito = [ 'Based on original Arkanoid game', 'by Taito Corporation 1986' ];
+    var taito = ['Based on original Arkanoid game', 'by Taito Corporation 1986'];
     for (i in 0...taito.length) {
       g2.centerString(taito[i], 700 + (i * g2.fontSize));
     }
@@ -145,7 +145,6 @@ class StartState extends State {
           case _:
             return null;
         }
-        return null;
       case _:
         return null;
     }

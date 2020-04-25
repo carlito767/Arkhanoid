@@ -1,10 +1,5 @@
 package states;
 
-import kha.graphics2.Graphics;
-import kha.input.KeyCode;
-
-import input.InputEventType;
-import input.MouseButton;
 import states.RoundStartState;
 
 class GameStartState extends State {

@@ -4,14 +4,10 @@ import kha.Assets;
 import kha.Color;
 import kha.graphics2.Graphics;
 
-import paddle_states.PaddleState;
-
 import sprites.Ball;
 import sprites.Brick;
-import sprites.BrickColor;
 import sprites.Edges;
 import sprites.Paddle;
-import sprites.Sprite;
 
 typedef Area = {
   x:Int,
@@ -83,8 +79,9 @@ class Round {
     g2.color = backgroundColor;
     g2.fillRect(0, TOP_OFFSET, Game.WIDTH, Game.HEIGHT - TOP_OFFSET);
 
-    // Draw edges
     g2.color = Color.White;
+
+    // Draw edges
     for (edge in [edges.left, edges.right, edges.top]) {
       g2.drawImage(edge.image, edge.x, edge.y);
     }
@@ -97,8 +94,9 @@ class Round {
     // Draw lives
     var paddleLife = Assets.images.paddle_life;
     var x = area.x;
+    var y = area.y + area.height - paddleLife.height - 5;
     for (i in 1...lives) {
-      g2.drawImage(paddleLife, x, area.y + area.height - paddleLife.height - 5);
+      g2.drawImage(paddleLife, x, y);
       x += paddleLife.width + 5;
     }
 
@@ -147,9 +145,9 @@ class Round {
     var edgeRight = Assets.images.edge_right;
     var edgeTop = Assets.images.edge_top;
     return {
-      left:{ image:edgeLeft, x:0, y:TOP_OFFSET },
-      right:{ image:edgeRight, x:Game.WIDTH - edgeRight.width, y:TOP_OFFSET },
-      top:{ image:edgeTop, x:edgeLeft.width, y:TOP_OFFSET },
+      left:{image:edgeLeft, x:0, y:TOP_OFFSET},
+      right:{image:edgeRight, x:Game.WIDTH - edgeRight.width, y:TOP_OFFSET},
+      top:{image:edgeTop, x:edgeLeft.width, y:TOP_OFFSET},
     };
   }
 
@@ -158,13 +156,13 @@ class Round {
   //
 
   @:allow(states.State)
-  function createPaddle(speed:Int = PADDLE_SPEED):Paddle {
+  function createPaddle():Paddle {
     var image = Assets.images.paddle;
     paddle = {
       image:image,
       x:area.x + Std.int((area.width - image.width) * 0.5),
       y:area.y + area.height - image.height - 30,
-      speed:speed,
+      speed:PADDLE_SPEED,
     };
     return paddle;
   }

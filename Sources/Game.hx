@@ -6,12 +6,10 @@ import kha.System;
 
 import input.Input;
 import input.InputEventType;
-
 import rounds.Round;
 import rounds.Round1;
 import rounds.Round2;
 import rounds.RoundFactory;
-
 import states.GameStartState;
 import states.StartState;
 import states.State;
