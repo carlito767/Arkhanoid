@@ -6,7 +6,7 @@ import kha.graphics2.Graphics;
 
 import sprites.Ball;
 import sprites.Brick;
-import sprites.Edges;
+import sprites.Edge;
 import sprites.Paddle;
 
 typedef Area = {
@@ -34,23 +34,33 @@ class Round {
   var bricks:Array<Brick> = [];
   var paddle:Null<Paddle> = null;
 
-  var edges:Edges;
+  var edgeLeft:Edge;
+  var edgeRight:Edge;
+  var edgeTop:Edge;
   var area:Area;
 
   public function new(id:Int, lives:Int = LIVES) {
     this.id = id;
     this.lives = lives;
 
-    edges = createEdges();
-    var x = edges.left.x + edges.left.image.width;
-    var y = edges.top.y + edges.top.image.height;
+    // Create edges
+    var imageLeft = Assets.images.edge_left;
+    var imageRight = Assets.images.edge_right;
+    var imageTop = Assets.images.edge_top;
+    edgeLeft = {image:imageLeft, x:0, y:TOP_OFFSET};
+    edgeRight = {image:imageRight, x:Game.WIDTH - imageRight.width, y:TOP_OFFSET};
+    edgeTop = {image:imageTop, x:imageLeft.width, y:TOP_OFFSET};
+
+    var x = edgeLeft.x + edgeLeft.image.width;
+    var y = edgeTop.y + edgeTop.image.height;
     area = {
       x:x,
       y:y,
-      width:edges.right.x - x,
+      width:edgeRight.x - x,
       height:Game.HEIGHT - y,
     };
 
+    // Create bricks
     bricks = createBricks();
   }
 
@@ -85,7 +95,7 @@ class Round {
     g2.color = Color.White;
 
     // Draw edges
-    for (edge in [edges.left, edges.right, edges.top]) {
+    for (edge in [edgeLeft, edgeRight, edgeTop]) {
       g2.drawImage(edge.image, edge.x, edge.y);
     }
 
@@ -137,21 +147,6 @@ class Round {
 
   function createBricks():Array<Brick> {
     return [];
-  }
-
-  //
-  // Edges
-  //
-
-  function createEdges():Edges {
-    var edgeLeft = Assets.images.edge_left;
-    var edgeRight = Assets.images.edge_right;
-    var edgeTop = Assets.images.edge_top;
-    return {
-      left:{image:edgeLeft, x:0, y:TOP_OFFSET},
-      right:{image:edgeRight, x:Game.WIDTH - edgeRight.width, y:TOP_OFFSET},
-      top:{image:edgeTop, x:edgeLeft.width, y:TOP_OFFSET},
-    };
   }
 
   //
