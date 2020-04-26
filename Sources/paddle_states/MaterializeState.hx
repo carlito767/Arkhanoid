@@ -1,11 +1,12 @@
 package paddle_states;
 
 import sprites.Paddle;
+using AnimationTools;
 
 class MaterializeState extends PaddleState {
   var updateCount:Int = 0;
 
-  var animation:Animation = AnimationTools.loadSequence('paddle_materialize');
+  var animation:Animation = 'paddle_materialize'.loadAnimation();
 
   public function new(paddle:Paddle) {
     super(paddle);

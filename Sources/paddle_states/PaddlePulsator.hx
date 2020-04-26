@@ -1,6 +1,7 @@
 package paddle_states;
 
 import sprites.Paddle;
+using AnimationTools;
 
 class PaddlePulsator {
   var updateCount:Int = 0;
@@ -14,13 +15,13 @@ class PaddlePulsator {
   public function new(paddle:Paddle, id:String) {
     this.paddle = paddle;
   
-    animation1 = AnimationTools.loadSequence(id);
-    animation2 = AnimationTools.reverse(animation1);
+    animation1 = id.loadAnimation();
+    animation2 = animation1.reverse();
   }
 
   public function update() {
     if (updateCount % 80 == 0) {
-      animation = AnimationTools.chain(animation1, animation2);
+      animation = animation1.chain(animation2);
       updateCount = 0;
     }
     else if (updateCount % 4 == 0) {

@@ -2,16 +2,7 @@ import kha.Assets;
 import kha.Image;
 
 class AnimationTools {
-  public static function load(id:String):Animation {
-    var anim = new Animation();
-    var image = Assets.images.get(id);
-    if (image != null) {
-      anim.add(image);
-    }
-    return anim;
-  }
-
-  public static function loadSequence(id:String):Animation {
+  public static function loadAnimation(id:String):Animation {
     var anim = new Animation();
     while (true) {
       var image = Assets.images.get('${id}_${anim.length + 1}');
