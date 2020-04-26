@@ -38,7 +38,7 @@ class RoundStartState extends State {
 
       // Create ball
       var ball = game.round.createBall();
-      ball.x = paddle.x + Std.int(paddle.image.width * 0.5);
+      ball.x = paddle.x + paddle.image.width * 0.5;
       ball.y = paddle.y - ball.image.height;
       ball.anchored = true;
 

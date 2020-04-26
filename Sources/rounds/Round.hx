@@ -23,10 +23,10 @@ class Round {
   //      |               |
   //      +---------------+
   //                (right,bottom)
-  public var boundLeft(get, never):Int; inline function get_boundLeft() return edgeLeft.x + edgeLeft.image.width; 
-  public var boundTop(get, never):Int; inline function get_boundTop() return edgeTop.y + edgeTop.image.height; 
-  public var boundRight(get, never):Int; inline function get_boundRight() return edgeRight.x; 
-  public var boundBottom(get, never):Int; inline function get_boundBottom() return Game.HEIGHT; 
+  public var boundLeft(get, never):Float; inline function get_boundLeft() return edgeLeft.x + edgeLeft.image.width; 
+  public var boundTop(get, never):Float; inline function get_boundTop() return edgeTop.y + edgeTop.image.height; 
+  public var boundRight(get, never):Float; inline function get_boundRight() return edgeRight.x; 
+  public var boundBottom(get, never):Float; inline function get_boundBottom() return Game.HEIGHT; 
 
   public var id(default, null):Int;
   public var backgroundColor:Color = Color.Black;
@@ -70,8 +70,8 @@ class Round {
       var left = moveLeft && !moveRight;
       var right = moveRight && !moveLeft;
       if (left || right) {
-        var x = (left) ? Std.int(Math.max(boundLeft, paddle.x - paddle.speed))
-                       : Std.int(Math.min(boundRight - paddle.image.width, paddle.x + paddle.speed));
+        var x = (left) ? Math.max(boundLeft, paddle.x - paddle.speed)
+                       : Math.min(boundRight - paddle.image.width, paddle.x + paddle.speed);
         var dx = x - paddle.x;
         paddle.x = x;
 
@@ -155,7 +155,7 @@ class Round {
     var image = Assets.images.paddle;
     paddle = {
       image:image,
-      x:Std.int((boundRight + boundLeft - image.width) * 0.5),
+      x:(boundRight + boundLeft - image.width) * 0.5,
       y:boundBottom - image.height - 30,
       speed:PADDLE_SPEED,
     };
