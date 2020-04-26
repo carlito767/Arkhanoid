@@ -129,6 +129,11 @@ class Round {
           }
         }
 
+        // Detect collision between ball and paddle
+        if (collide(ball, paddle)) {
+          collisions.add(bounds(paddle));
+        }
+
         // Determine new angle for ball
         if (!collisions.isEmpty()) {
           newAngleForBall(ball, collisions);
