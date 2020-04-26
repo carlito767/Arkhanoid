@@ -46,6 +46,8 @@ class RoundStartState extends State {
       PaddleState.transition(paddle, MaterializeState.new);
     }
     if (displayCount == 340) {
+      // Release the anchor
+      game.round.releaseBalls();
       // Normal gameplay begins
       game.state = new RoundPlayState(game);
     }

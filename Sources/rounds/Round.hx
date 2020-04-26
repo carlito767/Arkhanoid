@@ -11,9 +11,13 @@ import sprites.Paddle;
 import sprites.Sprite;
 
 class Round {
+  public static inline var TOP_OFFSET = 150;
+
   public static inline var LIVES = 3;
   public static inline var PADDLE_SPEED = 10;
-  public static inline var TOP_OFFSET = 150;
+
+  public static inline var BALL_START_ANGLE_RAD = 5.0;
+  public static inline var BALL_BASE_SPEED = 8.0;
 
   // (left,top)
   //      +---------------+
@@ -92,6 +96,10 @@ class Round {
       if (ball.anchored) {
         ball.x += dx;
       }
+      else {
+        ball.x += ball.speed * Math.cos(ball.angle);
+        ball.y += ball.speed * Math.sin(ball.angle);
+      }
     }
   }
 
@@ -157,9 +165,22 @@ class Round {
       x:0,
       y:0,
       anchored:false,
+      angle:BALL_START_ANGLE_RAD,
+      speed:BALL_BASE_SPEED,
     };
     balls.push(ball);
     return ball;
+  }
+
+  @:allow(states.State)
+  function releaseBalls():Void {
+    for (ball in balls) {
+      if (ball.anchored) {
+        ball.anchored = false;
+        ball.angle = BALL_START_ANGLE_RAD;
+        ball.speed = BALL_BASE_SPEED;
+      }
+    }
   }
 
   //
