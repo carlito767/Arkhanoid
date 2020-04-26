@@ -10,6 +10,13 @@ import sprites.Edge;
 import sprites.Paddle;
 import sprites.Sprite;
 
+typedef Bounds = {
+  left:Float,
+  top:Float,
+  right:Float,
+  bottom:Float,
+}
+
 class Round {
   public static inline var TOP_OFFSET = 150;
 
@@ -74,6 +81,7 @@ class Round {
         paddle.state.update();
       }
 
+      // Detect paddle movement
       if (moveLeft && !moveRight) {
         dx = -paddle.speed;
       }
@@ -81,6 +89,7 @@ class Round {
         dx = paddle.speed;
       }
 
+      // Detect collision between paddle and edges
       if (collide(paddle, edgeLeft, dx)) {
         dx = boundLeft - paddle.x;
       }
@@ -144,14 +153,22 @@ class Round {
   // Collisions
   //
 
-  inline function left(sprite:Sprite):Float return sprite.x;
-  inline function top(sprite:Sprite):Float return sprite.y;
-  inline function right(sprite:Sprite):Float return sprite.x + sprite.image.width;
-  inline function bottom(sprite:Sprite):Float return sprite.y + sprite.image.height;
-
-  function collide(A:Sprite, B:Sprite, ?dx:Float = 0, ?dy:Float = 0):Bool {
-    return (right(A) + dx >= left(B) && left(A) + dx <= right(B) && bottom(A) + dy >= top(B) && top(A) + dy <= bottom(B));
+  function bounds(sprite:Sprite, ?dx:Float = 0, ?dy:Float = 0):Bounds {
+    return {
+      left:sprite.x + dx,
+      top:sprite.y + dy,
+      right:sprite.x + sprite.image.width + dx,
+      bottom:sprite.y + sprite.image.height + dy,
+    };
   }
+
+  function collide(spriteA:Sprite, spriteB:Sprite, ?dx:Float = 0, ?dy:Float = 0):Bool {
+    return isIntersecting(bounds(spriteA, dx, dy), bounds(spriteB));
+  }
+
+  inline function isIntersecting(A:Bounds, B:Bounds) {
+    return A.right >= B.left && A.left <= B.right && A.bottom >= B.top && A.top <= B.bottom;
+  } 
 
   //
   // Ball
