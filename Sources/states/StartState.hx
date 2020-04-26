@@ -5,7 +5,7 @@ import kha.graphics2.Graphics;
 import kha.input.KeyCode;
 
 import input.InputEventType;
-using AnimationTools;
+using AnimationExtension;
 using Graphics2Extension;
 
 typedef PowerupData = {

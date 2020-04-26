@@ -1,7 +1,7 @@
 package paddle_states;
 
 import sprites.Paddle;
-using AnimationTools;
+using AnimationExtension;
 
 class PaddlePulsator {
   var updateCount:Int = 0;

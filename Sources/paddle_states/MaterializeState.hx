@@ -1,7 +1,7 @@
 package paddle_states;
 
 import sprites.Paddle;
-using AnimationTools;
+using AnimationExtension;
 
 class MaterializeState extends PaddleState {
   var updateCount:Int = 0;

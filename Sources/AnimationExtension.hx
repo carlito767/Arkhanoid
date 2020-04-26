@@ -1,7 +1,7 @@
 import kha.Assets;
 import kha.Image;
 
-class AnimationTools {
+class AnimationExtension {
   public static function loadAnimation(id:String):Animation {
     var anim = new Animation();
     while (true) {
