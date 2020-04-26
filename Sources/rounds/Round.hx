@@ -8,6 +8,7 @@ import sprites.Ball;
 import sprites.Brick;
 import sprites.Edge;
 import sprites.Paddle;
+import sprites.Sprite;
 
 class Round {
   public static inline var LIVES = 3;
@@ -62,24 +63,34 @@ class Round {
   }
 
   public function update():Void {
+    // Update paddle
+    var dx = 0.0;
     if (paddle != null) {
       if (paddle.state != null) {
         paddle.state.update();
       }
 
-      var left = moveLeft && !moveRight;
-      var right = moveRight && !moveLeft;
-      if (left || right) {
-        var x = (left) ? Math.max(boundLeft, paddle.x - paddle.speed)
-                       : Math.min(boundRight - paddle.image.width, paddle.x + paddle.speed);
-        var dx = x - paddle.x;
-        paddle.x = x;
+      if (moveLeft && !moveRight) {
+        dx = -paddle.speed;
+      }
+      else if (moveRight && !moveLeft) {
+        dx = paddle.speed;
+      }
 
-        for (ball in balls) {
-          if (ball.anchored) {
-            ball.x += dx;
-          }
-        }
+      if (collide(paddle, edgeLeft, dx)) {
+        dx = boundLeft - paddle.x;
+      }
+      if (collide(paddle, edgeRight, dx)) {
+        dx = boundRight - (paddle.x + paddle.image.width);
+      }
+
+      paddle.x += dx;
+    }
+
+    // Update balls
+    for (ball in balls) {
+      if (ball.anchored) {
+        ball.x += dx;
       }
     }
   }
@@ -119,6 +130,19 @@ class Round {
     for (ball in balls) {
       g2.drawImage(ball.image, ball.x, ball.y);
     }
+  }
+
+  //
+  // Collisions
+  //
+
+  inline function left(sprite:Sprite):Float return sprite.x;
+  inline function top(sprite:Sprite):Float return sprite.y;
+  inline function right(sprite:Sprite):Float return sprite.x + sprite.image.width;
+  inline function bottom(sprite:Sprite):Float return sprite.y + sprite.image.height;
+
+  function collide(A:Sprite, B:Sprite, ?dx:Float = 0, ?dy:Float = 0):Bool {
+    return (right(A) + dx >= left(B) && left(A) + dx <= right(B) && bottom(A) + dy >= top(B) && top(A) + dy <= bottom(B));
   }
 
   //
