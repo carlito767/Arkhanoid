@@ -122,6 +122,13 @@ class Round {
           }
         }
 
+        // Detect collision between ball and bricks
+        for (brick in bricks) {
+          if (collide(ball, brick)) {
+            collisions.add(bounds(brick));
+          }
+        }
+
         // Determine new angle for ball
         if (!collisions.isEmpty()) {
           newAngleForBall(ball, collisions);
