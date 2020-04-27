@@ -54,20 +54,23 @@ class Game {
       Round.new,
     ];
 
-    // Initialize state
+    // Initialize fake round (for score and lives)
     round = new Round(0);
-    switchToRound(0);
+
+    // Initialize state
+    backToTitle();
 
     Scheduler.addTimeTask(update, 0, 1 / FPS);
     System.notifyOnFrames(render);
   }
 
+  public function backToTitle():Void {
+    state = new StartState(this);
+  }
+
   public function switchToRound(id:Int):Void {
-    if (id <= 0 || id > rounds.length) {
-      state = new StartState(this);
-    }
-    else {
-      var roundFactory = rounds[id - 1];
+    var roundFactory = rounds[id - 1];
+    if (roundFactory != null) {
       round = roundFactory(id, round.lives);
       state = new GameStartState(this);
     }

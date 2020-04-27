@@ -6,6 +6,6 @@ class BallOffScreenState extends State {
   }
 
   override function update():Void {
-    game.switchToRound(0);
+    game.backToTitle();
   }
 }

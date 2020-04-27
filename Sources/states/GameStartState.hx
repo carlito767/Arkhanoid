@@ -7,7 +7,7 @@ class GameStartState extends State {
     // Input bindings
     game.input.clearBindings();
     game.input.bind(Mouse(Left), (_)->{ game.switchMouseLock(); });
-    game.input.bind(Key(Escape), (_)->{ game.switchToRound(0); });
+    game.input.bind(Key(Escape), (_)->{ game.backToTitle(); });
   }
 
   override function update():Void {
