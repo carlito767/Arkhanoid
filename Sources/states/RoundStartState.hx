@@ -4,8 +4,8 @@ import kha.Color;
 import kha.graphics2.Graphics;
 
 import paddle_states.MaterializeState;
-import paddle_states.PaddleState;
 using Graphics2Extension;
+using PaddleExtension;
 
 class RoundStartState extends State {
   var displayCount:Int = 0;
@@ -43,7 +43,7 @@ class RoundStartState extends State {
       ball.anchored = true;
 
       // Animate the paddle materializing onto the screen
-      PaddleState.transition(paddle, MaterializeState.new);
+      paddle.transition(MaterializeState.new);
     }
     if (displayCount == 340) {
       // Release the anchor

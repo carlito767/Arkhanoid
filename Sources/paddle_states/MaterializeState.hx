@@ -2,6 +2,7 @@ package paddle_states;
 
 import sprites.Paddle;
 using AnimationExtension;
+using PaddleExtension;
 
 class MaterializeState extends PaddleState {
   var updateCount:Int = 0;
@@ -16,7 +17,7 @@ class MaterializeState extends PaddleState {
     if (updateCount % 2 == 0) {
       var image = animation.pop();
       if (image == null) {
-        PaddleState.transition(paddle, NormalState.new);
+        paddle.transition(NormalState.new);
       }
       else {
         paddle.image = image;
