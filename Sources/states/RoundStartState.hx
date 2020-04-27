@@ -3,9 +3,8 @@ package states;
 import kha.Color;
 import kha.graphics2.Graphics;
 
-import paddle_states.MaterializeState;
+using AnimationExtension;
 using Graphics2Extension;
-using PaddleExtension;
 
 class RoundStartState extends State {
   var displayCount:Int = 0;
@@ -43,7 +42,12 @@ class RoundStartState extends State {
       ball.anchored = true;
 
       // Animate the paddle materializing onto the screen
-      paddle.transition(MaterializeState.new);
+      game.round.animatePaddle('paddle_materialize'.loadAnimation(), 2);
+    }
+    if (displayCount > 201 && game.round.noPaddleAnimation) {
+      var animation1 = 'paddle_pulsate'.loadAnimation();
+      var animation2 = animation1.reverse();
+      game.round.animatePaddle(animation1.chain(animation2), 4, 80);
     }
     if (displayCount == 340) {
       // Release the anchor

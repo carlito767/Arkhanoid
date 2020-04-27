@@ -9,6 +9,7 @@ import sprites.Brick;
 import sprites.Edge;
 import sprites.Paddle;
 import sprites.Sprite;
+using AnimationExtension;
 
 import Math.PI;
 
@@ -34,6 +35,7 @@ class Round {
   public var moveRight:Bool = false;
 
   public var noBall(get,never):Bool; inline function get_noBall() return balls.isEmpty();
+  public var noPaddleAnimation(get,never):Bool; inline function get_noPaddleAnimation() return paddleAnimation.isEmpty();
 
   static inline var TOP_OFFSET = 150;
 
@@ -61,6 +63,14 @@ class Round {
   var bricks:Array<Brick> = [];
   var paddle:Null<Paddle> = null;
 
+  var paddleAnimation:Animation = new Animation();
+  // Animate each 'step' frames
+  var paddleAnimationStep:Int = 1;
+  // Frames in cycle (-1 for no cycle)
+  var paddleAnimationCycle:Int = 0;
+  // Frames since animation start
+  var paddleAnimationHeartbeat:Int = 0;
+
   var edgeLeft:Edge;
   var edgeRight:Edge;
   var edgeTop:Edge;
@@ -85,8 +95,20 @@ class Round {
     // Update paddle
     var dx = 0.0;
     if (paddle != null) {
-      if (paddle.state != null) {
-        paddle.state.update();
+      // Animate paddle
+      if (!paddleAnimation.isEmpty()) {
+        var animate = paddleAnimationHeartbeat % paddleAnimationStep == 0;
+        if (paddleAnimationCycle > 0) {
+          if (paddleAnimationHeartbeat == paddleAnimationCycle) {
+            paddleAnimationHeartbeat = 0;
+          }
+          animate = animate && paddleAnimationHeartbeat <= (paddleAnimation.length - 1) * paddleAnimationStep;
+        }
+        if (animate) {
+          // TODO: center paddle
+          paddle.image = (paddleAnimationCycle >= 0) ? paddleAnimation.cycle() : paddleAnimation.pop();
+        }
+        paddleAnimationHeartbeat++;
       }
 
       // Detect paddle movement
@@ -376,5 +398,13 @@ class Round {
       speed:PADDLE_SPEED,
     };
     return paddle;
+  }
+
+  @:allow(states.State)
+  function animatePaddle(animation:Animation, step:Int, cycle:Int = -1):Void {
+    paddleAnimation = animation;
+    paddleAnimationStep = step;
+    paddleAnimationCycle = cycle;
+    paddleAnimationHeartbeat = 0;
   }
 }
