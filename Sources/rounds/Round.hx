@@ -33,6 +33,8 @@ class Round {
   public static inline var BALL_START_ANGLE_RAD = 5.0;
   public static inline var BALL_BASE_SPEED = 8.0;
 
+  public var noBall(get,never):Bool; inline function get_noBall() return balls.isEmpty();
+
   // (left,top)
   //      +---------------+
   //      |               |
@@ -56,7 +58,7 @@ class Round {
   public var lives:Int;
   public var score:Int = 0;
 
-  var balls:Array<Ball> = [];
+  var balls:List<Ball> = new List();
   var bricks:Array<Brick> = [];
   var paddle:Null<Paddle> = null;
 
@@ -141,6 +143,10 @@ class Round {
 
         ball.x += ball.speed * Math.cos(ball.angle);
         ball.y += ball.speed * Math.sin(ball.angle);
+
+        if (ball.y >= boundBottom) {
+          balls.remove(ball);
+        }
       }
     }
   }
@@ -334,7 +340,7 @@ class Round {
       angle:BALL_START_ANGLE_RAD,
       speed:BALL_BASE_SPEED,
     };
-    balls.push(ball);
+    balls.add(ball);
     return ball;
   }
 

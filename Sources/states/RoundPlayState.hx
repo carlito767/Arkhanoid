@@ -19,6 +19,10 @@ class RoundPlayState extends State {
 
   override function update():Void {
     game.round.update();
+
+    if (game.round.noBall) {
+      game.state = new BallOffScreenState(game);
+    }
   }
 
   override function render(g2:Graphics):Void {
