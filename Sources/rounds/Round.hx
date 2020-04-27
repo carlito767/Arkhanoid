@@ -55,10 +55,10 @@ class Round {
   //      |               |
   //      +---------------+
   //                (right,bottom)
-  var boundLeft(get,never):Float; inline function get_boundLeft() return edgeLeft.x + edgeLeft.image.width; 
-  var boundTop(get,never):Float; inline function get_boundTop() return edgeTop.y + edgeTop.image.height; 
-  var boundRight(get,never):Float; inline function get_boundRight() return edgeRight.x; 
-  var boundBottom(get,never):Float; inline function get_boundBottom() return Game.HEIGHT; 
+  var boundLeft(get,never):Float; inline function get_boundLeft() return edgeLeft.x + edgeLeft.image.width;
+  var boundTop(get,never):Float; inline function get_boundTop() return edgeTop.y + edgeTop.image.height;
+  var boundRight(get,never):Float; inline function get_boundRight() return edgeRight.x;
+  var boundBottom(get,never):Float; inline function get_boundBottom() return Game.HEIGHT;
 
   var balls:List<Ball> = new List();
   var bricks:Array<Brick> = [];
@@ -333,7 +333,7 @@ class Round {
 
   inline function isIntersecting(A:Bounds, B:Bounds) {
     return A.right >= B.left && A.left <= B.right && A.bottom >= B.top && A.top <= B.bottom;
-  } 
+  }
 
   //
   // Ball

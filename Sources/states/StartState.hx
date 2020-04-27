@@ -64,7 +64,7 @@ class StartState extends State {
     // Display powerups
     g2.color = Color.White;
     g2.fontSize = 46;
-    g2.drawString('POWERUPS', 210, 200);
+    g2.centerString('POWERUPS', 200);
 
     var left = 30;
     var top = 270;
