@@ -25,15 +25,23 @@ typedef Point = {
 }
 
 class Round {
-  public static inline var TOP_OFFSET = 150;
+  public var id(default,null):Int;
+  public var backgroundColor(default,null):Color = Color.Black;
+  public var lives(default,null):Int;
+  public var score(default,null):Int = 0;
 
-  public static inline var LIVES = 3;
-  public static inline var PADDLE_SPEED = 10;
-
-  public static inline var BALL_START_ANGLE_RAD = 5.0;
-  public static inline var BALL_BASE_SPEED = 8.0;
+  public var moveLeft:Bool = false;
+  public var moveRight:Bool = false;
 
   public var noBall(get,never):Bool; inline function get_noBall() return balls.isEmpty();
+
+  static inline var TOP_OFFSET = 150;
+
+  static inline var LIVES = 3;
+  static inline var PADDLE_SPEED = 10;
+
+  static inline var BALL_START_ANGLE_RAD = 5.0;
+  static inline var BALL_BASE_SPEED = 8.0;
 
   // (left,top)
   //      +---------------+
@@ -44,19 +52,10 @@ class Round {
   //      |               |
   //      +---------------+
   //                (right,bottom)
-  public var boundLeft(get, never):Float; inline function get_boundLeft() return edgeLeft.x + edgeLeft.image.width; 
-  public var boundTop(get, never):Float; inline function get_boundTop() return edgeTop.y + edgeTop.image.height; 
-  public var boundRight(get, never):Float; inline function get_boundRight() return edgeRight.x; 
-  public var boundBottom(get, never):Float; inline function get_boundBottom() return Game.HEIGHT; 
-
-  public var id(default, null):Int;
-  public var backgroundColor:Color = Color.Black;
-
-  public var moveLeft:Bool = false;
-  public var moveRight:Bool = false;
-
-  public var lives:Int;
-  public var score:Int = 0;
+  var boundLeft(get,never):Float; inline function get_boundLeft() return edgeLeft.x + edgeLeft.image.width; 
+  var boundTop(get,never):Float; inline function get_boundTop() return edgeTop.y + edgeTop.image.height; 
+  var boundRight(get,never):Float; inline function get_boundRight() return edgeRight.x; 
+  var boundBottom(get,never):Float; inline function get_boundBottom() return Game.HEIGHT; 
 
   var balls:List<Ball> = new List();
   var bricks:Array<Brick> = [];

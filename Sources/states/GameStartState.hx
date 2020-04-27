@@ -1,7 +1,5 @@
 package states;
 
-import states.RoundStartState;
-
 class GameStartState extends State {
   public function new(game:Game) {
     super(game);

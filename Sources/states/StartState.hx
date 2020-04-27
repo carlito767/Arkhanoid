@@ -125,7 +125,7 @@ class StartState extends State {
   }
 
   //
-  // Numeric Event Types
+  // Input bindings
   //
 
   function numericTypes():Array<InputEventType> {

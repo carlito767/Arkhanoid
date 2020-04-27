@@ -14,8 +14,8 @@ typedef InputEvent = {
 typedef Bindings = Map<InputEventType, InputHandler>;
 
 class Input {
-  public var keyboard(default, null):Null<KhaKeyboard> = null;
-  public var mouse(default, null):Null<KhaMouse> = null;
+  public var keyboard(default,null):Null<KhaKeyboard> = null;
+  public var mouse(default,null):Null<KhaMouse> = null;
 
   var bindingsDown:Bindings = new Bindings();
   var bindingsUp:Bindings = new Bindings();

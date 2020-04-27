@@ -18,18 +18,17 @@ class Game {
   public static inline var HEIGHT = 800;
   public static inline var FPS = 60;
 
-  public static inline var SETTINGS_FILENAME = 'settings';
-
   public final MAIN_FONT = Assets.fonts.generation;
   public final ALT_FONT = Assets.fonts.optimus;
 
-  public var input(default, null):Input = new Input();
+  public var input(default,null):Input = new Input();
 
-  public var rounds(default, null):Array<RoundFactory>;
-  public var round:Round;
+  public var rounds(default,null):Array<RoundFactory>;
+  public var round(default,null):Round;
 
   public var state:State;
 
+  static inline var SETTINGS_FILENAME = 'settings';
   var settings:GameSettings;
 
   public function new() {
