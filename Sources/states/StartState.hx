@@ -24,12 +24,12 @@ class StartState extends State {
     super(game);
 
     powerups = [
-      {anim:'powerup_laser'.loadAnimation(), name:'laser', desc:'enables the vaus\nto fire a laser'},
-      {anim:'powerup_slow'.loadAnimation(), name:'slow', desc:'slow down the\nenergy ball'},
-      {anim:'powerup_life'.loadAnimation(), name:'extra life', desc:'gain an additional\nvaus'},
-      {anim:'powerup_expand'.loadAnimation(), name:'expand', desc:'expands the vaus'},
-      {anim:'powerup_catch'.loadAnimation(), name:'catch', desc:'catches the energy\nball'},
-      {anim:'powerup_duplicate'.loadAnimation(), name:'duplicate', desc:'duplicates the energy\nball'},
+      {anim:'powerup_laser'.loadAnimation(4), name:'laser', desc:'enables the vaus\nto fire a laser'},
+      {anim:'powerup_slow'.loadAnimation(4), name:'slow', desc:'slow down the\nenergy ball'},
+      {anim:'powerup_life'.loadAnimation(4), name:'extra life', desc:'gain an additional\nvaus'},
+      {anim:'powerup_expand'.loadAnimation(4), name:'expand', desc:'expands the vaus'},
+      {anim:'powerup_catch'.loadAnimation(4), name:'catch', desc:'catches the energy\nball'},
+      {anim:'powerup_duplicate'.loadAnimation(4), name:'duplicate', desc:'duplicates the energy\nball'},
     ];
     roundId = 0;
 
@@ -70,7 +70,7 @@ class StartState extends State {
     var top = 270;
     for (powerup in powerups) {
         // Image
-        var image = (displayCount % 4 == 0) ? powerup.anim.cycle() : powerup.anim.first();
+        var image = powerup.anim.tick();
         g2.color = Color.White;
         g2.drawImage(image, left, top);
         // Name
