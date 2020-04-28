@@ -34,10 +34,9 @@ class Round {
   public var moveLeft:Bool = false;
   public var moveRight:Bool = false;
 
+  public var balls(default,null):List<Ball> = new List();
   public var bricks(default,null):Array<Brick> = [];
   public var paddle(default,null):Null<Paddle> = null;
-
-  public var noBall(get,never):Bool; inline function get_noBall() return balls.isEmpty();
 
   static inline var TOP_OFFSET = 150;
 
@@ -60,8 +59,6 @@ class Round {
   var boundTop(get,never):Float; inline function get_boundTop() return edgeTop.y + edgeTop.image.height;
   var boundRight(get,never):Float; inline function get_boundRight() return edgeRight.x;
   var boundBottom(get,never):Float; inline function get_boundBottom() return Game.HEIGHT;
-
-  var balls:List<Ball> = new List();
 
   var edgeLeft:Edge;
   var edgeRight:Edge;
