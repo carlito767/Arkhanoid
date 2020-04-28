@@ -43,6 +43,11 @@ class RoundStartState extends State {
 
       // Animate the paddle materializing onto the screen
       paddle.animation = 'paddle_materialize'.loadAnimation(2, -1);
+
+      // Animate the bricks
+      for (brick in game.round.bricks) {
+        brick.animation = 'brick_${brick.color}'.loadAnimation(4, -1);
+      }
     }
     if (displayCount > 201 && game.round.paddle.animation == null) {
       var animation1 = 'paddle_pulsate'.loadAnimation(4, 80);

@@ -34,6 +34,7 @@ class Round {
   public var moveLeft:Bool = false;
   public var moveRight:Bool = false;
 
+  public var bricks(default,null):Array<Brick> = [];
   public var paddle(default,null):Null<Paddle> = null;
 
   public var noBall(get,never):Bool; inline function get_noBall() return balls.isEmpty();
@@ -61,7 +62,6 @@ class Round {
   var boundBottom(get,never):Float; inline function get_boundBottom() return Game.HEIGHT;
 
   var balls:List<Ball> = new List();
-  var bricks:Array<Brick> = [];
 
   var edgeLeft:Edge;
   var edgeRight:Edge;
@@ -88,16 +88,8 @@ class Round {
     var dx = 0.0;
     if (paddle != null) {
       // Animate paddle
-      if (paddle.animation != null) {
-        var image = paddle.animation.tick();
-        if (image == null) {
-          paddle.animation = null;
-        }
-        else {
-          // TODO: center paddle
-          paddle.image = image;
-        }
-      }
+      // TODO: center paddle
+      animateSprite(paddle);
 
       // Detect paddle movement
       if (moveLeft && !moveRight) {
@@ -158,6 +150,11 @@ class Round {
         }
       }
     }
+
+    // Animate the bricks
+    for (brick in bricks) {
+      animateSprite(brick);
+    }
   }
 
   public function render(g2:Graphics):Void {
@@ -194,6 +191,22 @@ class Round {
     // Draw ball
     for (ball in balls) {
       g2.drawImage(ball.image, ball.x, ball.y);
+    }
+  }
+
+  //
+  // Animation
+  //
+
+  function animateSprite(sprite:Sprite):Void {
+    if (sprite.animation == null) return;
+
+    var image = sprite.animation.tick();
+    if (image == null) {
+      sprite.animation = null;
+    }
+    else {
+      sprite.image = image;
     }
   }
 
