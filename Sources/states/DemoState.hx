@@ -56,7 +56,7 @@ class DemoState extends State {
     // Input bindings
     game.input.clearBindings();
     game.input.bind(Mouse(Left), (_)->{ game.switchMouseLock(); });
-    game.input.bind(Key(Escape), (_)->{ game.backToTitle(); });
+    game.input.bind(Key(Backspace), (_)->{ game.backToTitle(); });
     game.input.bind(Key(D), (_)->{ nextDemo(); });
   }
 
