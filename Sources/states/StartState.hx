@@ -35,8 +35,10 @@ class StartState extends State {
 
     // Input bindings
     game.input.clearBindings();
-    game.input.bind(Mouse(Left), (_)->{ game.switchMouseLock(); });
+    #if debug
     game.input.bind(Key(D), (_)->{ game.showDemo(); });
+    #end
+    game.input.bind(Mouse(Left), (_)->{ game.switchMouseLock(); });
     game.input.bind(Key(Backspace), (_)->{
       if (roundId > 0) {
         roundId = Std.int(roundId / 10);
