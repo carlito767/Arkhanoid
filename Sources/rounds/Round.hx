@@ -34,9 +34,9 @@ class Round {
   public var moveLeft:Bool = false;
   public var moveRight:Bool = false;
 
-  public var noBall(get,never):Bool; inline function get_noBall() return balls.isEmpty();
+  public var paddle(default,null):Null<Paddle> = null;
 
-  public var paddleAnimation:Null<Animation> = null;
+  public var noBall(get,never):Bool; inline function get_noBall() return balls.isEmpty();
 
   static inline var TOP_OFFSET = 150;
 
@@ -62,7 +62,6 @@ class Round {
 
   var balls:List<Ball> = new List();
   var bricks:Array<Brick> = [];
-  var paddle:Null<Paddle> = null;
 
   var edgeLeft:Edge;
   var edgeRight:Edge;
@@ -89,10 +88,10 @@ class Round {
     var dx = 0.0;
     if (paddle != null) {
       // Animate paddle
-      if (paddleAnimation != null) {
-        var image = paddleAnimation.tick();
+      if (paddle.animation != null) {
+        var image = paddle.animation.tick();
         if (image == null) {
-          paddleAnimation = null;
+          paddle.animation = null;
         }
         else {
           // TODO: center paddle

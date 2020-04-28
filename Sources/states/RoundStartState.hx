@@ -42,12 +42,12 @@ class RoundStartState extends State {
       ball.anchored = true;
 
       // Animate the paddle materializing onto the screen
-      game.round.paddleAnimation = 'paddle_materialize'.loadAnimation(2, -1);
+      paddle.animation = 'paddle_materialize'.loadAnimation(2, -1);
     }
-    if (displayCount > 201 && game.round.paddleAnimation == null) {
+    if (displayCount > 201 && game.round.paddle.animation == null) {
       var animation1 = 'paddle_pulsate'.loadAnimation(4, 80);
       var animation2 = animation1.reverse();
-      game.round.paddleAnimation = animation1.chain(animation2);
+      game.round.paddle.animation = animation1.chain(animation2);
     }
     if (displayCount == 340) {
       // Release the anchor
