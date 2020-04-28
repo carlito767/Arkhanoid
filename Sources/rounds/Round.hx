@@ -85,8 +85,22 @@ class Round {
     var dx = 0.0;
     if (paddle != null) {
       // Animate paddle
-      // TODO: center paddle
+      var image = paddle.image;
       animateSprite(paddle);
+
+      // Center paddle (and adjust its balls)
+      var dw = (image.width - paddle.image.width) * 0.5;
+      var dh = (image.height - paddle.image.height) * 0.5;
+      if (dw != 0 || dh != 0) {
+        paddle.x += dw;
+        paddle.y += dh;
+        for (ball in balls) {
+          if (ball.anchored) {
+            ball.x += dw;
+            ball.y += dh;
+          }
+        }
+      }
 
       // Detect paddle movement
       if (moveLeft && !moveRight) {
