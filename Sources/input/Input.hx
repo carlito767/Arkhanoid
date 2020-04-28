@@ -73,6 +73,7 @@ class Input {
     // https://github.com/HaxeFoundation/haxe/issues/2550
     bindingsDown = new Bindings();
     bindingsUp = new Bindings();
+    events.clear();
   }
 
   //

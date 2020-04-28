@@ -1,5 +1,7 @@
 package states;
 
+import kha.graphics2.Graphics;
+
 class GameStartState extends State {
   public function new(game:Game) {
     super(game);
@@ -14,5 +16,9 @@ class GameStartState extends State {
 
   override function update():Void {
     game.state = new RoundStartState(game);
+  }
+
+  override function render(g2:Graphics):Void {
+    game.round.render(g2);
   }
 }

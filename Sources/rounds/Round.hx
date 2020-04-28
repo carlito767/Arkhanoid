@@ -28,7 +28,7 @@ typedef Point = {
 class Round {
   public var id(default,null):Int;
   public var backgroundColor(default,null):Color = Color.Black;
-  public var lives(default,null):Int;
+  public var lives:Int;
   public var score(default,null):Int = 0;
 
   public var moveLeft:Bool = false;
@@ -36,7 +36,7 @@ class Round {
 
   public var balls(default,null):List<Ball> = new List();
   public var bricks(default,null):Array<Brick> = [];
-  public var paddle(default,null):Null<Paddle> = null;
+  public var paddle:Null<Paddle> = null;
 
   static inline var TOP_OFFSET = 150;
 
@@ -64,9 +64,9 @@ class Round {
   var edgeRight:Edge;
   var edgeTop:Edge;
 
-  public function new(id:Int, lives:Int = LIVES) {
+  public function new(id:Int, lives:Int = 0) {
     this.id = id;
-    this.lives = lives;
+    this.lives = (lives <= 0) ? LIVES : lives;
 
     // Create edges
     var imageLeft = Assets.images.edge_left;
