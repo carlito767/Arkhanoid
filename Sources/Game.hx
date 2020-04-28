@@ -9,6 +9,7 @@ import rounds.Round;
 import rounds.Round1;
 import rounds.Round2;
 import rounds.RoundFactory;
+import states.DemoState;
 import states.GameStartState;
 import states.StartState;
 import states.State;
@@ -66,6 +67,10 @@ class Game {
 
   public function backToTitle():Void {
     state = new StartState(this);
+  }
+
+  public function showDemo():Void {
+    state = new DemoState(this);
   }
 
   public function switchToRound(id:Int):Void {

@@ -1,6 +1,6 @@
 package sprites;
 
-enum abstract BrickColor(String) {
+enum abstract BrickColor(String) from String to String {
   var blue;
   var cyan;
   var gold;

@@ -5,6 +5,7 @@ typedef Images = List<Image>;
 
 class AnimationExtension {
   public static function loadAnimation(id:String, step:Int, cycle:Int = 0):Animation {
+    // Load images id_*.png
     var images = new Images();
     while (true) {
       var image = Assets.images.get('${id}_${images.length + 1}');
@@ -12,6 +13,13 @@ class AnimationExtension {
         break;
       }
       images.add(image);
+    }
+    // Backup strategy: id.png
+    if (images.isEmpty()) {
+      var image = Assets.images.get(id);
+      if (image != null) {
+        images.add(image);
+      }
     }
     return {
       images:images,
@@ -24,6 +32,7 @@ class AnimationExtension {
   public static function tick(animation:Animation):Null<Image> {
     if (animation.images.isEmpty()) return null;
 
+    // Need animation?
     var animate = animation.heartbeat % animation.step == 0;
     if (animation.cycle > 0) {
       if (animation.heartbeat == animation.cycle) {
@@ -32,8 +41,10 @@ class AnimationExtension {
       animate = animate && animation.heartbeat <= (animation.images.length - 1) * animation.step;
     }
 
+    // Take a breath
     animation.heartbeat++;
 
+    // Animate
     if (!animate) {
       return animation.images.first();
     }
