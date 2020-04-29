@@ -4,6 +4,7 @@ import kha.Assets;
 import kha.Color;
 import kha.graphics2.Graphics;
 
+import Collisions.BounceStrategy;
 import Collisions.Bounds;
 import Collisions.bounds;
 import Collisions.collide;
@@ -115,11 +116,13 @@ class Round {
       }
       else {
         var collisions = new List<Bounds>();
+        var bounceStrategy:Null<BounceStrategy> = null;
 
         // Detect collision between ball and edges
         for (edge in [edgeLeft, edgeRight, edgeTop]) {
           if (collide(ball, edge)) {
             collisions.add(bounds(edge));
+            bounceStrategy = edge.bounceStrategy;
           }
         }
 
@@ -127,6 +130,7 @@ class Round {
         for (brick in bricks) {
           if (collide(ball, brick)) {
             collisions.add(bounds(brick));
+            bounceStrategy = brick.bounceStrategy;
             // TODO: remove fake score
             game.score += 100;
           }
@@ -135,11 +139,14 @@ class Round {
         // Detect collision between ball and paddle
         if (collide(ball, paddle)) {
           collisions.add(bounds(paddle));
+          bounceStrategy = paddle.bounceStrategy;
         }
 
         // Determine new angle for ball
         if (!collisions.isEmpty()) {
-          ball.angle = Collisions.bounceStrategy(ball, collisions);
+          ball.angle = (collisions.length == 1 && bounceStrategy != null)
+            ? bounceStrategy(ball, collisions.first())
+            : Collisions.bounceStrategy(ball, collisions);
         }
 
         ball.x += ball.speed * Math.cos(ball.angle);
@@ -259,6 +266,7 @@ class Round {
       image:image,
       x:(boundRight + boundLeft - image.width) * 0.5,
       y:boundBottom - image.height - 30,
+      bounceStrategy:Collisions.bounceStrategyForPaddle,
       speed:PADDLE_SPEED,
     };
     return paddle;

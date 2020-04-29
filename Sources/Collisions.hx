@@ -14,6 +14,8 @@ typedef Point = {
   y:Float,
 }
 
+typedef BounceStrategy = Ball->Bounds->Float;
+
 class Collisions {
   static var HALF_PI(get,never):Float; static inline function get_HALF_PI() { return PI * 0.5; };
   static var TWO_PI(get,never):Float; static inline function get_TWO_PI() { return PI * 2; };
@@ -122,6 +124,28 @@ class Collisions {
           // stuck in a repeating bounce loop
           angle += RANDOM_RANGE - (2 * RANDOM_RANGE * Math.random());
         }
+    }
+
+    return angle;
+  }
+
+  public static function bounceStrategyForPaddle(ball:Ball, collision:Bounds):Float {
+    var angle = ball.angle;
+
+    // Logically break the paddle into 6 segments
+    // Each segment triggers a different angle of bounce
+    var segmentSize = Math.floor((collision.right - collision.left) / 6);
+
+    // The bounce angles corresponding to each of the 6 segments
+    var angles = [220, 245, 260, 280, 295, 320]; // Degrees
+
+    var bb = bounds(ball);
+    for (i in 0...6) {
+      var left = collision.left + segmentSize * i;
+      var width = (i == 5) ? (collision.right - collision.left) - (segmentSize * 5) : segmentSize;
+      if (isIntersecting(bb, {left:left, top:collision.top, right:left + width, bottom:collision.bottom})) {
+        angle = (PI / 180 * angles[i]);
+      }
     }
 
     return angle;
