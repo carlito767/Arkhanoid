@@ -84,6 +84,17 @@ class Game {
     state = new DemoState(this);
   }
 
+  public function switchMouseLock():Void {
+    if (input.mouse != null) {
+      if (input.mouse.isLocked()) {
+        input.mouse.unlock();
+      }
+      else {
+        input.mouse.lock();
+      }
+    }
+  }
+
   public function switchToRound(id:Int, lives:Int = LIVES):Void {
     var roundFactory = rounds[id - 1];
     if (roundFactory != null) {
@@ -91,6 +102,10 @@ class Game {
       state = new GameStartState(this, round);
     }
   }
+
+  //
+  // Game loop
+  //
 
   function update():Void {
     input.update();
@@ -125,16 +140,5 @@ class Game {
     state.render(g2);
 
     g2.end();
-  }
-
-  public function switchMouseLock():Void {
-    if (input.mouse != null) {
-      if (input.mouse.isLocked()) {
-        input.mouse.unlock();
-      }
-      else {
-        input.mouse.lock();
-      }
-    }
   }
 }
