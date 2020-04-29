@@ -1,37 +1,30 @@
 package states;
 
-import kha.graphics2.Graphics;
-
+import rounds.Round;
 using AnimationExtension;
 
-class BallOffScreenState extends State {
-  public function new(game:Game) {
-    super(game);
+class BallOffScreenState extends RoundState {
+  public function new(game:Game, round:Round) {
+    super(game, round);
 
     // Don't move...
     game.input.clearBindings();
-    game.round.moveLeft = false;
-    game.round.moveRight = false;
+    round.moveLeft = false;
+    round.moveRight = false;
     // ...my deadly love!
-    game.round.paddle.animation = 'paddle_explode'.loadAnimation(4, -1);
+    round.paddle.animation = 'paddle_explode'.loadAnimation(4, -1);
   }
 
   override function update():Void {
-    game.round.update();
+    round.update();
 
-    if (game.round.paddle.animation == null) {
-      game.round.lives--;
-      if (game.round.lives > 0) {
-        game.round.paddle = null;
-        game.state = new GameStartState(game);
+    if (round.paddle.animation == null) {
+      if (round.lives > 1) {
+        game.state = new RoundRestartState(game, round);
       }
       else {
         game.backToTitle();
       }
     }
-  }
-
-  override function render(g2:Graphics):Void {
-    game.round.render(g2);
   }
 }

@@ -29,7 +29,6 @@ class Round {
   public var id(default,null):Int;
   public var backgroundColor(default,null):Color = Color.Black;
   public var lives:Int;
-  public var score(default,null):Int = 0;
 
   public var moveLeft:Bool = false;
   public var moveRight:Bool = false;
@@ -40,7 +39,6 @@ class Round {
 
   static inline var TOP_OFFSET = 150;
 
-  static inline var LIVES = 3;
   static inline var PADDLE_SPEED = 10;
 
   static inline var BALL_START_ANGLE_RAD = 5.0;
@@ -64,9 +62,9 @@ class Round {
   var edgeRight:Edge;
   var edgeTop:Edge;
 
-  public function new(id:Int, lives:Int = 0) {
+  public function new(id:Int, lives:Int) {
     this.id = id;
-    this.lives = (lives <= 0) ? LIVES : lives;
+    this.lives = lives;
 
     // Create edges
     var imageLeft = Assets.images.edge_left;

@@ -1,10 +1,10 @@
 package states;
 
-import kha.graphics2.Graphics;
+import rounds.Round;
 
-class GameStartState extends State {
-  public function new(game:Game) {
-    super(game);
+class GameStartState extends RoundState {
+  public function new(game:Game, round:Round) {
+    super(game, round);
 
     // Input bindings
     game.input.clearBindings();
@@ -15,10 +15,6 @@ class GameStartState extends State {
   }
 
   override function update():Void {
-    game.state = new RoundStartState(game);
-  }
-
-  override function render(g2:Graphics):Void {
-    game.round.render(g2);
+    game.state = new RoundStartState(game, round);
   }
 }

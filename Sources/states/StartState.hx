@@ -14,14 +14,16 @@ typedef PowerupData = {
   desc:String,
 }
 
-class StartState extends State {
+class StartState implements State {
+  var game:Game;
+
   var displayCount:Int = 0;
 
   var powerups:Array<PowerupData>;
   var roundId:Int;
 
   public function new(game:Game) {
-    super(game);
+    this.game = game;
 
     powerups = [
       {anim:'powerup_laser'.loadAnimation(4), name:'laser', desc:'enables the vaus\nto fire a laser'},
@@ -61,7 +63,10 @@ class StartState extends State {
     });
   }
 
-  override function render(g2:Graphics):Void {
+  public function update():Void {
+  }
+
+  public function render(g2:Graphics):Void {
     g2.font = game.ALT_FONT;
 
     // Display powerups

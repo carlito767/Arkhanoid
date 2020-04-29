@@ -19,15 +19,18 @@ class Game {
   public static inline var HEIGHT = 800;
   public static inline var FPS = 60;
 
+  public static inline var LIVES = 3;
+
   public final MAIN_FONT = Assets.fonts.generation;
   public final ALT_FONT = Assets.fonts.optimus;
 
   public var input(default,null):Input = new Input();
 
   public var rounds(default,null):Array<RoundFactory>;
-  public var round(default,null):Round;
 
   public var state:State;
+
+  public var score:Int = 0;
 
   static inline var SETTINGS_FILENAME = 'settings';
   var settings:GameSettings;
@@ -55,9 +58,6 @@ class Game {
       Round.new,
     ];
 
-    // Initialize fake round (for score and lives)
-    round = new Round(0);
-
     // Initialize state
     backToTitle();
 
@@ -73,11 +73,11 @@ class Game {
     state = new DemoState(this);
   }
 
-  public function switchToRound(id:Int):Void {
+  public function switchToRound(id:Int, lives:Int = LIVES):Void {
     var roundFactory = rounds[id - 1];
     if (roundFactory != null) {
-      round = roundFactory(id, round.lives);
-      state = new GameStartState(this);
+      var round = roundFactory(id, lives);
+      state = new GameStartState(this, round);
     }
   }
 
@@ -103,7 +103,7 @@ class Game {
     g2.drawString('HIGH SCORE', WIDTH - 205, 75);
 
     g2.color = Color.White;
-    var scoreString = Std.string(round.score);
+    var scoreString = Std.string(score);
     var scoreWidth = g2.font.width(g2.fontSize, scoreString);
     g2.drawString(scoreString, WIDTH - scoreWidth - 10, 35);
     var highScoreString = Std.string(settings.highScore);

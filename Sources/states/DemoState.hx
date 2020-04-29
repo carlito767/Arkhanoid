@@ -12,7 +12,9 @@ typedef Demo = {
   name:String,
 }
 
-class DemoState extends State {
+class DemoState implements State {
+  var game:Game;
+
   var n:Int = 0;
 
   var paddles:Array<Demo>;
@@ -26,7 +28,7 @@ class DemoState extends State {
   var dy2:Int;
 
   public function new(game:Game) {
-    super(game);
+    this.game = game;
 
     paddles = [
       {anim:'paddle_materialize'.loadAnimation(4), name:'materialize'},
@@ -60,7 +62,10 @@ class DemoState extends State {
     game.input.bind(Key(D), (_)->{ nextDemo(); });
   }
 
-  override function render(g2:Graphics):Void {
+  public function update():Void {
+  }
+
+  public function render(g2:Graphics):Void {
     g2.color = Color.White;
     g2.font = game.ALT_FONT;
     g2.fontSize = 46;

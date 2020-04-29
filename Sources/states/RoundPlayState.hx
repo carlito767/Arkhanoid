@@ -1,31 +1,27 @@
 package states;
 
-import kha.graphics2.Graphics;
+import rounds.Round;
 
-class RoundPlayState extends State {
-  public function new(game:Game) {
-    super(game);
+class RoundPlayState extends RoundState {
+  public function new(game:Game, round:Round) {
+    super(game, round);
 
     // Input bindings
     game.input.bind(Key(Left),
-      (_)->{ game.round.moveLeft = true; },
-      (_)->{ game.round.moveLeft = false; }
+      (_)->{ round.moveLeft = true; },
+      (_)->{ round.moveLeft = false; }
     );
     game.input.bind(Key(Right),
-      (_)->{ game.round.moveRight = true; },
-      (_)->{ game.round.moveRight = false; }
+      (_)->{ round.moveRight = true; },
+      (_)->{ round.moveRight = false; }
     );
   }
 
   override function update():Void {
-    game.round.update();
+    round.update();
 
-    if (game.round.balls.isEmpty()) {
-      game.state = new BallOffScreenState(game);
+    if (round.balls.isEmpty()) {
+      game.state = new BallOffScreenState(game, round);
     }
-  }
-
-  override function render(g2:Graphics):Void {
-    game.round.render(g2);
   }
 }
