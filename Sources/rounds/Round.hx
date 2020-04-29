@@ -28,11 +28,13 @@ class Round {
   public var paddle:Null<Paddle> = null;
 
   static inline var TOP_OFFSET = 150;
-
-  static inline var PADDLE_SPEED = 10;
-
   static inline var BALL_START_ANGLE_RAD = 5.0;
-  static inline var BALL_BASE_SPEED = 8.0;
+  static inline var BALL_BASE_SPEED = 8.0; // pixels per frame
+  static inline var BALL_TOP_SPEED = 15.0; // pixels per frame
+  static inline var BALL_SPEED_NORMALISATION_RATE = 0.02;
+  static inline var BRICK_SPEED_ADJUST = 0.5;
+  static inline var WALL_SPEED_ADJUST = 0.2;
+  static inline var PADDLE_SPEED = 10;
 
   // (left,top)
   //      +---------------+
@@ -117,12 +119,14 @@ class Round {
       else {
         var collisions = new List<Bounds>();
         var bounceStrategy:Null<BounceStrategy> = null;
+        var speed = 0.0;
 
         // Detect collision between ball and edges
         for (edge in [edgeLeft, edgeRight, edgeTop]) {
           if (collide(ball, edge)) {
             collisions.add(bounds(edge));
             bounceStrategy = edge.bounceStrategy;
+            speed += WALL_SPEED_ADJUST;
           }
         }
 
@@ -131,6 +135,7 @@ class Round {
           if (collide(ball, brick)) {
             collisions.add(bounds(brick));
             bounceStrategy = brick.bounceStrategy;
+            speed += BRICK_SPEED_ADJUST;
             game.score += brickValue(brick);
             brick.collisions++;
             if (brickToDestroy(brick)) {
@@ -150,6 +155,15 @@ class Round {
           ball.angle = (collisions.length == 1 && bounceStrategy != null)
             ? bounceStrategy(ball, collisions.first())
             : Collisions.bounceStrategy(ball, collisions);
+        }
+
+        // Determine new speed for ball
+        // TODO: adjust ball base speed and normalisation rate per round (see Round 3)
+        if (collisions.isEmpty()) {
+          ball.speed += (ball.speed > BALL_BASE_SPEED) ? -BALL_SPEED_NORMALISATION_RATE : BALL_SPEED_NORMALISATION_RATE;
+        }
+        else {
+          ball.speed = Math.min(ball.speed + speed, BALL_TOP_SPEED);
         }
 
         ball.x += ball.speed * Math.cos(ball.angle);
