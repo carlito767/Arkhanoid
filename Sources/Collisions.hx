@@ -17,6 +17,10 @@ typedef Point = {
 typedef BounceStrategy = Ball->Bounds->Float;
 
 class Collisions {
+  //
+  // Bounce strategies
+  //
+
   static var HALF_PI(get,never):Float; static inline function get_HALF_PI() { return PI * 0.5; };
   static var TWO_PI(get,never):Float; static inline function get_TWO_PI() { return PI * 2; };
 
@@ -129,9 +133,7 @@ class Collisions {
     return angle;
   }
 
-  public static function bounceStrategyForPaddle(ball:Ball, collision:Bounds):Float {
-    var angle = ball.angle;
-
+  public static function bounceStrategyPaddle(ball:Ball, collision:Bounds):Float {
     // Logically break the paddle into 6 segments
     // Each segment triggers a different angle of bounce
     var segmentSize = Math.floor((collision.right - collision.left) / 6);
@@ -144,12 +146,17 @@ class Collisions {
       var left = collision.left + segmentSize * i;
       var width = (i == 5) ? (collision.right - collision.left) - (segmentSize * 5) : segmentSize;
       if (isIntersecting(bb, {left:left, top:collision.top, right:left + width, bottom:collision.bottom})) {
-        angle = (PI / 180 * angles[i]);
+        return (PI / 180 * angles[i]);
       }
     }
 
-    return angle;
+    // Should never happen
+    return ball.angle;
   }
+
+  //
+  // Common
+  //
 
   public static function bounds(sprite:Sprite, ?dx:Float = 0, ?dy:Float = 0):Bounds {
     return {

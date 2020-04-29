@@ -266,7 +266,7 @@ class Round {
       image:image,
       x:(boundRight + boundLeft - image.width) * 0.5,
       y:boundBottom - image.height - 30,
-      bounceStrategy:Collisions.bounceStrategyForPaddle,
+      bounceStrategy:Collisions.bounceStrategyPaddle,
       speed:PADDLE_SPEED,
     };
     return paddle;
