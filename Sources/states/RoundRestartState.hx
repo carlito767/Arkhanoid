@@ -11,7 +11,7 @@ class RoundRestartState extends RoundState {
     round.paddle = null;
   }
 
-  override function update():Void {
+  override function postUpdate():Void {
     if (updateCount > 100) {
       round.lives--;
       game.state = new GameStartState(game, round);

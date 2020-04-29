@@ -17,9 +17,7 @@ class RoundPlayState extends RoundState {
     );
   }
 
-  override function update():Void {
-    round.update(game);
-
+  override function postUpdate():Void {
     if (round.balls.isEmpty()) {
       game.state = new BallOffScreenState(game, round);
     }

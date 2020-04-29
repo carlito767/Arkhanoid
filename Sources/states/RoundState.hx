@@ -13,11 +13,19 @@ class RoundState implements State {
     this.round = round;
   }
 
-  public function update():Void {
+  public final function update():Void {
     round.update(game);
+    postUpdate();
   }
 
-  public function render(g2:Graphics):Void {
+  public final function render(g2:Graphics):Void {
     round.render(g2);
+    postRender(g2);
+  }
+
+  function postUpdate():Void {
+  }
+
+  function postRender(g2:Graphics):Void {
   }
 }

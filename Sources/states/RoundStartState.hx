@@ -14,7 +14,7 @@ class RoundStartState extends RoundState {
     super(game, round);
   }
 
-  override function render(g2:Graphics):Void {
+  override function postRender(g2:Graphics):Void {
     round.render(g2);
 
     g2.color = Color.White;

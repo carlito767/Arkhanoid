@@ -14,7 +14,7 @@ class GameStartState extends RoundState {
     game.input.bind(Mouse(Left), (_)->{ game.switchMouseLock(); });
   }
 
-  override function update():Void {
+  override function postUpdate():Void {
     game.state = new RoundStartState(game, round);
   }
 }
