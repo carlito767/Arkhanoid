@@ -78,7 +78,7 @@ class Round {
     bricks = createBricks();
   }
 
-  public function update():Void {
+  public function update(game:Game):Void {
     // Update paddle
     var dx = 0.0;
     if (paddle != null) {
@@ -138,6 +138,8 @@ class Round {
         for (brick in bricks) {
           if (collide(ball, brick)) {
             collisions.add(bounds(brick));
+            // TODO: remove fake score
+            game.score += 100;
           }
         }
 

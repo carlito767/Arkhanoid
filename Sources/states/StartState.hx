@@ -39,6 +39,7 @@ class StartState implements State {
     game.input.clearBindings();
     #if debug
     game.input.bind(Key(D), (_)->{ game.showDemo(); });
+    game.input.bind(Key(H), (_)->{ game.resetHighScore(); });
     #end
     game.input.bind(Mouse(Left), (_)->{ game.switchMouseLock(); });
     game.input.bind(Key(Backspace), (_)->{
@@ -50,6 +51,7 @@ class StartState implements State {
       if (roundId == 0) {
         roundId = 1;
       }
+      game.score = 0;
       game.switchToRound(roundId);
     });
     game.input.bindMulti(numericTypes(), (type)->{

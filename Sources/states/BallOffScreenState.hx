@@ -16,7 +16,7 @@ class BallOffScreenState extends RoundState {
   }
 
   override function update():Void {
-    round.update();
+    round.update(game);
 
     if (round.paddle.animation == null) {
       if (round.lives > 1) {

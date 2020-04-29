@@ -14,7 +14,7 @@ class RoundState implements State {
   }
 
   public function update():Void {
-    round.update();
+    round.update(game);
   }
 
   public function render(g2:Graphics):Void {

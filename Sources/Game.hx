@@ -30,7 +30,14 @@ class Game {
 
   public var state:State;
 
-  public var score:Int = 0;
+  public var score(default,set):Int = 0;
+  function set_score(value) {
+    if (value > settings.highScore) {
+      settings.highScore = value;
+      Settings.write(SETTINGS_FILENAME, settings);
+    }
+    return score = value;
+  }
 
   static inline var SETTINGS_FILENAME = 'settings';
   var settings:GameSettings;
@@ -46,7 +53,6 @@ class Game {
       v:1,
       highScore:0,
     });
-    settings.highScore = 99999;
 
     // Initialize rounds
     // https://haxe.org/blog/codingtips-new/
@@ -67,6 +73,11 @@ class Game {
 
   public function backToTitle():Void {
     state = new StartState(this);
+  }
+
+  public function resetHighScore():Void {
+    settings.highScore = 0;
+    Settings.write(SETTINGS_FILENAME, settings);
   }
 
   public function showDemo():Void {
