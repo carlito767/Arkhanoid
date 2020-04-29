@@ -24,7 +24,7 @@ class Round {
   public var moveRight:Bool = false;
 
   public var balls(default,null):List<Ball> = new List();
-  public var bricks(default,null):Array<Brick> = [];
+  public var bricks(default,null):List<Brick> = new List();
   public var paddle:Null<Paddle> = null;
 
   static inline var TOP_OFFSET = 150;
@@ -131,8 +131,11 @@ class Round {
           if (collide(ball, brick)) {
             collisions.add(bounds(brick));
             bounceStrategy = brick.bounceStrategy;
-            // TODO: remove fake score
-            game.score += 100;
+            game.score += brickValue(brick);
+            brick.collisions++;
+            if (brickToDestroy(brick)) {
+              bricks.remove(brick);
+            }
           }
         }
 
@@ -251,8 +254,31 @@ class Round {
   // Bricks
   //
 
-  function createBricks():Array<Brick> {
-    return [];
+  function createBricks():List<Brick> {
+    return new List<Brick>();
+  }
+
+  function brickValue(brick:Brick):Int {
+    return switch brick.color {
+      case blue: 100;
+      case cyan: 70;
+      case gold: 0;
+      case green: 80;
+      case orange: 60;
+      case pink: 110;
+      case red: 90;
+      case silver: 50 * id;
+      case white: 50;
+      case yellow: 120;
+    }
+  }
+
+  function brickToDestroy(brick:Brick):Bool {
+    return switch brick.color {
+      case gold: false;
+      case silver: brick.collisions > Math.ceil(id / 8);
+      default: true;
+    }
   }
 
   //
