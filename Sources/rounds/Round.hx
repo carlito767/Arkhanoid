@@ -27,13 +27,24 @@ class Round {
   public var bricks(default,null):List<Brick> = new List();
   public var paddle:Null<Paddle> = null;
 
+  // The number of pixels from the top of the screen before the top edge starts.
   static inline var TOP_OFFSET = 150;
-  static inline var BALL_START_ANGLE_RAD = 5.0;
+  // The angle the ball initially moves off the paddle.
+  static inline var BALL_START_ANGLE_RAD = 5.0; // radians
+  // The speed that the ball will always try to arrive at.
+  // This is based on a game running at 60fps. You might need to increment it by
+  // a couple of notches if you find the ball moves too slowly.
   static inline var BALL_BASE_SPEED = 8.0; // pixels per frame
+  // The max speed of the ball, prevents a runaway speed when lots of rapid
+  // collisions.
   static inline var BALL_TOP_SPEED = 15.0; // pixels per frame
+  // Per-frame rate at which ball is brought back to base speed.
   static inline var BALL_SPEED_NORMALISATION_RATE = 0.02;
+  // Increase in speed caused by colliding with a brick.
   static inline var BRICK_SPEED_ADJUST = 0.5;
+  // Increase in speed caused by colliding with a wall.
   static inline var WALL_SPEED_ADJUST = 0.2;
+  // The speed the paddle moves.
   static inline var PADDLE_SPEED = 10;
 
   // (left,top)

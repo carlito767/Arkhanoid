@@ -19,15 +19,11 @@ class Game {
   public static inline var HEIGHT = 800;
   public static inline var FPS = 60;
 
-  public static inline var LIVES = 3;
-
   public final MAIN_FONT = Assets.fonts.generation;
   public final ALT_FONT = Assets.fonts.optimus;
 
   public var input(default,null):Input = new Input();
-
   public var rounds(default,null):Array<RoundFactory>;
-
   public var state:State;
 
   public var score(default,set):Int = 0;
@@ -67,6 +63,7 @@ class Game {
     // Initialize state
     backToTitle();
 
+    // Initialize game loop
     Scheduler.addTimeTask(update, 0, 1 / FPS);
     System.notifyOnFrames(render);
   }
@@ -95,7 +92,7 @@ class Game {
     }
   }
 
-  public function switchToRound(id:Int, lives:Int = LIVES):Void {
+  public function switchToRound(id:Int, lives:Int = 3):Void {
     var roundFactory = rounds[id - 1];
     if (roundFactory != null) {
       var round = roundFactory(id, lives);

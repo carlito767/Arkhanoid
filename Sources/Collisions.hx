@@ -26,7 +26,7 @@ class Collisions {
 
   // A value will be chosen at random between this and it's negative
   // to apply to the angle of bounce for top/bottom/side collisions of the ball
-  static inline var RANDOM_RANGE = 0.1; // Radians
+  static inline var RANDOM_RANGE = 0.1; // radians
 
   public static function bounceStrategy(ball:Ball, collisions:List<Bounds>):Float {
     if (collisions.isEmpty()) return ball.angle;
@@ -139,7 +139,7 @@ class Collisions {
     var segmentSize = Math.floor((collision.right - collision.left) / 6);
 
     // The bounce angles corresponding to each of the 6 segments
-    var angles = [220, 245, 260, 280, 295, 320]; // Degrees
+    var angles = [220, 245, 260, 280, 295, 320]; // degrees
 
     var bb = bounds(ball);
     for (i in 0...6) {
@@ -155,7 +155,7 @@ class Collisions {
   }
 
   //
-  // Common
+  // Tools
   //
 
   public static function bounds(sprite:Sprite, ?dx:Float = 0, ?dy:Float = 0):Bounds {

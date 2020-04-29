@@ -9,7 +9,7 @@ class Main {
   public static function main() {
     System.start({title:title(), width:Game.WIDTH, height:Game.HEIGHT}, (_)->{
       System.notifyOnFrames(renderLoadingScreen);
-      Assets.loadEverything(function() {
+      Assets.loadEverything(()->{
         System.removeFramesListener(renderLoadingScreen);
         new Game();
       });
