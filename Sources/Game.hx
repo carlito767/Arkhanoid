@@ -13,6 +13,7 @@ import states.DemoState;
 import states.GameStartState;
 import states.StartState;
 import states.State;
+using Graphics2Extension;
 
 class Game {
   public static inline var WIDTH = 600;
@@ -126,21 +127,17 @@ class Game {
     g2.fontSize = 18;
 
     g2.color = Color.fromBytes(230, 0, 0);
-    g2.drawString('1UP', WIDTH - 70, 10);
-    g2.drawString('HIGH SCORE', WIDTH - 205, 75);
+    g2.rightString('1UP', WIDTH - 10, 10);
+    g2.rightString('HIGH SCORE', WIDTH - 10, 75);
 
     g2.color = Color.White;
-    var scoreString = Std.string(score);
-    var scoreWidth = g2.font.width(g2.fontSize, scoreString);
-    g2.drawString(scoreString, WIDTH - scoreWidth - 10, 35);
-    var highScoreString = Std.string(settings.highScore);
-    var highScoreWidth = g2.font.width(g2.fontSize, highScoreString);
-    g2.drawString(highScoreString, WIDTH - highScoreWidth - 10, 100);
+    g2.rightString(Std.string(score), WIDTH - 10, 35);
+    g2.rightString(Std.string(settings.highScore), WIDTH - 10, 100);
 
     // Display "God Mode"
     if (godMode) {
       g2.color = Color.Yellow;
-      g2.drawString('GOD MODE', WIDTH - 165, 125);
+      g2.rightString('GOD MODE', WIDTH - 10, 125);
     }
 
     // Display state
