@@ -98,6 +98,10 @@ class Game {
   }
 
   public function switchToRound(id:Int, lives:Int = 3):Void {
+    if (id <= 0 || id > rounds.length) {
+      backToTitle();
+      return;
+    }
     var roundFactory = rounds[id - 1];
     if (roundFactory != null) {
       var round = roundFactory(id, lives);
