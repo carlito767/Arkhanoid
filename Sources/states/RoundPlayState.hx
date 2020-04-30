@@ -20,7 +20,7 @@ class RoundPlayState extends RoundState {
   override function postUpdate():Void {
     if (round.bricks.isEmpty()) {
       // You win!
-      game.switchToRound(round.id + 1);
+      game.state = new RoundEndState(game, round);
     }
     else if (round.balls.isEmpty()) {
       // You lose!

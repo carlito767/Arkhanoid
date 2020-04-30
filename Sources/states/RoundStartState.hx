@@ -8,6 +8,12 @@ using AnimationExtension;
 using Graphics2Extension;
 
 class RoundStartState extends RoundState {
+  static inline var DISPLAY_ROUND_FRAME = 60;
+  static inline var DISPLAY_READY_FRAME = DISPLAY_ROUND_FRAME + 60;
+  static inline var NO_DISPLAY_FRAME = DISPLAY_READY_FRAME + 50;
+  static inline var PADDLE_FRAME = NO_DISPLAY_FRAME + 10;
+  static inline var START_FRAME = PADDLE_FRAME + 60;
+
   var displayCount:Int = 0;
 
   public function new(game:Game, round:Round) {
@@ -21,14 +27,14 @@ class RoundStartState extends RoundState {
     g2.font = game.MAIN_FONT;
     g2.fontSize = 18;
     // Display round name
-    if (displayCount > 100 && displayCount < 311) {
+    if (displayCount >= DISPLAY_ROUND_FRAME && displayCount < NO_DISPLAY_FRAME) {
       g2.centerString('Round ${round.id}', 600);
     }
-    // Display 'ready'
-    if (displayCount > 200 && displayCount < 311) {
-      g2.centerString('ready', 650);
+    // Display 'Ready'
+    if (displayCount >= DISPLAY_READY_FRAME && displayCount < NO_DISPLAY_FRAME) {
+      g2.centerString('Ready', 650);
     }
-    if (displayCount == 201) {
+    if (displayCount == PADDLE_FRAME) {
       // Create paddle
       var paddle = round.createPaddle();
 
@@ -46,12 +52,12 @@ class RoundStartState extends RoundState {
         brick.animation = 'brick_${brick.color}'.loadAnimation(4, -1);
       }
     }
-    if (displayCount > 201 && round.paddle.animation == null) {
+    if (displayCount > PADDLE_FRAME && round.paddle.animation == null) {
       var animation1 = 'paddle_pulsate'.loadAnimation(4, 80);
       var animation2 = animation1.reverse();
       round.paddle.animation = animation1.chain(animation2);
     }
-    if (displayCount == 340) {
+    if (displayCount == START_FRAME) {
       // Release the anchor
       round.releaseBalls();
       // Normal gameplay begins
