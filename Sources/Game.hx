@@ -6,9 +6,8 @@ import kha.System;
 
 import input.Input;
 import rounds.Round;
-import rounds.Round1;
-import rounds.Round2;
 import rounds.RoundDataFactory;
+import rounds.RoundsBuilder;
 import states.DemoState;
 import states.GameStartState;
 import states.StartState;
@@ -24,7 +23,7 @@ class Game {
   public final ALT_FONT = Assets.fonts.optimus;
 
   public var input(default,null):Input = new Input();
-  public var rounds(default,null):Array<RoundDataFactory>;
+  public var rounds(default,never):Array<RoundDataFactory> = RoundsBuilder.rounds();
   public var state:State;
 
   public var score(default,set):Int = 0;
@@ -54,13 +53,6 @@ class Game {
       v:1,
       highScore:0,
     });
-
-    // Initialize rounds
-    // https://haxe.org/blog/codingtips-new/
-    rounds = [
-      Round1.generate,
-      Round2.generate,
-    ];
 
     // Initialize state
     backToTitle();
