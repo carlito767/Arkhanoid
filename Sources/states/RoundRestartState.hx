@@ -13,7 +13,7 @@ class RoundRestartState extends RoundState {
 
   override function postUpdate():Void {
     if (updateCount > 100) {
-      round.lives--;
+      if (!game.godMode) round.lives--;
       game.state = new GameStartState(game, round);
     }
 

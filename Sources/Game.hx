@@ -30,10 +30,14 @@ class Game {
   function set_score(value) {
     if (value > settings.highScore) {
       settings.highScore = value;
-      Settings.write(SETTINGS_FILENAME, settings);
+      if (!godMode) {
+        Settings.write(SETTINGS_FILENAME, settings);
+      }
     }
     return score = value;
   }
+
+  public var godMode:Bool = false;
 
   static inline var SETTINGS_FILENAME = 'settings';
   var settings:GameSettings;
@@ -132,6 +136,12 @@ class Game {
     var highScoreString = Std.string(settings.highScore);
     var highScoreWidth = g2.font.width(g2.fontSize, highScoreString);
     g2.drawString(highScoreString, WIDTH - highScoreWidth - 10, 100);
+
+    // Display "God Mode"
+    if (godMode) {
+      g2.color = Color.Yellow;
+      g2.drawString('GOD MODE', WIDTH - 165, 125);
+    }
 
     // Display state
     state.render(g2);

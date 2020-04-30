@@ -39,6 +39,7 @@ class StartState implements State {
     game.input.clearBindings();
     #if debug
     game.input.bind(Key(D), (_)->{ game.showDemo(); });
+    game.input.bind(Key(G), (_)->{ game.godMode = !game.godMode; });
     game.input.bind(Key(H), (_)->{ game.resetHighScore(); });
     #end
     game.input.bind(Mouse(Left), (_)->{ game.switchMouseLock(); });
