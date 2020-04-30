@@ -5,8 +5,6 @@ import rounds.Round;
 class RoundEndState extends RoundState {
   static inline var NEXT_ROUND_FRAME = 60;
 
-  var updateCount:Int = 0;
-
   public function new(game:Game, round:Round) {
     super(game, round);
 
@@ -14,10 +12,8 @@ class RoundEndState extends RoundState {
   }
 
   override function postUpdate():Void {
-    if (updateCount == NEXT_ROUND_FRAME) {
+    if (frame == NEXT_ROUND_FRAME) {
       game.switchToRound(round.id + 1);
     }
-
-    updateCount++;
   }
 }

@@ -16,8 +16,7 @@ typedef PowerupData = {
 
 class StartState implements State {
   var game:Game;
-
-  var displayCount:Int = 0;
+  var frame:Int = 0;
 
   var powerups:Array<PowerupData>;
   var roundId:Int;
@@ -103,7 +102,7 @@ class StartState implements State {
     }
 
     // Display instructions
-    var switchColor = (displayCount % 30) > 14;
+    var switchColor = (frame % 30) > 14;
 
     var instruction1 = 'SPACEBAR TO START';
     g2.fontSize = 65;
@@ -131,8 +130,8 @@ class StartState implements State {
       g2.centerString(taito[i], 700 + (i * g2.fontSize));
     }
 
-    // Update display count
-    displayCount++;
+    // Update frame
+    frame++;
   }
 
   //
