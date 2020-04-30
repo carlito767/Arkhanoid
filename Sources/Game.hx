@@ -8,7 +8,7 @@ import input.Input;
 import rounds.Round;
 import rounds.Round1;
 import rounds.Round2;
-import rounds.RoundFactory;
+import rounds.RoundDataFactory;
 import states.DemoState;
 import states.GameStartState;
 import states.StartState;
@@ -24,7 +24,7 @@ class Game {
   public final ALT_FONT = Assets.fonts.optimus;
 
   public var input(default,null):Input = new Input();
-  public var rounds(default,null):Array<RoundFactory>;
+  public var rounds(default,null):Array<RoundDataFactory>;
   public var state:State;
 
   public var score(default,set):Int = 0;
@@ -58,11 +58,8 @@ class Game {
     // Initialize rounds
     // https://haxe.org/blog/codingtips-new/
     rounds = [
-      Round1.new,
-      Round2.new,
-      Round.new,
-      Round.new,
-      Round.new,
+      Round1.generate,
+      Round2.generate,
     ];
 
     // Initialize state
@@ -102,9 +99,9 @@ class Game {
       backToTitle();
       return;
     }
-    var roundFactory = rounds[id - 1];
-    if (roundFactory != null) {
-      var round = roundFactory(id, lives);
+    var roundDataFactory = rounds[id - 1];
+    if (roundDataFactory != null) {
+      var round = new Round(id, lives, roundDataFactory());
       state = new GameStartState(this, round);
     }
   }

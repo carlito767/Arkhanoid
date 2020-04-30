@@ -2,10 +2,15 @@ package rounds;
 
 import kha.Color;
 
-class Round2 extends Round {
-  public function new(id:Int, lives:Int) {
-    super(id, lives);
+import sprites.Brick;
 
-    backgroundColor = Color.fromBytes(0, 128, 0);
+class Round2 {
+  public static function generate():RoundData {
+    var bricks:List<Brick> = new List();
+
+    return {
+      backgroundColor:Color.fromBytes(0, 128, 0),
+      bricks:bricks,
+    }
   }
 }

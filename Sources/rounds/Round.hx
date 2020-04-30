@@ -17,14 +17,15 @@ using AnimationExtension;
 
 class Round {
   public var id(default,null):Int;
-  public var backgroundColor(default,null):Color = Color.Black;
   public var lives:Int;
+
+  public var backgroundColor(default,null):Color;
+  public var bricks(default,null):List<Brick>;
 
   public var moveLeft:Bool = false;
   public var moveRight:Bool = false;
 
   public var balls(default,null):List<Ball> = new List();
-  public var bricks(default,null):List<Brick> = new List();
   public var paddle:Null<Paddle> = null;
 
   // The number of pixels from the top of the screen before the top edge starts.
@@ -65,9 +66,11 @@ class Round {
   var edgeRight:Edge;
   var edgeTop:Edge;
 
-  public function new(id:Int, lives:Int) {
+  public function new(id:Int, lives:Int, roundData:RoundData) {
     this.id = id;
     this.lives = lives;
+    backgroundColor = roundData.backgroundColor;
+    bricks = roundData.bricks;
 
     // Create edges
     var imageLeft = Assets.images.edge_left;
@@ -77,8 +80,11 @@ class Round {
     edgeRight = {image:imageRight, x:Game.WIDTH - imageRight.width, y:TOP_OFFSET};
     edgeTop = {image:imageTop, x:imageLeft.width, y:TOP_OFFSET};
 
-    // Create bricks
-    bricks = createBricks();
+    // Add offset to bricks coordinates
+    for (brick in bricks) {
+      brick.x += boundLeft;
+      brick.y += boundTop;
+    }
   }
 
   public function update(game:Game):Void {
@@ -278,10 +284,6 @@ class Round {
   //
   // Bricks
   //
-
-  function createBricks():List<Brick> {
-    return new List<Brick>();
-  }
 
   function brickValue(brick:Brick):Int {
     return switch brick.color {
