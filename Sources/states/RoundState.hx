@@ -7,7 +7,6 @@ import rounds.Round;
 class RoundState implements State {
   var game:Game;
   var round:Round;
-  var frame:Int = 0;
 
   public function new(game:Game, round:Round) {
     this.game = game;
@@ -17,7 +16,6 @@ class RoundState implements State {
   public final function update():Void {
     round.update(game);
     postUpdate();
-    frame++;
   }
 
   public final function render(g2:Graphics):Void {
