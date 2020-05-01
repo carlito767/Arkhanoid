@@ -147,9 +147,9 @@ class StartState implements State {
   }
 
   function number(type:InputEventType):Null<Int> {
-    switch (type) {
+    switch type {
       case Key(key):
-        switch (key) {
+        switch key {
           case Zero | One | Two | Three | Four | Five | Six | Seven | Eight | Nine:
             return key - Zero;
           case Numpad0 | Numpad1 | Numpad2 | Numpad3 | Numpad4 | Numpad5 | Numpad6 | Numpad7 | Numpad8 | Numpad9:

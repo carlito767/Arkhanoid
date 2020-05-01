@@ -83,7 +83,7 @@ class Collisions {
     }
 
     // Determine new angle
-    switch (collideTrue.length) {
+    switch collideTrue.length {
       case 1 | 3 | 4:
         angle += (angle > PI) ? -PI : PI;
         if (collideTrue.length == 1) {

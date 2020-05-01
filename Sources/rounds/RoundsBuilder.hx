@@ -30,13 +30,10 @@ class RoundsBuilder {
   }
 
   static function cook(rawRound:RawRound):RoundData {
-    // Background color
-    var backgroundColor:Color = rawRound.backgroundColor;
-
     // Bricks
     var bricks:List<Brick> = new List();
-    var y = 0;
-    for (row in rawRound.bricks) {
+    for (y in 0...rawRound.bricks.length) {
+      var row = rawRound.bricks[y];
       for (x in 0...row.length) {
         var value = row.charAt(x);
         var color = switch value {
@@ -63,11 +60,10 @@ class RoundsBuilder {
           });
         }
       }
-      y++;
     }
 
     return {
-      backgroundColor:backgroundColor,
+      backgroundColor:rawRound.backgroundColor,
       ballBaseSpeedAdjust:rawRound.ballBaseSpeedAdjust,
       ballSpeedNormalisationRateAdjust:rawRound.ballSpeedNormalisationRateAdjust,
       bricks:bricks

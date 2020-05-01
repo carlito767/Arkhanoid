@@ -86,7 +86,7 @@ class DemoState implements State {
 
   function nextDemo():Void {
     n++;
-    switch (n) {
+    switch n {
       case 1:
         id = 'PADDLES';
         demos = paddles;
