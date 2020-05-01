@@ -153,10 +153,10 @@ class Round {
             collisions.add(bounds(brick));
             bounceStrategy = brick.bounceStrategy;
             speed += BRICK_SPEED_ADJUST;
-            game.score += brickValue(brick);
             brick.collisions++;
             if (brickToDestroy(brick)) {
               bricks.remove(brick);
+              game.score += brickValue(brick);
             }
           }
         }
