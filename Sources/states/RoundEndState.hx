@@ -15,7 +15,7 @@ class RoundEndState extends RoundState {
 
   override function postUpdate():Void {
     if (updateCount == NEXT_ROUND_FRAME) {
-      game.switchToRound(round.id + 1);
+      game.switchToRound(round.id + 1, round.lives);
     }
 
     updateCount++;

@@ -12,12 +12,12 @@ class GameStartState extends RoundState {
     game.input.bind(Key(Backspace), (_)->{ game.backToTitle(); });
     game.input.bind(Key(Subtract), (_)->{
       if (round.id > 1) {
-        game.switchToRound(round.id - 1);
+        game.switchToRound(round.id - 1, round.lives);
       }
     });
     game.input.bind(Key(Add), (_)->{
       if (round.id < game.rounds.length) {
-        game.switchToRound(round.id + 1);
+        game.switchToRound(round.id + 1, round.lives);
       }
     });
     #end
