@@ -10,7 +10,7 @@ class RoundRestartState extends RoundState {
   public function new(game:Game, round:Round) {
     super(game, round);
 
-    round.paddle = null;
+    round.reset();
   }
 
   override function postUpdate():Void {

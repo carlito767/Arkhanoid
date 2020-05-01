@@ -96,6 +96,11 @@ class Round {
     }
   }
 
+  public function reset():Void {
+    balls.clear();
+    paddle = null;
+  }
+
   public function update(game:Game):Void {
     // Update paddle
     var dx = 0.0;
@@ -171,7 +176,7 @@ class Round {
         }
 
         // Detect collision between ball and paddle
-        if (collide(ball, paddle)) {
+        if (paddle != null && collide(ball, paddle)) {
           collisions.add(bounds(paddle));
           bounceStrategy = paddle.bounceStrategy;
         }

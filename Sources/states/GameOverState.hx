@@ -10,8 +10,7 @@ class GameOverState extends RoundState {
   public function new(game:Game, round:Round) {
     super(game, round);
 
-    round.balls.clear();
-    round.paddle = null;
+    round.reset();
   }
 
   override function postUpdate():Void {
