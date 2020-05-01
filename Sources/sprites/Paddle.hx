@@ -2,5 +2,5 @@ package sprites;
 
 typedef Paddle = {
   > Sprite,
-  speed:Int,
+  speed:Float,
 }

@@ -48,7 +48,7 @@ class Round {
   // Increase in speed caused by colliding with a wall.
   static inline var WALL_SPEED_ADJUST = 0.2;
   // The speed the paddle moves.
-  static inline var PADDLE_SPEED = 10;
+  static inline var PADDLE_SPEED = 10.0;
   // The speed the powerup moves.
   static inline var POWERUP_SPEED = 3.0;
 
