@@ -7,6 +7,8 @@ import sprites.Brick;
 
 typedef RawRound = {
   backgroundColor:Color,
+  ?ballBaseSpeedAdjust:Float,
+  ?ballSpeedNormalisationRateAdjust:Float,
   bricks:Array<String>,
 }
 
@@ -66,6 +68,8 @@ class RoundsBuilder {
 
     return {
       backgroundColor:backgroundColor,
+      ballBaseSpeedAdjust:rawRound.ballBaseSpeedAdjust,
+      ballSpeedNormalisationRateAdjust:rawRound.ballSpeedNormalisationRateAdjust,
       bricks:bricks
     };
   }
@@ -114,6 +118,8 @@ class RoundsBuilder {
   static function round3():RawRound {
     return {
       backgroundColor:Color.fromBytes(0, 0, 128),
+      ballBaseSpeedAdjust:-2.0,
+      ballSpeedNormalisationRateAdjust:0.05,
       bricks:[
         '',
         '',

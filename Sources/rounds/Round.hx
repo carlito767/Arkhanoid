@@ -66,10 +66,19 @@ class Round {
   var edgeRight:Edge;
   var edgeTop:Edge;
 
+  var ballBaseSpeed:Float = BALL_BASE_SPEED;
+  var ballSpeedNormalisationRate = BALL_SPEED_NORMALISATION_RATE;
+
   public function new(id:Int, lives:Int, roundData:RoundData) {
     this.id = id;
     this.lives = lives;
     backgroundColor = roundData.backgroundColor;
+    if (roundData.ballBaseSpeedAdjust != null) {
+      ballBaseSpeed += roundData.ballBaseSpeedAdjust;
+    }
+    if (roundData.ballSpeedNormalisationRateAdjust != null) {
+      ballSpeedNormalisationRate += roundData.ballSpeedNormalisationRateAdjust;
+    }
     bricks = roundData.bricks;
 
     // Create edges
@@ -175,9 +184,8 @@ class Round {
         }
 
         // Determine new speed for ball
-        // TODO: adjust ball base speed and normalisation rate per round (see Round 3)
         if (collisions.isEmpty()) {
-          ball.speed += (ball.speed > BALL_BASE_SPEED) ? -BALL_SPEED_NORMALISATION_RATE : BALL_SPEED_NORMALISATION_RATE;
+          ball.speed += (ball.speed > ballBaseSpeed) ? -ballSpeedNormalisationRate : ballSpeedNormalisationRate;
         }
         else {
           ball.speed = Math.min(ball.speed + speed, BALL_TOP_SPEED);
@@ -264,7 +272,7 @@ class Round {
       y:0,
       anchored:false,
       angle:BALL_START_ANGLE_RAD,
-      speed:BALL_BASE_SPEED,
+      speed:ballBaseSpeed,
     };
     balls.add(ball);
     return ball;
@@ -276,7 +284,7 @@ class Round {
       if (ball.anchored) {
         ball.anchored = false;
         ball.angle = BALL_START_ANGLE_RAD;
-        ball.speed = BALL_BASE_SPEED;
+        ball.speed = ballBaseSpeed;
       }
     }
   }
