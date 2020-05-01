@@ -4,11 +4,14 @@ import kha.Assets;
 import kha.Color;
 import kha.graphics2.Graphics;
 
+import AbstractEnumTools;
 import BounceStrategies.BounceStrategy;
 import sprites.Ball;
 import sprites.Brick;
 import sprites.Edge;
 import sprites.Paddle;
+import sprites.Powerup;
+import sprites.PowerupType;
 import sprites.Sprite;
 using AnimationExtension;
 using Collisions;
@@ -25,6 +28,7 @@ class Round {
 
   public var balls(default,null):List<Ball> = new List();
   public var paddle:Null<Paddle> = null;
+  var powerups(default,null):List<Powerup> = new List();
 
   // The number of pixels from the top of the screen before the top edge starts.
   static inline var TOP_OFFSET = 150;
@@ -45,6 +49,8 @@ class Round {
   static inline var WALL_SPEED_ADJUST = 0.2;
   // The speed the paddle moves.
   static inline var PADDLE_SPEED = 10;
+  // The speed the powerup moves.
+  static inline var POWERUP_SPEED = 3.0;
 
   // (left,top)
   //      +---------------+
@@ -169,6 +175,12 @@ class Round {
             if (brickToDestroy(brick)) {
               bricks.remove(brick);
               game.score += brickValue(brick);
+              // TODO: use a powerup strategy
+              var types = AbstractEnumTools.getValues(PowerupType);
+              var type = Math.floor(Math.random() * types.length);
+              var powerup = createPowerup(types[type]);
+              powerup.x = brick.x;
+              powerup.y = brick.y;
             }
           }
         }
@@ -203,9 +215,22 @@ class Round {
       }
     }
 
+    // Update powerups
+    for (powerup in powerups) {
+      powerup.y += powerup.speed;
+      if (powerup.y >= boundBottom) {
+        powerups.remove(powerup);
+      }
+    }
+
     // Animate the bricks
     for (brick in bricks) {
       animateSprite(brick);
+    }
+
+    // Animate the powerups
+    for (powerup in powerups) {
+      animateSprite(powerup);
     }
   }
 
@@ -243,6 +268,11 @@ class Round {
     // Draw ball
     for (ball in balls) {
       g2.drawImage(ball.image, ball.x, ball.y);
+    }
+
+    // Draw powerups
+    for (powerup in powerups) {
+      g2.drawImage(powerup.image, powerup.x, powerup.y);
     }
   }
 
@@ -334,5 +364,24 @@ class Round {
       speed:PADDLE_SPEED,
     };
     return paddle;
+  }
+
+  //
+  // Powerup
+  //
+
+  function createPowerup(type:PowerupType):Powerup {
+    var animation = 'powerup_${Std.string(type).toLowerCase()}'.loadAnimation(4);
+    var image = animation.tick();
+    var powerup:Powerup = {
+      image:image,
+      animation:animation,
+      x:0,
+      y:0,
+      type:type,
+      speed:POWERUP_SPEED,
+    };
+    powerups.add(powerup);
+    return powerup;
   }
 }
