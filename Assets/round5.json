@@ -1,0 +1,22 @@
+{
+  "backgroundColor":"0xff000080",
+  "bricks":[
+    "",
+    "   Y     Y",
+    "   Y     Y",
+    "    Y   Y",
+    "    Y   Y",
+    "   SSSSSSS",
+    "   SSSSSSS",
+    "  SSRSSSRSS",
+    "  SSRSSSRSS",
+    " SSSSSSSSSSS",
+    " SSSSSSSSSSS",
+    " SSSSSSSSSSS",
+    " S SSSSSSS S",
+    " S S     S S",
+    " S S     S S",
+    "    SS SS",
+    "    SS SS"
+  ]
+}
