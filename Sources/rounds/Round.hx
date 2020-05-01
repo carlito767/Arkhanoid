@@ -4,7 +4,7 @@ import kha.Assets;
 import kha.Color;
 import kha.graphics2.Graphics;
 
-import Collisions.BounceStrategy;
+import BounceStrategies.BounceStrategy;
 import Collisions.Bounds;
 import Collisions.bounds;
 import Collisions.collide;
@@ -185,7 +185,7 @@ class Round {
         if (!collisions.isEmpty()) {
           ball.angle = (collisions.length == 1 && bounceStrategy != null)
             ? bounceStrategy(ball, collisions.first())
-            : Collisions.bounceStrategy(ball, collisions);
+            : BounceStrategies.bounceStrategy(ball, collisions);
         }
 
         // Determine new speed for ball
@@ -332,7 +332,7 @@ class Round {
       image:image,
       x:(boundRight + boundLeft - image.width) * 0.5,
       y:boundBottom - image.height - 30,
-      bounceStrategy:Collisions.bounceStrategyPaddle,
+      bounceStrategy:BounceStrategies.bounceStrategyPaddle,
       speed:PADDLE_SPEED,
     };
     return paddle;

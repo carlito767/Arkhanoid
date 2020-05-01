@@ -2,7 +2,7 @@ package sprites;
 
 import kha.Image;
 
-import Collisions.BounceStrategy;
+import BounceStrategies.BounceStrategy;
 
 typedef Sprite = {
   image:Image,
