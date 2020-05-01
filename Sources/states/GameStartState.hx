@@ -22,6 +22,11 @@ class GameStartState extends RoundState {
     });
     #end
     game.input.bind(Mouse(Left), (_)->{ game.switchMouseLock(); });
+    game.input.bind(Key(R), (_)->{
+      if (round.lives > 1) {
+        game.state = new RoundRestartState(game, round);
+      }
+    });
   }
 
   override function postUpdate():Void {
