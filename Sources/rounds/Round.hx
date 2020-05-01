@@ -277,6 +277,21 @@ class Round {
   }
 
   //
+  // Win/Lose conditions
+  //
+
+  public function win():Bool {
+    for (brick in bricks) {
+      if (brickValue(brick) != 0) return false;
+    }
+    return true;
+  }
+
+  public function lose():Bool {
+    return balls.isEmpty();
+  }
+
+  //
   // Animation
   //
 
