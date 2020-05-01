@@ -1,10 +1,7 @@
 import Math.PI;
 
-import Collisions;
-import Collisions.bounds;
-import Collisions.isInside;
-import Collisions.isIntersecting;
 import sprites.Ball;
+using Collisions;
 
 typedef BounceStrategy = Ball->Bounds->Float;
 
@@ -27,12 +24,12 @@ class BounceStrategies {
     var bl = false;
     var br = false;
 
-    var bb = bounds(ball);
+    var bb = ball.bounds();
     for (collision in collisions) {
-      tl = tl || isInside(collision, {x:bb.left, y:bb.top});
-      tr = tr || isInside(collision, {x:bb.right, y:bb.top});
-      bl = bl || isInside(collision, {x:bb.left, y:bb.bottom});
-      br = br || isInside(collision, {x:bb.right, y:bb.bottom});
+      tl = tl || collision.isInside({x:bb.left, y:bb.top});
+      tr = tr || collision.isInside({x:bb.right, y:bb.top});
+      bl = bl || collision.isInside({x:bb.left, y:bb.bottom});
+      br = br || collision.isInside({x:bb.right, y:bb.bottom});
     }
 
     var collideTrue = [tl, tr, bl, br].filter((v)->{v == true;});
@@ -129,11 +126,11 @@ class BounceStrategies {
     // The bounce angles corresponding to each of the 6 segments
     var angles = [220, 245, 260, 280, 295, 320]; // degrees
 
-    var bb = bounds(ball);
+    var bb = ball.bounds();
     for (i in 0...6) {
       var left = collision.left + segmentSize * i;
       var width = (i == 5) ? (collision.right - collision.left) - (segmentSize * 5) : segmentSize;
-      if (isIntersecting(bb, {left:left, top:collision.top, right:left + width, bottom:collision.bottom})) {
+      if (bb.isIntersecting({left:left, top:collision.top, right:left + width, bottom:collision.bottom})) {
         return (PI / 180 * angles[i]);
       }
     }

@@ -5,15 +5,13 @@ import kha.Color;
 import kha.graphics2.Graphics;
 
 import BounceStrategies.BounceStrategy;
-import Collisions.Bounds;
-import Collisions.bounds;
-import Collisions.collide;
 import sprites.Ball;
 import sprites.Brick;
 import sprites.Edge;
 import sprites.Paddle;
 import sprites.Sprite;
 using AnimationExtension;
+using Collisions;
 
 class Round {
   public var id(default,null):Int;
@@ -132,10 +130,10 @@ class Round {
       }
 
       // Detect collision between paddle and edges
-      if (collide(paddle, edgeLeft, dx)) {
+      if (paddle.collide(edgeLeft, dx)) {
         dx = boundLeft - paddle.x;
       }
-      if (collide(paddle, edgeRight, dx)) {
+      if (paddle.collide(edgeRight, dx)) {
         dx = boundRight - (paddle.x + paddle.image.width);
       }
 
@@ -154,8 +152,8 @@ class Round {
 
         // Detect collision between ball and edges
         for (edge in [edgeLeft, edgeRight, edgeTop]) {
-          if (collide(ball, edge)) {
-            collisions.add(bounds(edge));
+          if (ball.collide(edge)) {
+            collisions.add(edge.bounds());
             bounceStrategy = edge.bounceStrategy;
             speed += WALL_SPEED_ADJUST;
           }
@@ -163,8 +161,8 @@ class Round {
 
         // Detect collision between ball and bricks
         for (brick in bricks) {
-          if (collide(ball, brick)) {
-            collisions.add(bounds(brick));
+          if (ball.collide(brick)) {
+            collisions.add(brick.bounds());
             bounceStrategy = brick.bounceStrategy;
             speed += BRICK_SPEED_ADJUST;
             brick.collisions++;
@@ -176,8 +174,8 @@ class Round {
         }
 
         // Detect collision between ball and paddle
-        if (paddle != null && collide(ball, paddle)) {
-          collisions.add(bounds(paddle));
+        if (paddle != null && ball.collide(paddle)) {
+          collisions.add(paddle.bounds());
           bounceStrategy = paddle.bounceStrategy;
         }
 
