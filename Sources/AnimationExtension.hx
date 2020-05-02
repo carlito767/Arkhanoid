@@ -28,11 +28,12 @@ class AnimationExtension {
   }
 
   public static function pulsateAnimation(id:String, step:Int, cycle:Int = 0):Animation {
-    var animation1 = loadAnimation(id, step, cycle);
-    var animation2 = loadAnimation(id, step, cycle);
-    animation2.images.reverse();
-    animation1.images = animation1.images.concat(animation2.images);
-    return animation1;
+    var animation = loadAnimation(id, step, cycle);
+    var n = animation.images.length;
+    for (i in 1...n+1) {
+      animation.images.push(animation.images[n - i]);
+    }
+    return animation;
   }
 
   public static function over(animation:Animation):Bool {

@@ -9,8 +9,6 @@ class RoundEndState extends RoundState {
 
   public function new(game:Game, round:Round) {
     super(game, round);
-
-    round.balls.clear();
   }
 
   override function postUpdate():Void {

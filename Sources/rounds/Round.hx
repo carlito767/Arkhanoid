@@ -26,9 +26,10 @@ class Round {
   public var moveLeft:Bool = false;
   public var moveRight:Bool = false;
 
-  public var balls(default,null):List<Ball> = new List();
   public var paddle:Null<Paddle> = null;
-  var powerups(default,null):List<Powerup> = new List();
+
+  var balls:List<Ball> = new List();
+  var powerups:List<Powerup> = new List();
 
   // The number of pixels from the top of the screen before the top edge starts.
   static inline var TOP_OFFSET = 150;
@@ -71,7 +72,7 @@ class Round {
   var edgeTop:Edge;
 
   var ballBaseSpeed:Float = BALL_BASE_SPEED;
-  var ballSpeedNormalisationRate = BALL_SPEED_NORMALISATION_RATE;
+  var ballSpeedNormalisationRate:Float = BALL_SPEED_NORMALISATION_RATE;
 
   public function new(id:Int, lives:Int, roundData:RoundData) {
     this.id = id;
