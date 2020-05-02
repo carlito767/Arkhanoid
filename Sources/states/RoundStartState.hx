@@ -52,10 +52,8 @@ class RoundStartState extends RoundState {
         brick.animation = 'brick_${brick.color}'.loadAnimation(4, -1);
       }
     }
-    if (displayCount > PADDLE_FRAME && round.paddle.animation == null) {
-      var animation1 = 'paddle_pulsate'.loadAnimation(4, 80);
-      var animation2 = animation1.reverse();
-      round.paddle.animation = animation1.chain(animation2);
+    if (displayCount > PADDLE_FRAME && round.paddle.animation.over()) {
+      round.paddle.animation = 'paddle_pulsate'.pulsateAnimation(4, 80);
     }
     if (displayCount == START_FRAME) {
       // Release the anchor

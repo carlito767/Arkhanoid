@@ -1,7 +1,7 @@
 import kha.Image;
 
 typedef Animation = {
-  images:List<Image>,
+  images:Array<Image>,
   // Animate each 'step' frames
   step:Int,
   // Frames in cycle (-1 for no cycle)

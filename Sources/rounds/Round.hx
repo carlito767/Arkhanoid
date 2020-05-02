@@ -300,13 +300,7 @@ class Round {
   function animateSprite(sprite:Sprite):Void {
     if (sprite.animation == null) return;
 
-    var image = sprite.animation.tick();
-    if (image == null) {
-      sprite.animation = null;
-    }
-    else {
-      sprite.image = image;
-    }
+    sprite.image = sprite.animation.tick();
   }
 
   //

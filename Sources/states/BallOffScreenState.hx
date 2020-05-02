@@ -16,7 +16,7 @@ class BallOffScreenState extends RoundState {
   }
 
   override function postUpdate():Void {
-    if (round.paddle.animation == null) {
+    if (round.paddle.animation.over()) {
       if (round.lives > 1) {
         // Try again!
         game.state = new RoundRestartState(game, round);

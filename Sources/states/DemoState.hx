@@ -32,12 +32,12 @@ class DemoState implements State {
 
     paddles = [
       {anim:'paddle_materialize'.loadAnimation(4), name:'materialize'},
-      {anim:chainAnimation('paddle_pulsate', 4, 80), name:'normal (pulsate)'},
-      {anim:chainAnimation('paddle_wide', 4), name:'wide'},
-      {anim:chainAnimation('paddle_wide_pulsate', 4, 80), name:'wide (pulsate)'},
+      {anim:'paddle_pulsate'.pulsateAnimation(4, 80), name:'normal (pulsate)'},
+      {anim:'paddle_wide'.pulsateAnimation(4), name:'wide'},
+      {anim:'paddle_wide_pulsate'.pulsateAnimation(4, 80), name:'wide (pulsate)'},
       {anim:'paddle_laser'.loadAnimation(4), name:'laser'},
-      {anim:chainAnimation('paddle_laser_pulsate', 4, 80), name:'laser (pulsate)'},
-      {anim:chainAnimation('paddle_explode', 4), name:'explode'},
+      {anim:'paddle_laser_pulsate'.pulsateAnimation(4, 80), name:'laser (pulsate)'},
+      {anim:'paddle_explode'.pulsateAnimation(4), name:'explode'},
     ];
 
     enemies = [
@@ -108,11 +108,5 @@ class DemoState implements State {
       default:
         game.backToTitle();
     }
-  }
-
-  function chainAnimation(id:String, step:Int, cycle:Int = 0):Animation {
-    var animation1 = id.loadAnimation(step, cycle);
-    var animation2 = animation1.reverse();
-    return animation1.chain(animation2);
   }
 }
