@@ -3,6 +3,7 @@ package rounds;
 import kha.Assets;
 
 import sprites.Brick;
+import sprites.BrickColor;
 
 typedef RawRound = {
   backgroundColor:Int,
@@ -16,11 +17,11 @@ class RoundsBuilder {
     var rounds:Array<RoundDataFactory> = [];
 
     // Load rounds from JSON files (Assets/round*.json)
-    var i = 1;
+    var id = 1;
     while (true) {
-      var blob = Assets.blobs.get('round${i}_json');
+      var blob = Assets.blobs.get('round${id}_json');
       if (blob == null) break;
-      trace('Loading round $i...');
+      trace('Loading round $id...');
 
       // TODO: check data
       var data = null;
@@ -33,42 +34,43 @@ class RoundsBuilder {
       }
       if (data == null) break;
 
-      rounds.push(()->{ return cook(data); });
+      rounds.push(()->{ return cook(id, data); });
 
-      i++;
+      id++;
     }
 
     return rounds;
   }
 
-  static function cook(rawRound:RawRound):RoundData {
+  static function cook(id:Int, rawRound:RawRound):RoundData {
     // Bricks
     var bricks:List<Brick> = new List();
     for (y in 0...rawRound.bricks.length) {
       var row = rawRound.bricks[y];
       for (x in 0...row.length) {
         var value = row.charAt(x);
-        var color = switch value {
-          case 'B': 'blue';
-          case 'C': 'cyan';
-          case '*': 'gold';
-          case 'G': 'green';
-          case 'O': 'orange';
-          case 'P': 'pink';
-          case 'R': 'red';
-          case 'S': 'silver';
-          case 'W': 'white';
-          case 'Y': 'yellow';
-          case _: '';
+        var color:Null<BrickColor> = switch value {
+          case 'B': blue;
+          case 'C': cyan;
+          case '*': gold;
+          case 'G': green;
+          case 'O': orange;
+          case 'P': pink;
+          case 'R': red;
+          case 'S': silver;
+          case 'W': white;
+          case 'Y': yellow;
+          case _: null;
         };
-        if (color != '') {
+        if (color != null) {
           var image = Assets.images.get('brick_${color}');
           bricks.add({
             image:image,
             x:x * image.width,
             y:y * image.height,
             color:color,
-            collisions:0,
+            life:brickLife(id, color),
+            value:brickValue(id, color),
           });
         }
       }
@@ -80,5 +82,28 @@ class RoundsBuilder {
       ballSpeedNormalisationRateAdjust:rawRound.ballSpeedNormalisationRateAdjust,
       bricks:bricks
     };
+  }
+
+  static function brickLife(id:Int, color:BrickColor):Int {
+    return switch color {
+      case gold: 0; // indestructable
+      case silver: Math.ceil(id / 8) + 1;
+      case _: 1;
+    }
+  }
+
+  static function brickValue(id:Int, color:BrickColor):Int {
+    return switch color {
+      case blue: 100;
+      case cyan: 70;
+      case gold: 0;
+      case green: 80;
+      case orange: 60;
+      case pink: 110;
+      case red: 90;
+      case silver: 50 * id;
+      case white: 50;
+      case yellow: 120;
+    }
   }
 }

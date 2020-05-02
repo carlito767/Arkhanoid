@@ -2,6 +2,8 @@ package sprites;
 
 typedef Brick = {
   > Sprite,
+  // TODO: remove color
   color:BrickColor,
-  collisions:Int,
+  life:Int,
+  value:Int,
 }

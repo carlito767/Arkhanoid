@@ -171,16 +171,18 @@ class Round {
             collisions.add(brick.bounds());
             bounceStrategy = brick.bounceStrategy;
             speed += BRICK_SPEED_ADJUST;
-            brick.collisions++;
-            if (brickToDestroy(brick)) {
-              bricks.remove(brick);
-              game.score += brickValue(brick);
-              // TODO: use a powerup strategy
-              var types = AbstractEnumTools.getValues(PowerupType);
-              var type = Math.floor(Math.random() * types.length);
-              var powerup = createPowerup(types[type]);
-              powerup.x = brick.x;
-              powerup.y = brick.y;
+            if (brick.life > 0) {
+              brick.life--;
+              if (brick.life == 0) {
+                bricks.remove(brick);
+                game.score += brick.value;
+                // TODO: use a powerup strategy
+                var types = AbstractEnumTools.getValues(PowerupType);
+                var type = Math.floor(Math.random() * types.length);
+                var powerup = createPowerup(types[type]);
+                powerup.x = brick.x;
+                powerup.y = brick.y;
+              }
             }
           }
         }
@@ -282,7 +284,7 @@ class Round {
 
   public function win():Bool {
     for (brick in bricks) {
-      if (brickValue(brick) != 0) return false;
+      if (brick.value > 0) return false;
     }
     return true;
   }
@@ -334,33 +336,6 @@ class Round {
         ball.angle = BALL_START_ANGLE_RAD;
         ball.speed = ballBaseSpeed;
       }
-    }
-  }
-
-  //
-  // Bricks
-  //
-
-  function brickValue(brick:Brick):Int {
-    return switch brick.color {
-      case blue: 100;
-      case cyan: 70;
-      case gold: 0;
-      case green: 80;
-      case orange: 60;
-      case pink: 110;
-      case red: 90;
-      case silver: 50 * id;
-      case white: 50;
-      case yellow: 120;
-    }
-  }
-
-  function brickToDestroy(brick:Brick):Bool {
-    return switch brick.color {
-      case gold: false;
-      case silver: brick.collisions > Math.ceil(id / 8);
-      default: true;
     }
   }
 
