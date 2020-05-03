@@ -41,6 +41,7 @@ class StartState implements State {
     game.input.bind(Key(A), (_)->{ game.showDemoAnimation(); });
     game.input.bind(Key(G), (_)->{ game.godMode = !game.godMode; });
     game.input.bind(Key(H), (_)->{ game.resetHighScore(); });
+    game.input.bind(Key(W), (_)->{ game.showDemoWorld(); });
     #end
     game.input.bind(Mouse(Left), (_)->{ game.switchMouseLock(); });
     game.input.bind(Key(Backspace), (_)->{

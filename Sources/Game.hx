@@ -9,6 +9,7 @@ import rounds.Round;
 import rounds.RoundDataFactory;
 import rounds.RoundsBuilder;
 import states.DemoAnimationState;
+import states.DemoWorldState;
 import states.GameStartState;
 import states.StartState;
 import states.State;
@@ -73,6 +74,10 @@ class Game {
 
   public function showDemoAnimation():Void {
     state = new DemoAnimationState(this);
+  }
+
+  public function showDemoWorld():Void {
+    state = new DemoWorldState(this);
   }
 
   public function switchMouseLock():Void {
