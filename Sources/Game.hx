@@ -8,7 +8,7 @@ import input.Input;
 import rounds.Round;
 import rounds.RoundDataFactory;
 import rounds.RoundsBuilder;
-import states.DemoState;
+import states.DemoAnimationState;
 import states.GameStartState;
 import states.StartState;
 import states.State;
@@ -71,8 +71,8 @@ class Game {
     Settings.write(SETTINGS_FILENAME, settings);
   }
 
-  public function showDemo():Void {
-    state = new DemoState(this);
+  public function showDemoAnimation():Void {
+    state = new DemoAnimationState(this);
   }
 
   public function switchMouseLock():Void {

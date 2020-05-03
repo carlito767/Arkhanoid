@@ -12,7 +12,7 @@ typedef Demo = {
   name:String,
 }
 
-class DemoState implements State {
+class DemoAnimationState implements State {
   var game:Game;
 
   var n:Int = 0;
@@ -59,7 +59,7 @@ class DemoState implements State {
     game.input.clearBindings();
     game.input.bind(Mouse(Left), (_)->{ game.switchMouseLock(); });
     game.input.bind(Key(Backspace), (_)->{ game.backToTitle(); });
-    game.input.bind(Key(D), (_)->{ nextDemo(); });
+    game.input.bind(Key(A), (_)->{ nextDemo(); });
   }
 
   public function update():Void {
