@@ -1,5 +1,6 @@
 package world;
 
+import components.Anchored;
 import components.Animation;
 import components.Image;
 import components.Position;
@@ -7,6 +8,10 @@ import components.PowerupType;
 import components.Velocity;
 
 class Entity {
+  @:isVar public var anchored(get,set):Null<Anchored>;
+  inline function get_anchored() { return world.anchored.get(id); }
+  inline function set_anchored(value) { world.anchored.set(id, value); return anchored = value; }
+
   @:isVar public var animation(get,set):Null<Animation>;
   inline function get_animation() { return world.animations.get(id); }
   inline function set_animation(value) { world.animations.set(id, value); return animation = value; }

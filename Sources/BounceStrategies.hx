@@ -1,9 +1,9 @@
 import Math.PI;
 
-import sprites.Ball;
+import world.Entity;
 using Collisions;
 
-typedef BounceStrategy = Ball->Bounds->Float;
+typedef BounceStrategy = Entity->Bounds->Float;
 
 class BounceStrategies {
   static var HALF_PI(get,never):Float; static inline function get_HALF_PI() { return PI * 0.5; };
@@ -13,10 +13,10 @@ class BounceStrategies {
   // to apply to the angle of bounce for top/bottom/side collisions of the ball
   static inline var RANDOM_RANGE = 0.1; // radians
 
-  public static function bounceStrategy(ball:Ball, collisions:List<Bounds>):Float {
-    if (collisions.isEmpty()) return ball.angle;
+  public static function bounceStrategy(ball:Entity, collisions:List<Bounds>):Float {
+    if (collisions.isEmpty()) return ball.velocity.angle;
 
-    var angle = ball.angle;
+    var angle = ball.velocity.angle;
 
     // Determine collide points
     var tl = false;
@@ -118,7 +118,7 @@ class BounceStrategies {
     return angle;
   }
 
-  public static function bounceStrategyPaddle(ball:Ball, collision:Bounds):Float {
+  public static function bounceStrategyPaddle(ball:Entity, collision:Bounds):Float {
     // Logically break the paddle into 6 segments
     // Each segment triggers a different angle of bounce
     var segmentSize = Math.floor((collision.right - collision.left) / 6);
@@ -136,6 +136,6 @@ class BounceStrategies {
     }
 
     // Should never happen
-    return ball.angle;
+    return ball.velocity.angle;
   }
 }

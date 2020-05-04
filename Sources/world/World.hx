@@ -1,5 +1,6 @@
 package world;
 
+import components.Anchored;
 import components.Animation;
 import components.Image;
 import components.Position;
@@ -9,7 +10,13 @@ import components.Velocity;
 typedef Entities = Array<Entity>;
 
 class World {
+  // Views
+  public inline function all(?kind:Kind):Entities {
+    return filter((_)->{ return true; }, kind);
+  }
+
   // Components
+  public var anchored:Map<EntityId,Anchored> = new Map();
   public var animations:Map<EntityId,Animation> = new Map();
   public var images:Map<EntityId,Image> = new Map();
   public var positions:Map<EntityId,Position> = new Map();
@@ -62,9 +69,10 @@ class World {
     return new Entity(this, id);
   }
 
-  public function remove(e:Entity) {
+  public function remove(e:Entity):Void {
     var id = e.id;
 
+    anchored.remove(id);
     animations.remove(id);
     images.remove(id);
     positions.remove(id);
@@ -74,6 +82,10 @@ class World {
     kinds.remove(id);
 
     entities.remove(id);
+  }
+
+  public function removeAll(?kind:Kind):Void {
+    for (e in all(kind)) remove(e);
   }
 
   function filter(f:Entity->Bool, ?kind:Kind):Entities {

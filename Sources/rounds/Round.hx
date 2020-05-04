@@ -5,11 +5,11 @@ import kha.Color;
 import kha.graphics2.Graphics;
 
 import BounceStrategies.BounceStrategy;
-import sprites.Ball;
 import sprites.Brick;
 import sprites.Edge;
 import sprites.Paddle;
 import sprites.Sprite;
+import world.Entity;
 import world.World;
 using AnimationExtension;
 using Collisions;
@@ -26,8 +26,6 @@ class Round {
   public var moveRight:Bool = false;
 
   public var paddle:Null<Paddle> = null;
-
-  var balls:List<Ball> = new List();
 
   // The number of pixels from the top of the screen before the top edge starts.
   static inline var TOP_OFFSET = 150;
@@ -72,6 +70,7 @@ class Round {
   var ballBaseSpeed:Float = BALL_BASE_SPEED;
   var ballSpeedNormalisationRate:Float = BALL_SPEED_NORMALISATION_RATE;
 
+  static inline var KIND_BALL = 'ball';
   static inline var KIND_POWERUP = 'powerup';
 
   var world:World = new World();
@@ -104,7 +103,7 @@ class Round {
   }
 
   public function reset():Void {
-    balls.clear();
+    world.removeAll(KIND_BALL);
     paddle = null;
   }
 
@@ -115,7 +114,8 @@ class Round {
     }
 
     // Update movables
-    for (e in world.movables()) {
+    // TODO: not only for powerups
+    for (e in world.movables(KIND_POWERUP)) {
       e.position.x += e.velocity.speed * Math.cos(e.velocity.angle);
       e.position.y += e.velocity.speed * Math.sin(e.velocity.angle);
     }
@@ -133,10 +133,10 @@ class Round {
       if (dw != 0 || dh != 0) {
         paddle.x += dw;
         paddle.y += dh;
-        for (ball in balls) {
+        for (ball in world.all(KIND_BALL)) {
           if (ball.anchored) {
-            ball.x += dw;
-            ball.y += dh;
+            ball.position.x += dw;
+            ball.position.y += dh;
           }
         }
       }
@@ -150,10 +150,10 @@ class Round {
       }
 
       // Detect collision between paddle and edges
-      if (paddle.collide(edgeLeft, dx)) {
+      if (paddle.collideSS(edgeLeft, dx)) {
         dx = boundLeft - paddle.x;
       }
-      if (paddle.collide(edgeRight, dx)) {
+      if (paddle.collideSS(edgeRight, dx)) {
         dx = boundRight - (paddle.x + paddle.image.width);
       }
 
@@ -161,9 +161,9 @@ class Round {
     }
 
     // Update balls
-    for (ball in balls) {
+    for (ball in world.all(KIND_BALL)) {
       if (ball.anchored) {
-        ball.x += dx;
+        ball.position.x += dx;
       }
       else {
         var collisions = new List<Bounds>();
@@ -172,8 +172,8 @@ class Round {
 
         // Detect collision between ball and edges
         for (edge in [edgeLeft, edgeRight, edgeTop]) {
-          if (ball.collide(edge)) {
-            collisions.add(edge.bounds());
+          if (ball.collideES(edge)) {
+            collisions.add(edge.boundsS());
             bounceStrategy = edge.bounceStrategy;
             speed += WALL_SPEED_ADJUST;
           }
@@ -181,8 +181,8 @@ class Round {
 
         // Detect collision between ball and bricks
         for (brick in bricks) {
-          if (ball.collide(brick)) {
-            collisions.add(brick.bounds());
+          if (ball.collideES(brick)) {
+            collisions.add(brick.boundsS());
             bounceStrategy = brick.bounceStrategy;
             speed += BRICK_SPEED_ADJUST;
             if (brick.life > 0) {
@@ -199,31 +199,31 @@ class Round {
         }
 
         // Detect collision between ball and paddle
-        if (paddle != null && ball.collide(paddle)) {
-          collisions.add(paddle.bounds());
+        if (paddle != null && ball.collideES(paddle)) {
+          collisions.add(paddle.boundsS());
           bounceStrategy = paddle.bounceStrategy;
         }
 
         // Determine new angle for ball
         if (!collisions.isEmpty()) {
-          ball.angle = (collisions.length == 1 && bounceStrategy != null)
+          ball.velocity.angle = (collisions.length == 1 && bounceStrategy != null)
             ? bounceStrategy(ball, collisions.first())
             : BounceStrategies.bounceStrategy(ball, collisions);
         }
 
         // Determine new speed for ball
         if (collisions.isEmpty()) {
-          ball.speed += (ball.speed > ballBaseSpeed) ? -ballSpeedNormalisationRate : ballSpeedNormalisationRate;
+          ball.velocity.speed += (ball.velocity.speed > ballBaseSpeed) ? -ballSpeedNormalisationRate : ballSpeedNormalisationRate;
         }
         else {
-          ball.speed = Math.min(ball.speed + speed, BALL_TOP_SPEED);
+          ball.velocity.speed = Math.min(ball.velocity.speed + speed, BALL_TOP_SPEED);
         }
 
-        ball.x += ball.speed * Math.cos(ball.angle);
-        ball.y += ball.speed * Math.sin(ball.angle);
+        ball.position.x += ball.velocity.speed * Math.cos(ball.velocity.angle);
+        ball.position.y += ball.velocity.speed * Math.sin(ball.velocity.angle);
 
-        if (ball.y >= boundBottom) {
-          balls.remove(ball);
+        if (ball.position.y >= boundBottom) {
+          world.remove(ball);
         }
       }
     }
@@ -276,11 +276,6 @@ class Round {
     if (paddle != null) {
       g2.drawImage(paddle.image, paddle.x, paddle.y);
     }
-
-    // Draw ball
-    for (ball in balls) {
-      g2.drawImage(ball.image, ball.x, ball.y);
-    }
   }
 
   //
@@ -295,7 +290,7 @@ class Round {
   }
 
   public function lose():Bool {
-    return balls.isEmpty();
+    return world.all(KIND_BALL).length == 0;
   }
 
   //
@@ -313,27 +308,21 @@ class Round {
   //
 
   @:allow(states.State)
-  function createBall():Ball {
-    var image = Assets.images.ball;
-    var ball:Ball = {
-      image:image,
-      x:0,
-      y:0,
-      anchored:false,
-      angle:BALL_START_ANGLE_RAD,
-      speed:ballBaseSpeed,
-    };
-    balls.add(ball);
-    return ball;
+  function createBall():Entity {
+    var e = world.add(KIND_BALL);
+    e.image = Assets.images.ball;
+    e.position = {x:0, y:0};
+    e.velocity = {angle:BALL_START_ANGLE_RAD, speed:ballBaseSpeed};
+    return e;
   }
 
   @:allow(states.State)
   function releaseBalls():Void {
-    for (ball in balls) {
+    for (ball in world.all(KIND_BALL)) {
       if (ball.anchored) {
         ball.anchored = false;
-        ball.angle = BALL_START_ANGLE_RAD;
-        ball.speed = ballBaseSpeed;
+        ball.velocity.angle = BALL_START_ANGLE_RAD;
+        ball.velocity.speed = ballBaseSpeed;
       }
     }
   }

@@ -40,8 +40,8 @@ class RoundStartState extends RoundState {
 
       // Create ball
       var ball = round.createBall();
-      ball.x = paddle.x + paddle.image.width * 0.5;
-      ball.y = paddle.y - ball.image.height;
+      ball.position.x = paddle.x + paddle.image.width * 0.5;
+      ball.position.y = paddle.y - ball.image.height;
       ball.anchored = true;
 
       // Animate the paddle materializing onto the screen
