@@ -3,6 +3,7 @@ package world;
 import components.Animation;
 import components.Image;
 import components.Position;
+import components.PowerupType;
 import components.Velocity;
 
 class Entity {
@@ -17,6 +18,10 @@ class Entity {
   @:isVar public var position(get,set):Null<Position>;
   inline function get_position() { return world.positions.get(id); }
   inline function set_position(value) { world.positions.set(id, value); return position = value; }
+
+  @:isVar public var powerupType(get,set):Null<PowerupType>;
+  inline function get_powerupType() { return world.powerupTypes.get(id); }
+  inline function set_powerupType(value) { world.powerupTypes.set(id, value); return powerupType = value; }
 
   @:isVar public var velocity(get,set):Null<Velocity>;
   inline function get_velocity() { return world.velocities.get(id); }

@@ -3,6 +3,7 @@ package world;
 import components.Animation;
 import components.Image;
 import components.Position;
+import components.PowerupType;
 import components.Velocity;
 
 typedef Entities = Array<Entity>;
@@ -12,6 +13,7 @@ class World {
   public var animations:Map<EntityId,Animation> = new Map();
   public var images:Map<EntityId,Image> = new Map();
   public var positions:Map<EntityId,Position> = new Map();
+  public var powerupTypes:Map<EntityId,PowerupType> = new Map();
   public var velocities:Map<EntityId,Velocity> = new Map();
 
   public var kinds:Map<EntityId,Kind> = new Map();
@@ -66,6 +68,7 @@ class World {
     animations.remove(id);
     images.remove(id);
     positions.remove(id);
+    powerupTypes.remove(id);
     velocities.remove(id);
 
     kinds.remove(id);

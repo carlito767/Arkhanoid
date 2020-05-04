@@ -9,11 +9,11 @@ import sprites.Ball;
 import sprites.Brick;
 import sprites.Edge;
 import sprites.Paddle;
-import sprites.Powerup;
-import sprites.PowerupType;
 import sprites.Sprite;
+import world.World;
 using AnimationExtension;
 using Collisions;
+using MathExtension;
 
 class Round {
   public var id(default,null):Int;
@@ -28,7 +28,6 @@ class Round {
   public var paddle:Null<Paddle> = null;
 
   var balls:List<Ball> = new List();
-  var powerups:List<Powerup> = new List();
 
   // The number of pixels from the top of the screen before the top edge starts.
   static inline var TOP_OFFSET = 150;
@@ -73,6 +72,10 @@ class Round {
   var ballBaseSpeed:Float = BALL_BASE_SPEED;
   var ballSpeedNormalisationRate:Float = BALL_SPEED_NORMALISATION_RATE;
 
+  static inline var KIND_POWERUP = 'powerup';
+
+  var world:World = new World();
+
   public function new(id:Int, lives:Int, roundData:RoundData) {
     this.id = id;
     this.lives = lives;
@@ -106,6 +109,17 @@ class Round {
   }
 
   public function update(game:Game):Void {
+    // Update animatables
+    for (e in world.animatables()) {
+      e.image = e.animation.tick();
+    }
+
+    // Update movables
+    for (e in world.movables()) {
+      e.position.x += e.velocity.speed * Math.cos(e.velocity.angle);
+      e.position.y += e.velocity.speed * Math.sin(e.velocity.angle);
+    }
+
     // Update paddle
     var dx = 0.0;
     if (paddle != null) {
@@ -214,22 +228,16 @@ class Round {
       }
     }
 
-    // Update powerups
-    for (powerup in powerups) {
-      powerup.y += powerup.speed;
-      if (powerup.y >= boundBottom) {
-        powerups.remove(powerup);
-      }
-    }
-
     // Animate the bricks
     for (brick in bricks) {
       animateSprite(brick);
     }
 
-    // Animate the powerups
-    for (powerup in powerups) {
-      animateSprite(powerup);
+    // Remove out of bounds
+    for (e in world.drawables()) {
+      if (e.position.y >= boundBottom) {
+        world.remove(e);
+      }
     }
   }
 
@@ -239,6 +247,11 @@ class Round {
     g2.fillRect(0, TOP_OFFSET, Game.WIDTH, Game.HEIGHT - TOP_OFFSET);
 
     g2.color = Color.White;
+
+    // Draw drawables
+    for (e in world.drawables()) {
+      g2.drawImage(e.image, e.position.x, e.position.y);
+    }
 
     // Draw edges
     for (edge in [edgeLeft, edgeRight, edgeTop]) {
@@ -267,11 +280,6 @@ class Round {
     // Draw ball
     for (ball in balls) {
       g2.drawImage(ball.image, ball.x, ball.y);
-    }
-
-    // Draw powerups
-    for (powerup in powerups) {
-      g2.drawImage(powerup.image, powerup.x, powerup.y);
     }
   }
 
@@ -353,17 +361,10 @@ class Round {
   //
 
   function createPowerup(brick:Brick):Void {
-    var animation = 'powerup_${Std.string(brick.powerupType).toLowerCase()}'.loadAnimation(4);
-    var image = animation.tick();
-    var powerup:Powerup = {
-      image:image,
-      animation:animation,
-      x:brick.x,
-      y:brick.y,
-      type:brick.powerupType,
-      speed:POWERUP_SPEED,
-      angle:0.0,
-    };
-    powerups.add(powerup);
+    var e = world.add(KIND_POWERUP);
+    e.animation = 'powerup_${Std.string(brick.powerupType).toLowerCase()}'.loadAnimation(4);
+    e.position = {x:brick.x, y:brick.y};
+    e.powerupType = brick.powerupType;
+    e.velocity = {speed:POWERUP_SPEED, angle:90.toRadians()};
   }
 }
