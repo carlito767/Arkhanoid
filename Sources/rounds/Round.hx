@@ -343,6 +343,7 @@ class Round {
       y:boundBottom - image.height - 30,
       bounceStrategy:BounceStrategies.bounceStrategyPaddle,
       speed:PADDLE_SPEED,
+      angle:0.0,
     };
     return paddle;
   }
@@ -361,6 +362,7 @@ class Round {
       y:brick.y,
       type:brick.powerupType,
       speed:POWERUP_SPEED,
+      angle:0.0,
     };
     powerups.add(powerup);
   }

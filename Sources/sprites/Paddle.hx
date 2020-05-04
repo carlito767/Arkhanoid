@@ -1,6 +1,8 @@
 package sprites;
 
+import components.Velocity;
+
 typedef Paddle = {
   > Sprite,
-  speed:Float,
+  > Velocity,
 }

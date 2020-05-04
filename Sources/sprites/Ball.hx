@@ -1,8 +1,10 @@
 package sprites;
 
+import components.Anchored;
+import components.Velocity;
+
 typedef Ball = {
   > Sprite,
-  anchored:Bool,
-  angle:Float,
-  speed:Float,
+  > Velocity,
+  anchored:Anchored,
 }

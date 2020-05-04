@@ -1,13 +1,13 @@
 package sprites;
 
-import kha.Image;
-
-import BounceStrategies.BounceStrategy;
+import components.Animation;
+import components.BounceStrategy;
+import components.Image;
+import components.Position;
 
 typedef Sprite = {
+  > Position,
   image:Image,
   ?animation:Animation,
-  x:Float,
-  y:Float,
   ?bounceStrategy:BounceStrategy,
 }
