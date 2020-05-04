@@ -4,7 +4,6 @@ import kha.Assets;
 import kha.Color;
 import kha.graphics2.Graphics;
 
-import AbstractEnumTools;
 import BounceStrategies.BounceStrategy;
 import sprites.Ball;
 import sprites.Brick;
@@ -177,12 +176,9 @@ class Round {
               if (brick.life == 0) {
                 bricks.remove(brick);
                 game.score += brick.value;
-                // TODO: use a powerup strategy
-                var types = AbstractEnumTools.getValues(PowerupType);
-                var type = Math.floor(Math.random() * types.length);
-                var powerup = createPowerup(types[type]);
-                powerup.x = brick.x;
-                powerup.y = brick.y;
+                if (brick.powerupType != null) {
+                  createPowerup(brick);
+                }
               }
             }
           }
@@ -355,18 +351,17 @@ class Round {
   // Powerup
   //
 
-  function createPowerup(type:PowerupType):Powerup {
-    var animation = 'powerup_${Std.string(type).toLowerCase()}'.loadAnimation(4);
+  function createPowerup(brick:Brick):Void {
+    var animation = 'powerup_${Std.string(brick.powerupType).toLowerCase()}'.loadAnimation(4);
     var image = animation.tick();
     var powerup:Powerup = {
       image:image,
       animation:animation,
-      x:0,
-      y:0,
-      type:type,
+      x:brick.x,
+      y:brick.y,
+      type:brick.powerupType,
       speed:POWERUP_SPEED,
     };
     powerups.add(powerup);
-    return powerup;
   }
 }

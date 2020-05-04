@@ -4,6 +4,7 @@ import kha.Assets;
 
 import sprites.Brick;
 import sprites.BrickColor;
+import sprites.PowerupType;
 
 typedef RawRound = {
   backgroundColor:Int,
@@ -13,6 +14,8 @@ typedef RawRound = {
 }
 
 class RoundsBuilder {
+  static final POWERUP_TYPES = AbstractEnumTools.getValues(PowerupType);
+
   public static function rounds() {
     var rounds:Array<RoundDataFactory> = [];
 
@@ -74,6 +77,13 @@ class RoundsBuilder {
           });
         }
       }
+    }
+
+    // Powerups
+    // TODO: use a powerup strategy
+    for (brick in bricks) {
+      var powerType = Math.floor(Math.random() * POWERUP_TYPES.length);
+      brick.powerupType = POWERUP_TYPES[powerType];
     }
 
     return {
