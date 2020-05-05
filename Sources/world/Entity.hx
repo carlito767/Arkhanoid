@@ -1,20 +1,24 @@
 package world;
 
-import components.Anchored;
 import components.Animation;
+import components.BounceStrategy;
 import components.Image;
 import components.Position;
 import components.PowerupType;
 import components.Velocity;
 
 class Entity {
-  @:isVar public var anchored(get,set):Null<Anchored>;
+  @:isVar public var anchored(get,set):Null<Bool>;
   inline function get_anchored() { return world.anchored.get(id); }
   inline function set_anchored(value) { world.anchored.set(id, value); return anchored = value; }
 
   @:isVar public var animation(get,set):Null<Animation>;
   inline function get_animation() { return world.animations.get(id); }
   inline function set_animation(value) { world.animations.set(id, value); return animation = value; }
+
+  @:isVar public var bounceStrategy(get,set):Null<BounceStrategy>;
+  inline function get_bounceStrategy() { return world.bounceStrategies.get(id); }
+  inline function set_bounceStrategy(value) { world.bounceStrategies.set(id, value); return bounceStrategy = value; }
 
   @:isVar public var image(get,set):Null<Image>;
   inline function get_image() { return world.images.get(id); }

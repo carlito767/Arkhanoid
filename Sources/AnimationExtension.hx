@@ -1,7 +1,7 @@
 import kha.Assets;
-import kha.Image;
 
 import components.Animation;
+import components.Image;
 
 class AnimationExtension {
   public static function loadAnimation(id:String, step:Int, cycle:Int = 0):Animation {

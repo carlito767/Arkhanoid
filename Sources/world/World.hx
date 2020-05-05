@@ -1,7 +1,7 @@
 package world;
 
-import components.Anchored;
 import components.Animation;
+import components.BounceStrategy;
 import components.Image;
 import components.Position;
 import components.PowerupType;
@@ -16,8 +16,9 @@ class World {
   }
 
   // Components
-  public var anchored:Map<EntityId,Anchored> = new Map();
+  public var anchored:Map<EntityId,Bool> = new Map();
   public var animations:Map<EntityId,Animation> = new Map();
+  public var bounceStrategies:Map<EntityId,BounceStrategy> = new Map();
   public var images:Map<EntityId,Image> = new Map();
   public var lives:Map<EntityId,Int> = new Map();
   public var positions:Map<EntityId,Position> = new Map();
@@ -76,24 +77,26 @@ class World {
   }
 
   public function remove(e:Entity):Void {
-    var id = e.id;
+    reset(e);
+    kinds.remove(e.id);
+    entities.remove(e.id);
+  }
 
+  public function removeAll(?kind:Kind):Void {
+    for (e in all(kind)) remove(e);
+  }
+
+  public function reset(e:Entity):Void {
+    var id = e.id;
     anchored.remove(id);
     animations.remove(id);
+    bounceStrategies.remove(id);
     images.remove(id);
     lives.remove(id);
     positions.remove(id);
     powerupTypes.remove(id);
     values.remove(id);
     velocities.remove(id);
-
-    kinds.remove(id);
-
-    entities.remove(id);
-  }
-
-  public function removeAll(?kind:Kind):Void {
-    for (e in all(kind)) remove(e);
   }
 
   function filter(f:Entity->Bool, ?kind:Kind):Entities {

@@ -1,7 +1,5 @@
 package components;
 
-import kha.Image;
-
 typedef Animation = {
   images:Array<Image>,
   // Animate each 'step' frames

@@ -4,10 +4,8 @@ import kha.Assets;
 import kha.Color;
 import kha.graphics2.Graphics;
 
-import BounceStrategies.BounceStrategy;
+import components.BounceStrategy;
 import components.Bounds;
-import sprites.Paddle;
-import sprites.Sprite;
 import world.Entity;
 import world.World;
 using AnimationExtension;
@@ -23,10 +21,8 @@ class Round {
   public var moveLeft:Bool = false;
   public var moveRight:Bool = false;
 
-  public var paddle:Null<Paddle> = null;
-
   // The number of pixels from the top of the screen before the top edge starts.
-  static inline var TOP_OFFSET = 150;
+  static inline var TOP_OFFSET = 150.0;
   // The angle the ball initially moves off the paddle.
   static inline var BALL_START_ANGLE_RAD = 5.0; // radians
   // The speed that the ball will always try to arrive at.
@@ -53,6 +49,7 @@ class Round {
   static inline var KIND_BALL = 'ball';
   static inline var KIND_BRICK = 'brick';
   static inline var KIND_EDGE = 'edge';
+  static inline var KIND_PADDLE = 'paddle';
   static inline var KIND_POWERUP = 'powerup';
 
   var bounds:Bounds;
@@ -60,6 +57,9 @@ class Round {
   var edgeLeft:Entity;
   var edgeRight:Entity;
   var edgeTop:Entity;
+
+  @:allow(states.State)
+  var paddle:Entity;
 
   var world:World = new World();
 
@@ -76,7 +76,7 @@ class Round {
 
     // Define bounds
     bounds = {
-      left:0,
+      left:0.0,
       top:TOP_OFFSET,
       right:Game.WIDTH,
       bottom:Game.HEIGHT,
@@ -105,39 +105,56 @@ class Round {
       e.value = brick.value;
       e.powerupType = brick.powerupType;
     }
+
+    // Create paddle
+    paddle = world.add(KIND_PADDLE);
   }
 
   public function reset():Void {
     world.removeAll(KIND_BALL);
-    paddle = null;
+    world.reset(paddle);
   }
 
   public function update(game:Game):Void {
+    // Detect paddle movement
+    if (moveLeft && !moveRight) {
+      paddle.velocity = {speed:PADDLE_SPEED, angle:180.toRadians()};
+    }
+    else if (moveRight && !moveLeft) {
+      paddle.velocity = {speed:PADDLE_SPEED, angle:0.0};
+    }
+    else {
+      paddle.velocity = null;
+    }
+
     // Update animatables
     for (e in world.animatables()) {
-      e.image = e.animation.tick();
+      // TODO: animate all kinds
+      if (e.kind != KIND_PADDLE) {
+        e.image = e.animation.tick();
+      }
     }
 
     // Update movables
-    // TODO: not only for powerups
-    for (e in world.movables(KIND_POWERUP)) {
-      e.position.x += e.velocity.speed * Math.cos(e.velocity.angle);
-      e.position.y += e.velocity.speed * Math.sin(e.velocity.angle);
+    for (e in world.movables()) {
+      // TODO: move all kinds
+      if (e.kind != KIND_BALL) {
+        e.position.x += e.velocity.speed * Math.cos(e.velocity.angle);
+        e.position.y += e.velocity.speed * Math.sin(e.velocity.angle);
+      }
     }
 
-    // Update paddle
-    var dx = 0.0;
-    if (paddle != null) {
-      // Animate paddle
+    // Animate paddle
+    if (paddle.animation != null && paddle.position != null) {
       var image = paddle.image;
-      animateSprite(paddle);
+      paddle.image = paddle.animation.tick();
 
       // Center paddle (and adjust its balls)
       var dw = (image.width - paddle.image.width) * 0.5;
       var dh = (image.height - paddle.image.height) * 0.5;
       if (dw != 0 || dh != 0) {
-        paddle.x += dw;
-        paddle.y += dh;
+        paddle.position.x += dw;
+        paddle.position.y += dh;
         for (ball in world.all(KIND_BALL)) {
           if (ball.anchored) {
             ball.position.x += dw;
@@ -145,24 +162,19 @@ class Round {
           }
         }
       }
+    }
 
-      // Detect paddle movement
-      if (moveLeft && !moveRight) {
-        dx = -paddle.speed;
+    // Detect collision between paddle and edges
+    var dx = 0.0;
+    if (paddle.image != null && paddle.position != null) {
+      if (paddle.collide(edgeLeft)) {
+        dx = edgeLeft.position.x + edgeLeft.image.width - paddle.position.x;
       }
-      else if (moveRight && !moveLeft) {
-        dx = paddle.speed;
-      }
-
-      // Detect collision between paddle and edges
-      if (paddle.collideSE(edgeLeft, dx)) {
-        dx = edgeLeft.position.x + edgeLeft.image.width - paddle.x;
-      }
-      if (paddle.collideSE(edgeRight, dx)) {
-        dx = edgeRight.position.x - (paddle.x + paddle.image.width);
+      if (paddle.collide(edgeRight)) {
+        dx = edgeRight.position.x - (paddle.position.x + paddle.image.width);
       }
 
-      paddle.x += dx;
+      paddle.position.x += dx;
     }
 
     // Update balls
@@ -202,8 +214,8 @@ class Round {
         }
 
         // Detect collision between ball and paddle
-        if (paddle != null && ball.collideES(paddle)) {
-          collisions.add(paddle.boundsS());
+        if (paddle != null && ball.collide(paddle)) {
+          collisions.add(paddle.bounds());
           bounceStrategy = paddle.bounceStrategy;
         }
 
@@ -255,11 +267,6 @@ class Round {
       g2.drawImage(paddleLife, x, y);
       x += paddleLife.width + 5;
     }
-
-    // Draw paddle
-    if (paddle != null) {
-      g2.drawImage(paddle.image, paddle.x, paddle.y);
-    }
   }
 
   //
@@ -275,16 +282,6 @@ class Round {
 
   public function lose():Bool {
     return world.all(KIND_BALL).length == 0;
-  }
-
-  //
-  // Animation
-  //
-
-  function animateSprite(sprite:Sprite):Void {
-    if (sprite.animation == null) return;
-
-    sprite.image = sprite.animation.tick();
   }
 
   //
@@ -327,16 +324,15 @@ class Round {
   //
 
   @:allow(states.State)
-  function createPaddle():Paddle {
-    var image = Assets.images.paddle;
-    paddle = {
-      image:image,
-      x:(bounds.right + bounds.left - image.width) * 0.5,
-      y:bounds.bottom - image.height - 30,
-      bounceStrategy:BounceStrategies.bounceStrategyPaddle,
-      speed:PADDLE_SPEED,
-      angle:0.0,
+  function createPaddle():Entity {
+    world.reset(paddle);
+    paddle.animation = 'paddle_materialize'.loadAnimation(2, -1);
+    paddle.image = paddle.animation.tick();
+    paddle.position = {
+      x:(bounds.right + bounds.left - paddle.image.width) * 0.5,
+      y:bounds.bottom - paddle.image.height - 30
     };
+    paddle.bounceStrategy = BounceStrategies.bounceStrategyPaddle;
     return paddle;
   }
 

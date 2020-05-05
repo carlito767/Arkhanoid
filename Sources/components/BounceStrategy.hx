@@ -1,3 +1,5 @@
 package components;
 
-typedef BounceStrategy = BounceStrategies.BounceStrategy;
+import world.Entity;
+
+typedef BounceStrategy = (Entity,Bounds)->Float;

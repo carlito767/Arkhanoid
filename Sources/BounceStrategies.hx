@@ -4,8 +4,6 @@ import components.Bounds;
 import world.Entity;
 using Collisions;
 
-typedef BounceStrategy = Entity->Bounds->Float;
-
 class BounceStrategies {
   static var HALF_PI(get,never):Float; static inline function get_HALF_PI() { return PI * 0.5; };
   static var TWO_PI(get,never):Float; static inline function get_TWO_PI() { return PI * 2; };
