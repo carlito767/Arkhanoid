@@ -5,8 +5,8 @@ import kha.Color;
 import kha.System;
 import kha.graphics2.Graphics;
 
-import Collisions.Bounds;
 import Collisions.isIntersecting;
+import components.Bounds;
 import world.World;
 using AnimationExtension;
 using MathExtension;
@@ -42,7 +42,7 @@ class DemoWorldState implements State {
       e.position.x += e.velocity.speed * Math.cos(e.velocity.angle);
       e.position.y += e.velocity.speed * Math.sin(e.velocity.angle);
 
-      var bounds:Bounds = { left:e.position.x, top:e.position.y, right:e.position.x, bottom:e.position.y };
+      var bounds:Bounds = {left:e.position.x, top:e.position.y, right:e.position.x, bottom:e.position.y};
       if (e.image != null) {
         bounds.left -= e.image.width * 0.5;
         bounds.top -= e.image.height * 0.5;

@@ -1,5 +1,6 @@
 import Math.PI;
 
+import components.Bounds;
 import world.Entity;
 using Collisions;
 

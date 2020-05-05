@@ -71,6 +71,10 @@ class World {
     return new Entity(this, id);
   }
 
+  public function get(id:EntityId):Entity {
+    return new Entity(this, id);
+  }
+
   public function remove(e:Entity):Void {
     var id = e.id;
 

@@ -1,13 +1,7 @@
+import components.Bounds;
 import components.Position;
 import sprites.Sprite;
 import world.Entity;
-
-typedef Bounds = {
-  left:Float,
-  top:Float,
-  right:Float,
-  bottom:Float,
-}
 
 class Collisions {
   public static function bounds(e:Entity, ?dx:Float = 0.0, ?dy:Float = 0.0):Bounds {
@@ -36,6 +30,11 @@ class Collisions {
   // TODO: remove (for compatibility)
   public static function collideES(e:Entity, sprite:Sprite, ?dx:Float = 0.0, ?dy:Float = 0.0):Bool {
     return isIntersecting(bounds(e, dx, dy), boundsS(sprite));
+  }
+
+  // TODO: remove (for compatibility)
+  public static function collideSE(sprite:Sprite, e:Entity, ?dx:Float = 0.0, ?dy:Float = 0.0):Bool {
+    return isIntersecting(boundsS(sprite, dx, dy), bounds(e));
   }
 
   // TODO: remove (for compatibility)

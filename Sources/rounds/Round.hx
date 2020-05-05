@@ -5,7 +5,7 @@ import kha.Color;
 import kha.graphics2.Graphics;
 
 import BounceStrategies.BounceStrategy;
-import sprites.Edge;
+import components.Bounds;
 import sprites.Paddle;
 import sprites.Sprite;
 import world.Entity;
@@ -47,30 +47,19 @@ class Round {
   // The speed the powerup moves.
   static inline var POWERUP_SPEED = 3.0;
 
-  // (left,top)
-  //      +---------------+
-  //      |               |
-  //      |               |
-  //      |               |
-  //      |               |
-  //      |               |
-  //      +---------------+
-  //                (right,bottom)
-  var boundLeft(get,never):Float; inline function get_boundLeft() return edgeLeft.x + edgeLeft.image.width;
-  var boundTop(get,never):Float; inline function get_boundTop() return edgeTop.y + edgeTop.image.height;
-  var boundRight(get,never):Float; inline function get_boundRight() return edgeRight.x;
-  var boundBottom(get,never):Float; inline function get_boundBottom() return Game.HEIGHT;
-
-  var edgeLeft:Edge;
-  var edgeRight:Edge;
-  var edgeTop:Edge;
-
   var ballBaseSpeed:Float = BALL_BASE_SPEED;
   var ballSpeedNormalisationRate:Float = BALL_SPEED_NORMALISATION_RATE;
 
   static inline var KIND_BALL = 'ball';
   static inline var KIND_BRICK = 'brick';
+  static inline var KIND_EDGE = 'edge';
   static inline var KIND_POWERUP = 'powerup';
+
+  var bounds:Bounds;
+
+  var edgeLeft:Entity;
+  var edgeRight:Entity;
+  var edgeTop:Entity;
 
   var world:World = new World();
 
@@ -85,20 +74,33 @@ class Round {
       ballSpeedNormalisationRate += roundData.ballSpeedNormalisationRateAdjust;
     }
 
+    // Define bounds
+    bounds = {
+      left:0,
+      top:TOP_OFFSET,
+      right:Game.WIDTH,
+      bottom:Game.HEIGHT,
+    };
+
     // Create edges
-    var imageLeft = Assets.images.edge_left;
-    var imageRight = Assets.images.edge_right;
-    var imageTop = Assets.images.edge_top;
-    edgeLeft = {image:imageLeft, x:0, y:TOP_OFFSET};
-    edgeRight = {image:imageRight, x:Game.WIDTH - imageRight.width, y:TOP_OFFSET};
-    edgeTop = {image:imageTop, x:imageLeft.width, y:TOP_OFFSET};
+    edgeLeft = world.add(KIND_EDGE);
+    edgeLeft.image = Assets.images.edge_left;
+    edgeLeft.position = {x:bounds.left, y:bounds.top};
+
+    edgeRight = world.add(KIND_EDGE);
+    edgeRight.image = Assets.images.edge_right;
+    edgeRight.position = {x:bounds.right - edgeRight.image.width, y:bounds.top};
+
+    edgeTop = world.add(KIND_EDGE);
+    edgeTop.image = Assets.images.edge_top;
+    edgeTop.position = {x:edgeLeft.image.width, y:bounds.top};
 
     // Create bricks
     for (brick in roundData.bricks) {
       var e = world.add(KIND_BRICK);
       e.animation = brick.animation;
       e.image = brick.image;
-      e.position = {x:brick.x + boundLeft, y:brick.y + boundTop};
+      e.position = {x:brick.x + edgeLeft.image.width, y:brick.y + bounds.top};
       e.life = brick.life;
       e.value = brick.value;
       e.powerupType = brick.powerupType;
@@ -153,11 +155,11 @@ class Round {
       }
 
       // Detect collision between paddle and edges
-      if (paddle.collideSS(edgeLeft, dx)) {
-        dx = boundLeft - paddle.x;
+      if (paddle.collideSE(edgeLeft, dx)) {
+        dx = edgeLeft.position.x + edgeLeft.image.width - paddle.x;
       }
-      if (paddle.collideSS(edgeRight, dx)) {
-        dx = boundRight - (paddle.x + paddle.image.width);
+      if (paddle.collideSE(edgeRight, dx)) {
+        dx = edgeRight.position.x - (paddle.x + paddle.image.width);
       }
 
       paddle.x += dx;
@@ -175,8 +177,8 @@ class Round {
 
         // Detect collision between ball and edges
         for (edge in [edgeLeft, edgeRight, edgeTop]) {
-          if (ball.collideES(edge)) {
-            collisions.add(edge.boundsS());
+          if (ball.collide(edge)) {
+            collisions.add(edge.bounds());
             speed += WALL_SPEED_ADJUST;
           }
         }
@@ -222,16 +224,12 @@ class Round {
 
         ball.position.x += ball.velocity.speed * Math.cos(ball.velocity.angle);
         ball.position.y += ball.velocity.speed * Math.sin(ball.velocity.angle);
-
-        if (ball.position.y >= boundBottom) {
-          world.remove(ball);
-        }
       }
     }
 
     // Remove out of bounds
     for (e in world.drawables()) {
-      if (e.position.y >= boundBottom) {
+      if (e.position.y >= bounds.bottom) {
         world.remove(e);
       }
     }
@@ -240,7 +238,7 @@ class Round {
   public function render(g2:Graphics):Void {
     // Draw background
     g2.color = backgroundColor;
-    g2.fillRect(0, TOP_OFFSET, Game.WIDTH, Game.HEIGHT - TOP_OFFSET);
+    g2.fillRect(bounds.left, bounds.top, bounds.right - bounds.left, bounds.bottom - bounds.top);
 
     g2.color = Color.White;
 
@@ -249,15 +247,10 @@ class Round {
       g2.drawImage(e.image, e.position.x, e.position.y);
     }
 
-    // Draw edges
-    for (edge in [edgeLeft, edgeRight, edgeTop]) {
-      g2.drawImage(edge.image, edge.x, edge.y);
-    }
-
     // Draw lives
     var paddleLife = Assets.images.paddle_life;
-    var x = boundLeft;
-    var y = boundBottom - paddleLife.height - 5;
+    var x = edgeLeft.position.x + edgeLeft.image.width;
+    var y = bounds.bottom - paddleLife.height - 5;
     for (i in 1...lives) {
       g2.drawImage(paddleLife, x, y);
       x += paddleLife.width + 5;
@@ -338,8 +331,8 @@ class Round {
     var image = Assets.images.paddle;
     paddle = {
       image:image,
-      x:(boundRight + boundLeft - image.width) * 0.5,
-      y:boundBottom - image.height - 30,
+      x:(bounds.right + bounds.left - image.width) * 0.5,
+      y:bounds.bottom - image.height - 30,
       bounceStrategy:BounceStrategies.bounceStrategyPaddle,
       speed:PADDLE_SPEED,
       angle:0.0,
