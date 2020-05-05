@@ -5,7 +5,6 @@ import kha.Color;
 import kha.graphics2.Graphics;
 
 import BounceStrategies.BounceStrategy;
-import sprites.Brick;
 import sprites.Edge;
 import sprites.Paddle;
 import sprites.Sprite;
@@ -20,7 +19,6 @@ class Round {
   public var lives:Int;
 
   public var backgroundColor(default,null):Color;
-  public var bricks(default,null):List<Brick>;
 
   public var moveLeft:Bool = false;
   public var moveRight:Bool = false;
@@ -71,6 +69,7 @@ class Round {
   var ballSpeedNormalisationRate:Float = BALL_SPEED_NORMALISATION_RATE;
 
   static inline var KIND_BALL = 'ball';
+  static inline var KIND_BRICK = 'brick';
   static inline var KIND_POWERUP = 'powerup';
 
   var world:World = new World();
@@ -85,7 +84,6 @@ class Round {
     if (roundData.ballSpeedNormalisationRateAdjust != null) {
       ballSpeedNormalisationRate += roundData.ballSpeedNormalisationRateAdjust;
     }
-    bricks = roundData.bricks;
 
     // Create edges
     var imageLeft = Assets.images.edge_left;
@@ -95,10 +93,15 @@ class Round {
     edgeRight = {image:imageRight, x:Game.WIDTH - imageRight.width, y:TOP_OFFSET};
     edgeTop = {image:imageTop, x:imageLeft.width, y:TOP_OFFSET};
 
-    // Add offset to bricks coordinates
-    for (brick in bricks) {
-      brick.x += boundLeft;
-      brick.y += boundTop;
+    // Create bricks
+    for (brick in roundData.bricks) {
+      var e = world.add(KIND_BRICK);
+      e.animation = brick.animation;
+      e.image = brick.image;
+      e.position = {x:brick.x + boundLeft, y:brick.y + boundTop};
+      e.life = brick.life;
+      e.value = brick.value;
+      e.powerupType = brick.powerupType;
     }
   }
 
@@ -174,25 +177,23 @@ class Round {
         for (edge in [edgeLeft, edgeRight, edgeTop]) {
           if (ball.collideES(edge)) {
             collisions.add(edge.boundsS());
-            bounceStrategy = edge.bounceStrategy;
             speed += WALL_SPEED_ADJUST;
           }
         }
 
         // Detect collision between ball and bricks
-        for (brick in bricks) {
-          if (ball.collideES(brick)) {
-            collisions.add(brick.boundsS());
-            bounceStrategy = brick.bounceStrategy;
+        for (brick in world.all(KIND_BRICK)) {
+          if (ball.collide(brick)) {
+            collisions.add(brick.bounds());
             speed += BRICK_SPEED_ADJUST;
             if (brick.life > 0) {
               brick.life--;
               if (brick.life == 0) {
-                bricks.remove(brick);
                 game.score += brick.value;
                 if (brick.powerupType != null) {
                   createPowerup(brick);
                 }
+                world.remove(brick);
               }
             }
           }
@@ -228,11 +229,6 @@ class Round {
       }
     }
 
-    // Animate the bricks
-    for (brick in bricks) {
-      animateSprite(brick);
-    }
-
     // Remove out of bounds
     for (e in world.drawables()) {
       if (e.position.y >= boundBottom) {
@@ -258,11 +254,6 @@ class Round {
       g2.drawImage(edge.image, edge.x, edge.y);
     }
 
-    // Draw bricks
-    for (brick in bricks) {
-      g2.drawImage(brick.image, brick.x, brick.y);
-    }
-
     // Draw lives
     var paddleLife = Assets.images.paddle_life;
     var x = boundLeft;
@@ -283,7 +274,7 @@ class Round {
   //
 
   public function win():Bool {
-    for (brick in bricks) {
+    for (brick in world.all(KIND_BRICK)) {
       if (brick.value > 0) return false;
     }
     return true;
@@ -328,6 +319,17 @@ class Round {
   }
 
   //
+  // Bricks
+  //
+
+  @:allow(states.State)
+  function animateBricks():Void {
+    for (brick in world.all(KIND_BRICK)) {
+      brick.animation.reset();
+    }
+  }
+
+  //
   // Paddle
   //
 
@@ -349,10 +351,10 @@ class Round {
   // Powerup
   //
 
-  function createPowerup(brick:Brick):Void {
+  function createPowerup(brick:Entity):Void {
     var e = world.add(KIND_POWERUP);
     e.animation = 'powerup_${Std.string(brick.powerupType).toLowerCase()}'.loadAnimation(4);
-    e.position = {x:brick.x, y:brick.y};
+    e.position = brick.position;
     e.powerupType = brick.powerupType;
     e.velocity = {speed:POWERUP_SPEED, angle:90.toRadians()};
   }

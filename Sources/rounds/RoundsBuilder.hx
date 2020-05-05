@@ -2,9 +2,10 @@ package rounds;
 
 import kha.Assets;
 
-import sprites.Brick;
-import sprites.BrickColor;
-import sprites.PowerupType;
+import components.Brick;
+import components.BrickColor;
+import components.PowerupType;
+using AnimationExtension;
 
 typedef RawRound = {
   backgroundColor:Int,
@@ -66,12 +67,14 @@ class RoundsBuilder {
           case _: null;
         };
         if (color != null) {
-          var image = Assets.images.get('brick_${color}');
+          var animation = 'brick_${color}'.loadAnimation(4, -1);
+          var image = animation.tick();
+          animation.paused = true;
           bricks.add({
+            animation:animation,
             image:image,
             x:x * image.width,
             y:y * image.height,
-            color:color,
             life:brickLife(id, color),
             value:brickValue(id, color),
           });

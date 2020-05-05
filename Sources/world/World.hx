@@ -19,8 +19,10 @@ class World {
   public var anchored:Map<EntityId,Anchored> = new Map();
   public var animations:Map<EntityId,Animation> = new Map();
   public var images:Map<EntityId,Image> = new Map();
+  public var lives:Map<EntityId,Int> = new Map();
   public var positions:Map<EntityId,Position> = new Map();
   public var powerupTypes:Map<EntityId,PowerupType> = new Map();
+  public var values:Map<EntityId,Int> = new Map();
   public var velocities:Map<EntityId,Velocity> = new Map();
 
   public var kinds:Map<EntityId,Kind> = new Map();
@@ -75,8 +77,10 @@ class World {
     anchored.remove(id);
     animations.remove(id);
     images.remove(id);
+    lives.remove(id);
     positions.remove(id);
     powerupTypes.remove(id);
+    values.remove(id);
     velocities.remove(id);
 
     kinds.remove(id);

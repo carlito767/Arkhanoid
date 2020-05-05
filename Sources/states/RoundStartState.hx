@@ -48,9 +48,7 @@ class RoundStartState extends RoundState {
       paddle.animation = 'paddle_materialize'.loadAnimation(2, -1);
 
       // Animate the bricks
-      for (brick in round.bricks) {
-        brick.animation = 'brick_${brick.color}'.loadAnimation(4, -1);
-      }
+      round.animateBricks();
     }
     if (displayCount > PADDLE_FRAME && round.paddle.animation.over()) {
       round.paddle.animation = 'paddle_pulsate'.pulsateAnimation(4, 80);

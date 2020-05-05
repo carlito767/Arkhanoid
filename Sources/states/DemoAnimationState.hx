@@ -3,7 +3,8 @@ package states;
 import kha.Color;
 import kha.graphics2.Graphics;
 
-import sprites.BrickColor;
+import components.Animation;
+import components.BrickColor;
 using AnimationExtension;
 using Graphics2Extension;
 

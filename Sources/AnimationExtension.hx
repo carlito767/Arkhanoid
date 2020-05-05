@@ -1,6 +1,8 @@
 import kha.Assets;
 import kha.Image;
 
+import components.Animation;
+
 class AnimationExtension {
   public static function loadAnimation(id:String, step:Int, cycle:Int = 0):Animation {
     // Load images id_*.png
@@ -24,6 +26,7 @@ class AnimationExtension {
       step:step,
       cycle:cycle,
       heartbeat:0,
+      paused:false,
     };
   }
 
@@ -40,6 +43,11 @@ class AnimationExtension {
     return animation.cycle < 0 && animation.heartbeat == animation.images.length * animation.step;
   }
 
+  public static function reset(animation:Animation):Void {
+    animation.heartbeat = 0;
+    animation.paused = false;
+  }
+
   public static function tick(animation:Animation):Null<Image> {
     if (animation.images.length == 0) return null;
 
@@ -50,7 +58,7 @@ class AnimationExtension {
     }
 
     // Take a breath
-    if (!over(animation)) {
+    if (!over(animation) && !animation.paused) {
       animation.heartbeat++;
     }
 

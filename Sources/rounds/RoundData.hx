@@ -2,7 +2,7 @@ package rounds;
 
 import kha.Color;
 
-import sprites.Brick;
+import components.Brick;
 
 typedef RoundData = {
   backgroundColor:Color,

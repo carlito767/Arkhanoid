@@ -20,6 +20,10 @@ class Entity {
   inline function get_image() { return world.images.get(id); }
   inline function set_image(value) { world.images.set(id, value); return image = value; }
 
+  @:isVar public var life(get,set):Null<Int>;
+  inline function get_life() { return world.lives.get(id); }
+  inline function set_life(value) { world.lives.set(id, value); return life = value; }
+
   @:isVar public var position(get,set):Null<Position>;
   inline function get_position() { return world.positions.get(id); }
   inline function set_position(value) { world.positions.set(id, value); return position = value; }
@@ -27,6 +31,10 @@ class Entity {
   @:isVar public var powerupType(get,set):Null<PowerupType>;
   inline function get_powerupType() { return world.powerupTypes.get(id); }
   inline function set_powerupType(value) { world.powerupTypes.set(id, value); return powerupType = value; }
+
+  @:isVar public var value(get,set):Null<Int>;
+  inline function get_value() { return world.values.get(id); }
+  inline function set_value(v) { world.values.set(id, v); return value = v; }
 
   @:isVar public var velocity(get,set):Null<Velocity>;
   inline function get_velocity() { return world.velocities.get(id); }
