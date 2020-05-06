@@ -8,6 +8,7 @@ import components.Position;
 import components.PowerupType;
 import components.Velocity;
 
+// TODO: build with macros
 class Entity {
   @:isVar public var anchor(get,set):Null<Anchor>;
   inline function get_anchor() { return world.anchors.get(id); }

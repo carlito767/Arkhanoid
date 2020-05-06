@@ -3,17 +3,17 @@ import components.Position;
 import world.Entity;
 
 class Collisions {
-  public static function bounds(e:Entity, ?dx:Float = 0.0, ?dy:Float = 0.0):Bounds {
+  public static function bounds(e:Entity):Bounds {
     return {
-      left:e.position.x + dx,
-      top:e.position.y + dy,
-      right:e.position.x + e.image.width + dx,
-      bottom:e.position.y + e.image.height + dy,
+      left:e.position.x,
+      top:e.position.y,
+      right:e.position.x + e.image.width,
+      bottom:e.position.y + e.image.height,
     };
   }
 
-  public static function collide(e1:Entity, e2:Entity, ?dx:Float = 0.0, ?dy:Float = 0.0):Bool {
-    return isIntersecting(bounds(e1, dx, dy), bounds(e2));
+  public static function collide(e1:Entity, e2:Entity):Bool {
+    return isIntersecting(bounds(e1), bounds(e2));
   }
 
   public static function isInside(A:Bounds, position:Position):Bool {

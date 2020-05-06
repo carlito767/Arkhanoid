@@ -10,6 +10,7 @@ import components.Velocity;
 
 typedef Entities = Array<Entity>;
 
+// TODO: build with macros
 class World {
   // Views
   public inline function all(?kind:Kind):Entities {
@@ -76,10 +77,6 @@ class World {
       kinds.set(id, kind);
     }
 
-    return new Entity(this, id);
-  }
-
-  public function get(id:EntityId):Entity {
     return new Entity(this, id);
   }
 
