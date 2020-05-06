@@ -60,7 +60,7 @@ class World {
 
   public function movables(?kind:Kind):Entities {
     return filter((e)->{
-      e.position != null && e.velocity != null;
+      e.position != null && e.velocity != null && e.anchor == null;
     }, kind);
   }
 

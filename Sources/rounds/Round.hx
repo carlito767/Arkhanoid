@@ -148,11 +148,8 @@ class Round {
 
     // Move entities
     for (e in world.movables()) {
-      // TODO: move all kinds
-      if (e.kind != KIND_BALL) {
-        e.position.x += e.velocity.speed * Math.cos(e.velocity.angle);
-        e.position.y += e.velocity.speed * Math.sin(e.velocity.angle);
-      }
+      e.position.x += e.velocity.speed * Math.cos(e.velocity.angle);
+      e.position.y += e.velocity.speed * Math.sin(e.velocity.angle);
     }
 
     // Detect collision between paddle and edges
@@ -221,9 +218,6 @@ class Round {
         else {
           ball.velocity.speed = Math.min(ball.velocity.speed + speed, BALL_TOP_SPEED);
         }
-
-        ball.position.x += ball.velocity.speed * Math.cos(ball.velocity.angle);
-        ball.position.y += ball.velocity.speed * Math.sin(ball.velocity.angle);
       }
     }
 
