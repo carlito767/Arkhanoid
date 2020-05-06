@@ -1,5 +1,6 @@
 package world;
 
+import components.Anchor;
 import components.Animation;
 import components.BounceStrategy;
 import components.Image;
@@ -16,7 +17,7 @@ class World {
   }
 
   // Components
-  public var anchored:Map<EntityId,Bool> = new Map();
+  public var anchors:Map<EntityId,Anchor> = new Map();
   public var animations:Map<EntityId,Animation> = new Map();
   public var bounceStrategies:Map<EntityId,BounceStrategy> = new Map();
   public var images:Map<EntityId,Image> = new Map();
@@ -39,20 +40,26 @@ class World {
   // Views
   //
 
+  public function anchoredTo(?anchor:Entity):Entities {
+    return filter((e)->{
+      e.anchor != null && (anchor == null || e.anchor.e.id == anchor.id);
+    });
+  }
+
   public function animatables(?kind:Kind):Entities {
-    return filter((e:Entity)->{
+    return filter((e)->{
       e.animation != null;
     }, kind);
   }
 
   public function drawables(?kind:Kind):Entities {
-    return filter((e:Entity)->{
+    return filter((e)->{
       e.position != null && e.image != null;
     }, kind);
   }
 
   public function movables(?kind:Kind):Entities {
-    return filter((e:Entity)->{
+    return filter((e)->{
       e.position != null && e.velocity != null;
     }, kind);
   }
@@ -88,7 +95,7 @@ class World {
 
   public function reset(e:Entity):Void {
     var id = e.id;
-    anchored.remove(id);
+    anchors.remove(id);
     animations.remove(id);
     bounceStrategies.remove(id);
     images.remove(id);

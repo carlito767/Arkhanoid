@@ -127,40 +127,31 @@ class Round {
       paddle.velocity = null;
     }
 
-    // Update animatables
+    // Animate entities
     for (e in world.animatables()) {
-      // TODO: animate all kinds
-      if (e.kind != KIND_PADDLE) {
-        e.image = e.animation.tick();
+      e.image = e.animation.tick();
+    }
+
+    // Update anchored entities
+    for (e in world.anchoredTo()) {
+      e.position = null;
+      var anchor = e.anchor.e;
+      if (anchor.position != null && anchor.image != null && e.image != null) {
+        var offset = e.anchor.offset;
+        var dx = Math.min(Math.abs(offset.x), anchor.image.width * 0.5);
+        e.position = {
+          x:anchor.position.x + anchor.image.width * 0.5 + ((offset.x > 0) ? dx : -dx),
+          y:anchor.position.y - e.image.height,
+        };
       }
     }
 
-    // Update movables
+    // Move entities
     for (e in world.movables()) {
       // TODO: move all kinds
       if (e.kind != KIND_BALL) {
         e.position.x += e.velocity.speed * Math.cos(e.velocity.angle);
         e.position.y += e.velocity.speed * Math.sin(e.velocity.angle);
-      }
-    }
-
-    // Animate paddle
-    if (paddle.animation != null && paddle.position != null) {
-      var image = paddle.image;
-      paddle.image = paddle.animation.tick();
-
-      // Center paddle (and adjust its balls)
-      var dw = (image.width - paddle.image.width) * 0.5;
-      var dh = (image.height - paddle.image.height) * 0.5;
-      if (dw != 0 || dh != 0) {
-        paddle.position.x += dw;
-        paddle.position.y += dh;
-        for (ball in world.all(KIND_BALL)) {
-          if (ball.anchored) {
-            ball.position.x += dw;
-            ball.position.y += dh;
-          }
-        }
       }
     }
 
@@ -179,10 +170,7 @@ class Round {
 
     // Update balls
     for (ball in world.all(KIND_BALL)) {
-      if (ball.anchored) {
-        ball.position.x += dx;
-      }
-      else {
+      if (ball.anchor == null) {
         var collisions = new List<Bounds>();
         var bounceStrategy:Null<BounceStrategy> = null;
         var speed = 0.0;
@@ -254,7 +242,7 @@ class Round {
 
     g2.color = Color.White;
 
-    // Draw drawables
+    // Draw entities
     for (e in world.drawables()) {
       g2.drawImage(e.image, e.position.x, e.position.y);
     }
@@ -300,10 +288,9 @@ class Round {
   @:allow(states.State)
   function releaseBalls():Void {
     for (ball in world.all(KIND_BALL)) {
-      if (ball.anchored) {
-        ball.anchored = false;
-        ball.velocity.angle = BALL_START_ANGLE_RAD;
-        ball.velocity.speed = ballBaseSpeed;
+      if (ball.anchor != null) {
+        ball.anchor = null;
+        ball.velocity = {speed:ballBaseSpeed, angle:BALL_START_ANGLE_RAD};
       }
     }
   }

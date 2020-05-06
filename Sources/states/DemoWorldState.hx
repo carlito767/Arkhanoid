@@ -32,12 +32,26 @@ class DemoWorldState implements State {
   }
 
   public function update():Void {
-    // Update animatables
+    // Animate entities
     for (e in world.animatables()) {
       e.image = e.animation.tick();
     }
 
-    // Update movables
+    // Update anchored entities
+    for (e in world.anchoredTo()) {
+      var anchor = e.anchor.e;
+      if (anchor.position != null && anchor.image != null && e.image != null) {
+        var offset = e.anchor.offset;
+        var x = anchor.position.x;
+        var y = anchor.position.y - (anchor.image.height + e.image.height) * 0.5;
+        var dx = Math.min(Math.abs(offset.x), anchor.image.width * 0.5);
+        x += (offset.x > 0) ? dx : -dx;
+        y += offset.y;
+        e.position = {x:x, y:y};
+      }
+    }
+
+    // Move entities
     for (e in world.movables()) {
       e.position.x += e.velocity.speed * Math.cos(e.velocity.angle);
       e.position.y += e.velocity.speed * Math.sin(e.velocity.angle);
@@ -51,6 +65,9 @@ class DemoWorldState implements State {
       }
       if (!isIntersecting(worldBounds, bounds)) {
         world.remove(e);
+        for (anchored in world.anchoredTo(e)) {
+          world.remove(anchored);
+        }
       }
     }
   }
@@ -74,14 +91,20 @@ class DemoWorldState implements State {
   }
 
   function newPaddle():Void {
-    var e = world.add(KIND_PADDLE);
-    e.animation = 'paddle_wide'.pulsateAnimation(4);
+    var paddle = world.add(KIND_PADDLE);
+    paddle.animation = 'paddle_wide'.pulsateAnimation(4);
     var x = Math.random() * System.windowWidth();
     var y = Math.random() * System.windowHeight();
-    e.position = {x:x, y:y};
+    paddle.position = {x:x, y:y};
     var speed = Math.random() * 2;
     var angle = Math.random() * 360;
-    e.velocity = {speed:speed, angle:angle.toRadians()};
+    paddle.velocity = {speed:speed, angle:angle.toRadians()};
+
+    var ball = world.add();
+    ball.image = Assets.images.ball;
+    var range = Assets.images.paddle.width * 0.5;
+    var offset = {x:Math.random() * range - range * 0.5, y:0.0};
+    ball.anchorTo(paddle, offset);
   }
 
   function switchPaddlesVelocity():Void {

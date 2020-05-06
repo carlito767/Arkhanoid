@@ -1,5 +1,6 @@
 package world;
 
+import components.Anchor;
 import components.Animation;
 import components.BounceStrategy;
 import components.Image;
@@ -8,9 +9,14 @@ import components.PowerupType;
 import components.Velocity;
 
 class Entity {
-  @:isVar public var anchored(get,set):Null<Bool>;
-  inline function get_anchored() { return world.anchored.get(id); }
-  inline function set_anchored(value) { world.anchored.set(id, value); return anchored = value; }
+  @:isVar public var anchor(get,set):Null<Anchor>;
+  inline function get_anchor() { return world.anchors.get(id); }
+  inline function set_anchor(value) { world.anchors.set(id, value); return anchor = value; }
+
+  public inline function anchorTo(e:Entity, ?offset:Position):Void {
+    if (offset == null) offset = {x:0.0, y:0.0};
+    anchor = {e:e, offset:offset};
+  }
 
   @:isVar public var animation(get,set):Null<Animation>;
   inline function get_animation() { return world.animations.get(id); }
