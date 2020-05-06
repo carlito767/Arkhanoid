@@ -1,6 +1,7 @@
 package states;
 
 import kha.Color;
+import kha.System;
 import kha.graphics2.Graphics;
 
 import components.Animation;
@@ -79,7 +80,7 @@ class DemoAnimationState implements State {
       g2.centerString(animation.name.toUpperCase(), top);
       // Image
       var image = animation.anim.tick();
-      g2.drawImage(image, (Game.WIDTH - image.width) * 0.5, top + dy1);
+      g2.drawImage(image, (System.windowWidth() - image.width) * 0.5, top + dy1);
 
       top += dy2;
     }

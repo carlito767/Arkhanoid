@@ -2,6 +2,7 @@ package rounds;
 
 import kha.Assets;
 import kha.Color;
+import kha.System;
 import kha.graphics2.Graphics;
 
 import components.BounceStrategy;
@@ -52,8 +53,6 @@ class Round {
   static inline var KIND_PADDLE = 'paddle';
   static inline var KIND_POWERUP = 'powerup';
 
-  var bounds:Bounds;
-
   var edgeLeft:Entity;
   var edgeRight:Entity;
   var edgeTop:Entity;
@@ -62,6 +61,7 @@ class Round {
   var paddle:Entity;
 
   var world:World = new World();
+  var worldBounds:Bounds = {left:0.0, top:TOP_OFFSET, right:System.windowWidth(), bottom:System.windowHeight()};
 
   public function new(id:Int, lives:Int, roundData:RoundData) {
     this.id = id;
@@ -74,33 +74,25 @@ class Round {
       ballSpeedNormalisationRate += roundData.ballSpeedNormalisationRateAdjust;
     }
 
-    // Define bounds
-    bounds = {
-      left:0.0,
-      top:TOP_OFFSET,
-      right:Game.WIDTH,
-      bottom:Game.HEIGHT,
-    };
-
     // Create edges
     edgeLeft = world.add(KIND_EDGE);
     edgeLeft.image = Assets.images.edge_left;
-    edgeLeft.position = {x:bounds.left, y:bounds.top};
+    edgeLeft.position = {x:worldBounds.left, y:worldBounds.top};
 
     edgeRight = world.add(KIND_EDGE);
     edgeRight.image = Assets.images.edge_right;
-    edgeRight.position = {x:bounds.right - edgeRight.image.width, y:bounds.top};
+    edgeRight.position = {x:worldBounds.right - edgeRight.image.width, y:worldBounds.top};
 
     edgeTop = world.add(KIND_EDGE);
     edgeTop.image = Assets.images.edge_top;
-    edgeTop.position = {x:edgeLeft.image.width, y:bounds.top};
+    edgeTop.position = {x:edgeLeft.image.width, y:worldBounds.top};
 
     // Create bricks
     for (brick in roundData.bricks) {
       var e = world.add(KIND_BRICK);
       e.animation = brick.animation;
       e.image = brick.image;
-      e.position = {x:brick.x + edgeLeft.image.width, y:brick.y + bounds.top};
+      e.position = {x:brick.x + edgeLeft.image.width, y:brick.y + worldBounds.top};
       e.life = brick.life;
       e.value = brick.value;
       e.powerupType = brick.powerupType;
@@ -223,7 +215,7 @@ class Round {
 
     // Remove out of bounds
     for (e in world.drawables()) {
-      if (e.position.y >= bounds.bottom) {
+      if (e.position.y >= worldBounds.bottom) {
         world.remove(e);
       }
     }
@@ -232,7 +224,7 @@ class Round {
   public function render(g2:Graphics):Void {
     // Draw background
     g2.color = backgroundColor;
-    g2.fillRect(bounds.left, bounds.top, bounds.right - bounds.left, bounds.bottom - bounds.top);
+    g2.fillRect(worldBounds.left, worldBounds.top, worldBounds.right - worldBounds.left, worldBounds.bottom - worldBounds.top);
 
     g2.color = Color.White;
 
@@ -244,7 +236,7 @@ class Round {
     // Draw lives
     var paddleLife = Assets.images.paddle_life;
     var x = edgeLeft.position.x + edgeLeft.image.width;
-    var y = bounds.bottom - paddleLife.height - 5;
+    var y = worldBounds.bottom - paddleLife.height - 5;
     for (i in 1...lives) {
       g2.drawImage(paddleLife, x, y);
       x += paddleLife.width + 5;
@@ -310,8 +302,8 @@ class Round {
     paddle.animation = 'paddle_materialize'.loadAnimation(2, -1);
     paddle.image = paddle.animation.tick();
     paddle.position = {
-      x:(bounds.right + bounds.left - paddle.image.width) * 0.5,
-      y:bounds.bottom - paddle.image.height - 30
+      x:(worldBounds.right + worldBounds.left - paddle.image.width) * 0.5,
+      y:worldBounds.bottom - paddle.image.height - 30
     };
     paddle.bounceStrategy = BounceStrategies.bounceStrategyPaddle;
     return paddle;
