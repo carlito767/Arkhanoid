@@ -77,4 +77,18 @@ class PowerupBuilders {
     bricks[102].powerupType = Laser;
     bricks[115].powerupType = Expand;
   }
+
+  public static function round5(bricks:Array<Brick>):Void {
+    var p:Array<PowerupType> = [
+      Catch, Catch, Catch,
+      Duplicate, Duplicate,
+      Expand, Expand,
+      Laser, Laser, Laser,
+      Slow, Slow
+    ];
+    var r = Random.sample(p.length, bricks.length);
+    for (i in 0...r.length) {
+      bricks[r[i]].powerupType = p[i];
+    }
+  }
 }
