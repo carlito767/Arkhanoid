@@ -18,14 +18,41 @@ class PowerupBuilders {
     var p:Array<PowerupType> = [
       Catch, Catch, Catch,
       Expand, Expand, Expand, Expand,
+      Laser, Laser, Laser, Laser,
       Life, Life, Life,
-      Slow, Slow,
-      Laser, Laser, Laser, Laser
+      Slow, Slow
     ];
     Random.shuffle(p);
     // 4 powerups in the bottom row
     var r = Random.sample(p.length - 4, bricks.length - 13);
     r = r.concat(Random.sample(4, bricks.length, bricks.length - 13));
+    for (i in 0...r.length) {
+      bricks[r[i]].powerupType = p[i];
+    }
+  }
+
+  public static function round2(bricks:Array<Brick>):Void {
+    // Create slow ball and catch for the bottom row (except red brick),
+    // given the lack of space beneath
+    var pBottom:Array<PowerupType> = [ Catch, Catch, Slow, Slow ];
+    Random.shuffle(pBottom);
+    var rBottom = Random.sample(pBottom.length, bricks.length - 1, bricks.length - 13);
+    for (i in 0...rBottom.length) {
+      bricks[rBottom[i]].powerupType = pBottom[i];
+    }
+    // Red brick
+    bricks[bricks.length - 1].powerupType = Slow;
+    // Powerups for the other rows
+    var p:Array<PowerupType> = [
+      Catch, Catch,
+      Duplicate, Duplicate,
+      Expand, Expand, Expand, Expand,
+      Laser, Laser, Laser, Laser,
+      Life, Life, Life,
+      Slow, Slow,
+    ];
+    Random.shuffle(p);
+    var r = Random.sample(p.length, bricks.length - 13);
     for (i in 0...r.length) {
       bricks[r[i]].powerupType = p[i];
     }
