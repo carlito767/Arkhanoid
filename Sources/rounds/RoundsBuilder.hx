@@ -86,6 +86,7 @@ class RoundsBuilder {
     var powerupsBuilder:PowerupsBuilder = switch rawRound.powerupsBuilder {
       case 'round1': PowerupBuilders.round1;
       case 'round2': PowerupBuilders.round2;
+      case 'round3': PowerupBuilders.round3;
       case _: PowerupBuilders.fullRandom;
     }
     powerupsBuilder(bricks);

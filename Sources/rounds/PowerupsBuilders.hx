@@ -57,4 +57,13 @@ class PowerupBuilders {
       bricks[r[i]].powerupType = p[i];
     }
   }
+
+  public static function round3(bricks:Array<Brick>):Void {
+    bricks[31].powerupType = Duplicate;
+    bricks[56].powerupType = Duplicate;
+    bricks[60].powerupType = Life;
+    bricks[80].powerupType = Catch;
+    bricks[84].powerupType = Life;
+    bricks[101].powerupType = Life;
+  }
 }
