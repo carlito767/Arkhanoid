@@ -75,6 +75,15 @@ class Game {
 
   public function resetBindings():Void {
     input.clearBindings();
+
+    #if debug
+    input.bind(Key(G), (_)->{ godMode = !godMode; });
+    input.bind(Key(H), (_)->{
+      settings.highScore = 0;
+      Settings.write(SETTINGS_FILENAME, settings);
+    });
+    #end
+
     input.bind(Mouse(Left), (_)->{
       if (input.mouse != null) {
         if (input.mouse.isLocked()) {
@@ -94,11 +103,6 @@ class Game {
 
   public function backToTitle():Void {
     state = new StartState(this);
-  }
-
-  public function resetHighScore():Void {
-    settings.highScore = 0;
-    Settings.write(SETTINGS_FILENAME, settings);
   }
 
   public function showDemoAnimation():Void {
