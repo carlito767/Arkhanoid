@@ -48,9 +48,11 @@ class Input {
 
   public function bind(type:InputEventType, ?handlerDown:InputHandler, ?handlerUp:InputHandler):Void {
     if (handlerDown != null) {
+      checkBindingDown(type);
       bindingsDown.set(type, handlerDown);
     }
     if (handlerUp != null) {
+      checkBindingUp(type);
       bindingsUp.set(type, handlerUp);
     }
   }
@@ -58,11 +60,13 @@ class Input {
   public function bindMulti(types:Array<InputEventType>, ?handlerDown:InputHandler, ?handlerUp:InputHandler):Void {
     if (handlerDown != null) {
       for (type in types) {
+        checkBindingDown(type);
         bindingsDown.set(type, handlerDown);
       }
     }
     if (handlerUp != null) {
       for (type in types) {
+        checkBindingUp(type);
         bindingsUp.set(type, handlerUp);
       }
     }
@@ -74,6 +78,18 @@ class Input {
     bindingsDown = new Bindings();
     bindingsUp = new Bindings();
     events.clear();
+  }
+
+  inline function checkBindingDown(type:InputEventType):Void {
+    if (bindingsDown.exists(type) || bindingsUp.exists(type)) {
+      trace('WARNING: Binding Down for $type already exist');
+    }
+  }
+
+  inline function checkBindingUp(type:InputEventType):Void {
+    if (bindingsUp.exists(type)) {
+      trace('WARNING: Binding Up for $type already exist');
+    }
   }
 
   //
