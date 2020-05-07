@@ -23,7 +23,6 @@ class GameStartState extends RoundState {
     game.input.bind(Key(R), (_)->{
       game.switchToRound(round.id, round.lives);
     });
-    game.input.bind(Key(S), (_)->{ round.showPowerups = !round.showPowerups; });
     #end
     game.input.bind(Key(Left),
       (_)->{ round.moveLeft = true; },

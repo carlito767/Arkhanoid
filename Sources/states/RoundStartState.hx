@@ -21,7 +21,7 @@ class RoundStartState extends RoundState {
   }
 
   override function postRender(g2:Graphics):Void {
-    round.render(g2);
+    round.render(game, g2);
 
     g2.color = Color.White;
     g2.font = game.MAIN_FONT;

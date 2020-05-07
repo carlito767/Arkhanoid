@@ -43,6 +43,7 @@ class Game {
     return score = value;
   }
 
+  public var debugMode:Bool = false;
   public var godMode:Bool = false;
   public var pause:Bool = false;
 
@@ -77,6 +78,7 @@ class Game {
     input.clearBindings();
 
     #if debug
+    input.bind(Key(D), (_)->{ debugMode = !debugMode; });
     input.bind(Key(G), (_)->{ godMode = !godMode; });
     input.bind(Key(H), (_)->{
       settings.highScore = 0;

@@ -19,7 +19,7 @@ class RoundState implements State {
   }
 
   public final function render(g2:Graphics):Void {
-    round.render(g2);
+    round.render(game, g2);
     postRender(g2);
   }
 
