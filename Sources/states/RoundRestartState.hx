@@ -16,7 +16,7 @@ class RoundRestartState extends RoundState {
   override function postUpdate():Void {
     if (updateCount == RESTART_FRAME) {
       if (!game.godMode) round.lives--;
-      game.state = new GameStartState(game, round);
+      game.state = new RoundStartState(game, round);
     }
 
     updateCount++;

@@ -19,6 +19,7 @@ class Round {
 
   public var backgroundColor(default,null):Color;
 
+  public var freezePaddle:Bool = false;
   public var moveLeft:Bool = false;
   public var moveRight:Bool = false;
 
@@ -111,10 +112,10 @@ class Round {
 
   public function update(game:Game):Void {
     // Detect paddle movement
-    if (moveLeft && !moveRight) {
+    if (!freezePaddle && moveLeft && !moveRight) {
       paddle.velocity = {speed:PADDLE_SPEED, angle:180.toRadians()};
     }
-    else if (moveRight && !moveLeft) {
+    else if (!freezePaddle && moveRight && !moveLeft) {
       paddle.velocity = {speed:PADDLE_SPEED, angle:0.0};
     }
     else {
@@ -312,7 +313,21 @@ class Round {
       y:worldBounds.bottom - paddle.image.height - 30
     };
     paddle.bounceStrategy = BounceStrategies.bounceStrategyPaddle;
+
+    // Move your body!
+    freezePaddle = false;
+    moveLeft = false;
+    moveRight = false;
+
     return paddle;
+  }
+
+  @:allow(states.State)
+  function destroyPaddle():Void {
+    // Don't move...
+    freezePaddle = true;
+    // ...my deadly love!
+    paddle.animation = 'paddle_explode'.loadAnimation(4, -1);
   }
 
   //

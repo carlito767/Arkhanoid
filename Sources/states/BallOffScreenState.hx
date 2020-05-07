@@ -7,12 +7,7 @@ class BallOffScreenState extends RoundState {
   public function new(game:Game, round:Round) {
     super(game, round);
 
-    // Don't move...
-    game.input.clearBindings();
-    round.moveLeft = false;
-    round.moveRight = false;
-    // ...my deadly love!
-    round.paddle.animation = 'paddle_explode'.loadAnimation(4, -1);
+    round.destroyPaddle();
   }
 
   override function postUpdate():Void {
