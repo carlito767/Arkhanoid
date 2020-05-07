@@ -58,8 +58,7 @@ class DemoAnimationState implements State {
     nextDemo();
 
     // Input bindings
-    game.input.clearBindings();
-    game.input.bind(Mouse(Left), (_)->{ game.switchMouseLock(); });
+    game.resetBindings();
     game.input.bind(Key(Backspace), (_)->{ game.backToTitle(); });
     game.input.bind(Key(A), (_)->{ nextDemo(); });
   }

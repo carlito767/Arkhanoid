@@ -7,9 +7,8 @@ class GameStartState extends RoundState {
     super(game, round);
 
     // Input bindings
-    game.input.clearBindings();
+    game.resetBindings();
     #if debug
-    game.input.bind(Key(P), (_)->{ round.showPowerups = !round.showPowerups; });
     game.input.bind(Key(Backspace), (_)->{ game.backToTitle(); });
     game.input.bind(Key(Subtract), (_)->{
       if (round.id > 1) {
@@ -21,8 +20,8 @@ class GameStartState extends RoundState {
         game.switchToRound(round.id + 1, round.lives);
       }
     });
+    game.input.bind(Key(S), (_)->{ round.showPowerups = !round.showPowerups; });
     #end
-    game.input.bind(Mouse(Left), (_)->{ game.switchMouseLock(); });
     game.input.bind(Key(R), (_)->{
       if (round.lives > 1) {
         game.state = new RoundRestartState(game, round);

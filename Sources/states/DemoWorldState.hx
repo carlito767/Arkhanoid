@@ -23,11 +23,10 @@ class DemoWorldState implements State {
     this.game = game;
 
     // Input bindings
-    game.input.clearBindings();
-    game.input.bind(Mouse(Left), (_)->{ game.switchMouseLock(); });
+    game.resetBindings();
     game.input.bind(Key(Backspace), (_)->{ game.backToTitle(); });
     game.input.bind(Key(B), (_)->{ newBalls(); });
-    game.input.bind(Key(P), (_)->{ newPaddle(); });
+    game.input.bind(Key(N), (_)->{ newPaddle(); });
     game.input.bind(Key(S), (_)->{ switchPaddlesVelocity(); });
   }
 

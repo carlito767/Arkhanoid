@@ -56,6 +56,6 @@ class RoundStartState extends RoundState {
     }
 
     // Update display count
-    displayCount++;
+    if (!game.pause) displayCount++;
   }
 }

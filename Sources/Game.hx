@@ -25,7 +25,12 @@ class Game {
 
   public var input(default,null):Input = new Input();
   public var rounds(default,never):Array<RoundDataFactory> = RoundsBuilder.rounds();
-  public var state:State;
+
+  public var state(default,set):State;
+  function set_state(value) {
+    pause = false;
+    return state = value;
+  }
 
   public var score(default,set):Int = 0;
   function set_score(value) {
@@ -39,6 +44,7 @@ class Game {
   }
 
   public var godMode:Bool = false;
+  public var pause:Bool = false;
 
   static inline var SETTINGS_FILENAME = 'settings';
   var settings:GameSettings;
@@ -63,6 +69,29 @@ class Game {
     System.notifyOnFrames(render);
   }
 
+  //
+  // Input bindings
+  //
+
+  public function resetBindings():Void {
+    input.clearBindings();
+    input.bind(Mouse(Left), (_)->{
+      if (input.mouse != null) {
+        if (input.mouse.isLocked()) {
+          input.mouse.unlock();
+        }
+        else {
+          input.mouse.lock();
+        }
+      }
+    });
+    input.bind(Key(P), (_)->{ pause = !pause; });
+  }
+
+  //
+  // Callbacks
+  //
+
   public function backToTitle():Void {
     state = new StartState(this);
   }
@@ -78,17 +107,6 @@ class Game {
 
   public function showDemoWorld():Void {
     state = new DemoWorldState(this);
-  }
-
-  public function switchMouseLock():Void {
-    if (input.mouse != null) {
-      if (input.mouse.isLocked()) {
-        input.mouse.unlock();
-      }
-      else {
-        input.mouse.lock();
-      }
-    }
   }
 
   public function switchToRound(id:Int, lives:Int = 3):Void {
@@ -109,7 +127,9 @@ class Game {
 
   function update():Void {
     input.update();
-    state.update();
+    if (!pause) {
+      state.update();
+    }
   }
 
   function render(framebuffers:Array<Framebuffer>):Void {
