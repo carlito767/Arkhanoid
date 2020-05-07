@@ -35,7 +35,6 @@ class PowerupBuilders {
     // Create slow ball and catch for the bottom row (except red brick),
     // given the lack of space beneath
     var pBottom:Array<PowerupType> = [ Catch, Catch, Slow, Slow ];
-    Random.shuffle(pBottom);
     var rBottom = Random.sample(pBottom.length, bricks.length - 1, bricks.length - 13);
     for (i in 0...rBottom.length) {
       bricks[rBottom[i]].powerupType = pBottom[i];
@@ -51,7 +50,6 @@ class PowerupBuilders {
       Life, Life, Life,
       Slow, Slow,
     ];
-    Random.shuffle(p);
     var r = Random.sample(p.length, bricks.length - 13);
     for (i in 0...r.length) {
       bricks[r[i]].powerupType = p[i];
