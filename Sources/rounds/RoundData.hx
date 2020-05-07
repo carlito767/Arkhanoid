@@ -8,5 +8,5 @@ typedef RoundData = {
   backgroundColor:Color,
   ?ballBaseSpeedAdjust:Float,
   ?ballSpeedNormalisationRateAdjust:Float,
-  bricks:List<Brick>,
+  bricks:Array<Brick>,
 }

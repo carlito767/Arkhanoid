@@ -48,7 +48,7 @@ class RoundsBuilder {
 
   static function cook(id:Int, rawRound:RawRound):RoundData {
     // Bricks
-    var bricks:List<Brick> = new List();
+    var bricks:Array<Brick> = [];
     for (y in 0...rawRound.bricks.length) {
       var row = rawRound.bricks[y];
       for (x in 0...row.length) {
@@ -70,7 +70,7 @@ class RoundsBuilder {
           var animation = 'brick_${color}'.loadAnimation(4, -1);
           var image = animation.tick();
           animation.paused = true;
-          bricks.add({
+          bricks.push({
             animation:animation,
             image:image,
             x:x * image.width,
@@ -84,6 +84,7 @@ class RoundsBuilder {
 
     // Powerups
     var powerupsBuilder:PowerupsBuilder = switch rawRound.powerupsBuilder {
+      case 'round1': PowerupBuilders.round1;
       case _: PowerupBuilders.fullRandom;
     }
     powerupsBuilder(bricks);
