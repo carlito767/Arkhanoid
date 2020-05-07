@@ -87,6 +87,7 @@ class RoundsBuilder {
       case 'round1': PowerupBuilders.round1;
       case 'round2': PowerupBuilders.round2;
       case 'round3': PowerupBuilders.round3;
+      case 'round4': PowerupBuilders.round4;
       case _: PowerupBuilders.fullRandom;
     }
     powerupsBuilder(bricks);

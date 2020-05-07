@@ -66,4 +66,15 @@ class PowerupBuilders {
     bricks[84].powerupType = Life;
     bricks[101].powerupType = Life;
   }
+
+  public static function round4(bricks:Array<Brick>):Void {
+    bricks[6].powerupType = Duplicate;
+    bricks[10].powerupType = Duplicate;
+    bricks[31].powerupType = Catch;
+    bricks[43].powerupType = Life;
+    bricks[57].powerupType = Laser;
+    bricks[78].powerupType = Life;
+    bricks[102].powerupType = Laser;
+    bricks[115].powerupType = Expand;
+  }
 }
