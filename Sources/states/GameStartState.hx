@@ -27,6 +27,14 @@ class GameStartState extends RoundState {
         game.state = new RoundRestartState(game, round);
       }
     });
+    game.input.bind(Key(Left),
+      (_)->{ round.moveLeft = true; },
+      (_)->{ round.moveLeft = false; }
+    );
+    game.input.bind(Key(Right),
+      (_)->{ round.moveRight = true; },
+      (_)->{ round.moveRight = false; }
+    );
   }
 
   override function postUpdate():Void {
