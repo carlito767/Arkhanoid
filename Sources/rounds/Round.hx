@@ -22,6 +22,8 @@ class Round {
   public var moveLeft:Bool = false;
   public var moveRight:Bool = false;
 
+  public var showPowerups:Bool = false;
+
   // The number of pixels from the top of the screen before the top edge starts.
   static inline var TOP_OFFSET = 150.0;
   // The angle the ball initially moves off the paddle.
@@ -231,6 +233,10 @@ class Round {
     // Draw entities
     for (e in world.drawables()) {
       g2.drawImage(e.image, e.position.x, e.position.y);
+      if (showPowerups && e.kind == KIND_BRICK && e.powerupType != null) {
+        var image = Assets.images.get('powerup_${Std.string(e.powerupType).toLowerCase()}_1');
+        g2.drawImage(image, e.position.x, e.position.y);
+      }
     }
 
     // Draw lives

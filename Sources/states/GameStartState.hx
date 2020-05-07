@@ -9,6 +9,7 @@ class GameStartState extends RoundState {
     // Input bindings
     game.input.clearBindings();
     #if debug
+    game.input.bind(Key(P), (_)->{ round.showPowerups = !round.showPowerups; });
     game.input.bind(Key(Backspace), (_)->{ game.backToTitle(); });
     game.input.bind(Key(Subtract), (_)->{
       if (round.id > 1) {
