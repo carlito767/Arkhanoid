@@ -2,5 +2,6 @@
   "backgroundColor":"0xff000000",
   "ballBaseSpeedAdjust":0.0,
   "ballSpeedNormalisationRateAdjust":0.0,
-  "bricks":[]
+  "bricks":[],
+  "powerupsBuilder":""
 }

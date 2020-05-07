@@ -1,5 +1,6 @@
 package components;
 
+// TODO: warp
 enum abstract PowerupType(String) from String to String {
   var Catch;
   var Duplicate;
@@ -7,5 +8,5 @@ enum abstract PowerupType(String) from String to String {
   var Laser;
   var Life;
   var Slow;
-  var Warp;
+  // var Warp;
 }
