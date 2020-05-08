@@ -62,4 +62,12 @@ class Entity {
     this.world = world;
     this.id = id;
   }
+
+  public inline function remove():Void {
+    world.remove(id);
+  }
+
+  public inline function reset():Void {
+    world.reset(id);
+  }
 }

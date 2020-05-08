@@ -86,18 +86,17 @@ class World {
     return new Entity(this, id);
   }
 
-  public function remove(e:Entity):Void {
-    reset(e);
-    kinds.remove(e.id);
-    entities.remove(e.id);
+  public function remove(id:EntityId):Void {
+    reset(id);
+    kinds.remove(id);
+    entities.remove(id);
   }
 
   public function removeAll(?kind:Kind):Void {
-    for (e in all(kind)) remove(e);
+    for (e in all(kind)) remove(e.id);
   }
 
-  public function reset(e:Entity):Void {
-    var id = e.id;
+  public function reset(id:EntityId):Void {
     anchors.remove(id);
     animations.remove(id);
     bounceStrategies.remove(id);

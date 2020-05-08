@@ -105,7 +105,7 @@ class Round {
 
   public function reset():Void {
     world.removeAll(KIND_BALL);
-    world.reset(paddle);
+    paddle.reset();
   }
 
   public function update(game:Game):Void {
@@ -185,7 +185,7 @@ class Round {
               if (brick.powerupType != null) {
                 createPowerup(brick);
               }
-              world.remove(brick);
+              brick.remove();
             }
           }
         }
@@ -216,7 +216,7 @@ class Round {
     // Remove out of bounds
     for (e in world.drawables()) {
       if (e.position.y >= worldBounds.bottom) {
-        world.remove(e);
+        e.remove();
       }
     }
   }
@@ -302,7 +302,7 @@ class Round {
 
   @:allow(states.State)
   function createPaddle():Entity {
-    world.reset(paddle);
+    paddle.reset();
     paddle.animation = 'paddle_materialize'.loadAnimation(2, -1);
     paddle.image = paddle.animation.tick();
     paddle.position = {

@@ -63,9 +63,9 @@ class DemoWorldState implements State {
         bounds.bottom += e.image.height;
       }
       if (!isIntersecting(worldBounds, bounds)) {
-        world.remove(e);
+        e.remove();
         for (anchored in world.anchoredTo(e)) {
-          world.remove(anchored);
+          anchored.remove();
         }
       }
     }
