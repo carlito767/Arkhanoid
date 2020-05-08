@@ -47,28 +47,30 @@ class Input {
   //
 
   public function bind(type:InputEventType, ?handlerDown:InputHandler, ?handlerUp:InputHandler):Void {
-    if (handlerDown != null) {
-      checkBindingDown(type);
+    if (handlerDown != null && bindingsDown.exists(type)) {
+      trace('WARNING: Binding Down for $type already exist');
+    }
+    if (handlerDown == null) {
+      bindingsDown.remove(type);
+    }
+    else {
       bindingsDown.set(type, handlerDown);
     }
-    if (handlerUp != null) {
-      checkBindingUp(type);
+
+    if (handlerUp != null && bindingsUp.exists(type)) {
+      trace('WARNING: Binding Up for $type already exist');
+    }
+    if (handlerUp == null) {
+      bindingsUp.remove(type);
+    }
+    else {
       bindingsUp.set(type, handlerUp);
     }
   }
 
   public function bindMulti(types:Array<InputEventType>, ?handlerDown:InputHandler, ?handlerUp:InputHandler):Void {
-    if (handlerDown != null) {
-      for (type in types) {
-        checkBindingDown(type);
-        bindingsDown.set(type, handlerDown);
-      }
-    }
-    if (handlerUp != null) {
-      for (type in types) {
-        checkBindingUp(type);
-        bindingsUp.set(type, handlerUp);
-      }
+    for (type in types) {
+      bind(type, handlerDown, handlerUp);
     }
   }
 
@@ -78,18 +80,6 @@ class Input {
     bindingsDown = new Bindings();
     bindingsUp = new Bindings();
     events.clear();
-  }
-
-  inline function checkBindingDown(type:InputEventType):Void {
-    if (bindingsDown.exists(type) || bindingsUp.exists(type)) {
-      trace('WARNING: Binding Down for $type already exist');
-    }
-  }
-
-  inline function checkBindingUp(type:InputEventType):Void {
-    if (bindingsUp.exists(type)) {
-      trace('WARNING: Binding Up for $type already exist');
-    }
   }
 
   //

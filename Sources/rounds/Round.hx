@@ -151,10 +151,10 @@ class Round {
         if (paddle.collide(powerup)) {
           game.score += powerup.value;
           if (currentPowerupType != null) {
-            deactivatePowerup(currentPowerupType);
+            deactivatePowerup(game, currentPowerupType);
           }
           currentPowerupType = powerup.powerupType;
-          activatePowerup(currentPowerupType);
+          activatePowerup(game, currentPowerupType);
           powerup.remove();
         }
       }
@@ -354,9 +354,10 @@ class Round {
     e.value = POWERUP_VALUE;
   }
 
-  function activatePowerup(powerupType:PowerupType):Void {
+  function activatePowerup(game:Game, powerupType:PowerupType):Void {
     switch powerupType {
       case Catch:
+        game.input.bind(Key(Space), (_)->{ releaseBalls(); });
       case Duplicate:
       case Expand:
       case Laser:
@@ -366,14 +367,16 @@ class Round {
     }
   }
 
-  function deactivatePowerup(powerupType:PowerupType):Void {
+  function deactivatePowerup(game:Game, powerupType:PowerupType):Void {
     switch powerupType {
       case Catch:
+        game.input.bind(Key(Space));
         releaseBalls();
       case Duplicate:
       case Expand:
       case Laser:
       case Life:
+        // Nothing
       case Slow:
     }
   }
