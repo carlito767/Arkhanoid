@@ -14,8 +14,6 @@ using MathExtension;
 class DemoWorldState implements State {
   var game:Game;
 
-  static inline var KIND_PADDLE = 'paddle';
-
   var world:World = new World();
   var worldBounds:Bounds = {left:0.0, top:0.0, right:System.windowWidth(), bottom:System.windowHeight()};
 
@@ -90,7 +88,7 @@ class DemoWorldState implements State {
   }
 
   function newPaddle():Void {
-    var paddle = world.add(KIND_PADDLE);
+    var paddle = world.add(Paddle);
     paddle.animation = 'paddle_wide'.pulsateAnimation(4);
     var x = Math.random() * System.windowWidth();
     var y = Math.random() * System.windowHeight();
@@ -107,7 +105,7 @@ class DemoWorldState implements State {
   }
 
   function switchPaddlesVelocity():Void {
-    for (e in world.movables(KIND_PADDLE)) {
+    for (e in world.movables(Paddle)) {
       e.velocity.angle = 2 * Math.PI - e.velocity.angle;
     }
   }

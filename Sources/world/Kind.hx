@@ -1,3 +1,9 @@
 package world;
 
-typedef Kind = String;
+enum Kind {
+  Ball;
+  Brick;
+  Edge;
+  Paddle;
+  Powerup;
+}

@@ -50,12 +50,6 @@ class Round {
   var ballBaseSpeed:Float = BALL_BASE_SPEED;
   var ballSpeedNormalisationRate:Float = BALL_SPEED_NORMALISATION_RATE;
 
-  static inline var KIND_BALL = 'ball';
-  static inline var KIND_BRICK = 'brick';
-  static inline var KIND_EDGE = 'edge';
-  static inline var KIND_PADDLE = 'paddle';
-  static inline var KIND_POWERUP = 'powerup';
-
   var edgeLeft:Entity;
   var edgeRight:Entity;
   var edgeTop:Entity;
@@ -78,21 +72,21 @@ class Round {
     }
 
     // Create edges
-    edgeLeft = world.add(KIND_EDGE);
+    edgeLeft = world.add(Edge);
     edgeLeft.image = Assets.images.edge_left;
     edgeLeft.position = {x:worldBounds.left, y:worldBounds.top};
 
-    edgeRight = world.add(KIND_EDGE);
+    edgeRight = world.add(Edge);
     edgeRight.image = Assets.images.edge_right;
     edgeRight.position = {x:worldBounds.right - edgeRight.image.width, y:worldBounds.top};
 
-    edgeTop = world.add(KIND_EDGE);
+    edgeTop = world.add(Edge);
     edgeTop.image = Assets.images.edge_top;
     edgeTop.position = {x:edgeLeft.image.width, y:worldBounds.top};
 
     // Create bricks
     for (brick in roundData.bricks) {
-      var e = world.add(KIND_BRICK);
+      var e = world.add(Brick);
       e.animation = brick.animation;
       e.image = brick.image;
       e.position = {x:brick.x + edgeLeft.image.width, y:brick.y + worldBounds.top};
@@ -102,11 +96,11 @@ class Round {
     }
 
     // Create paddle
-    paddle = world.add(KIND_PADDLE);
+    paddle = world.add(Paddle);
   }
 
   public function reset():Void {
-    world.removeAll(KIND_BALL);
+    world.removeAll(Ball);
     paddle.reset();
   }
 
@@ -148,7 +142,7 @@ class Round {
     }
 
     // Detect paddle collisions
-    for (paddle in world.collidables(KIND_PADDLE)) {
+    for (paddle in world.collidables(Paddle)) {
       // Detect collision between paddle and edges
       var dx = 0.0;
       if (paddle.collide(edgeLeft)) {
@@ -161,7 +155,7 @@ class Round {
       paddle.position.x += dx;
 
       // Detect collision between paddle and powerups
-      for (powerup in world.collidables(KIND_POWERUP)) {
+      for (powerup in world.collidables(Powerup)) {
         if (paddle.collide(powerup)) {
           game.score += powerup.value;
           powerup.remove();
@@ -170,7 +164,7 @@ class Round {
     }
 
     // Detect balls collisions
-    for (ball in world.collidables(KIND_BALL)) {
+    for (ball in world.collidables(Ball)) {
       var collisions = new List<Bounds>();
       var bounceStrategy:Null<BounceStrategy> = null;
       var speed = 0.0;
@@ -184,7 +178,7 @@ class Round {
       }
 
       // Detect collision between ball and bricks
-      for (brick in world.collidables(KIND_BRICK)) {
+      for (brick in world.collidables(Brick)) {
         if (ball.collide(brick)) {
           collisions.add(brick.bounds());
           speed += BRICK_SPEED_ADJUST;
@@ -241,7 +235,7 @@ class Round {
     // Draw entities
     for (e in world.drawables()) {
       g2.drawImage(e.image, e.position.x, e.position.y);
-      if (game.debugMode && e.kind == KIND_BRICK && e.powerupType != null) {
+      if (game.debugMode && e.kind == Brick && e.powerupType != null) {
         var image = Assets.images.get('powerup_${Std.string(e.powerupType).toLowerCase()}_1');
         g2.drawImage(image, e.position.x, e.position.y);
       }
@@ -262,14 +256,14 @@ class Round {
   //
 
   public function win():Bool {
-    for (brick in world.all(KIND_BRICK)) {
+    for (brick in world.all(Brick)) {
       if (brick.value > 0) return false;
     }
     return true;
   }
 
   public function lose():Bool {
-    return world.all(KIND_BALL).length == 0;
+    return world.all(Ball).length == 0;
   }
 
   //
@@ -278,7 +272,7 @@ class Round {
 
   @:allow(states.State)
   function createBall():Entity {
-    var e = world.add(KIND_BALL);
+    var e = world.add(Ball);
     e.image = Assets.images.ball;
     e.position = {x:0, y:0};
     e.velocity = {angle:BALL_START_ANGLE_RAD, speed:ballBaseSpeed};
@@ -287,7 +281,7 @@ class Round {
 
   @:allow(states.State)
   function releaseBalls():Void {
-    for (ball in world.all(KIND_BALL)) {
+    for (ball in world.all(Ball)) {
       if (ball.anchor != null) {
         ball.anchor = null;
         ball.velocity = {speed:ballBaseSpeed, angle:BALL_START_ANGLE_RAD};
@@ -301,7 +295,7 @@ class Round {
 
   @:allow(states.State)
   function animateBricks():Void {
-    for (brick in world.all(KIND_BRICK)) {
+    for (brick in world.all(Brick)) {
       brick.animation.reset();
     }
   }
@@ -342,7 +336,7 @@ class Round {
   //
 
   function createPowerup(brick:Entity):Void {
-    var e = world.add(KIND_POWERUP);
+    var e = world.add(Powerup);
     e.animation = 'powerup_${Std.string(brick.powerupType).toLowerCase()}'.loadAnimation(4);
     e.position = brick.position;
     e.powerupType = brick.powerupType;
