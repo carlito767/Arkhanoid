@@ -53,6 +53,12 @@ class World {
     }, kind);
   }
 
+  public function collidables(?kind:Kind):Entities {
+    return filter((e)->{
+      e.position != null && e.image != null && e.anchor == null;
+    }, kind);
+  }
+
   public function drawables(?kind:Kind):Entities {
     return filter((e)->{
       e.position != null && e.image != null;

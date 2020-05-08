@@ -145,9 +145,10 @@ class Round {
       e.position.y += e.velocity.speed * Math.sin(e.velocity.angle);
     }
 
-    // Detect collision between paddle and edges
-    var dx = 0.0;
-    if (paddle.image != null && paddle.position != null) {
+    // Detect paddle collisions
+    for (paddle in world.collidables(KIND_PADDLE)) {
+      // Detect collision between paddle and edges
+      var dx = 0.0;
       if (paddle.collide(edgeLeft)) {
         dx = edgeLeft.position.x + edgeLeft.image.width - paddle.position.x;
       }
@@ -158,59 +159,57 @@ class Round {
       paddle.position.x += dx;
     }
 
-    // Update balls
-    for (ball in world.all(KIND_BALL)) {
-      if (ball.anchor == null) {
-        var collisions = new List<Bounds>();
-        var bounceStrategy:Null<BounceStrategy> = null;
-        var speed = 0.0;
+    // Detect balls collisions
+    for (ball in world.collidables(KIND_BALL)) {
+      var collisions = new List<Bounds>();
+      var bounceStrategy:Null<BounceStrategy> = null;
+      var speed = 0.0;
 
-        // Detect collision between ball and edges
+      // Detect collision between ball and edges
         for (edge in [edgeLeft, edgeRight, edgeTop]) {
-          if (ball.collide(edge)) {
-            collisions.add(edge.bounds());
-            speed += WALL_SPEED_ADJUST;
-          }
+        if (ball.collide(edge)) {
+          collisions.add(edge.bounds());
+          speed += WALL_SPEED_ADJUST;
         }
+      }
 
-        // Detect collision between ball and bricks
-        for (brick in world.all(KIND_BRICK)) {
-          if (ball.collide(brick)) {
-            collisions.add(brick.bounds());
-            speed += BRICK_SPEED_ADJUST;
-            if (brick.life > 0) {
-              brick.life--;
-              if (brick.life == 0) {
-                game.score += brick.value;
-                if (brick.powerupType != null) {
-                  createPowerup(brick);
-                }
-                world.remove(brick);
+      // Detect collision between ball and bricks
+      for (brick in world.collidables(KIND_BRICK)) {
+        if (ball.collide(brick)) {
+          collisions.add(brick.bounds());
+          speed += BRICK_SPEED_ADJUST;
+          if (brick.life > 0) {
+            brick.life--;
+            if (brick.life == 0) {
+              game.score += brick.value;
+              if (brick.powerupType != null) {
+                createPowerup(brick);
               }
+              world.remove(brick);
             }
           }
         }
+      }
 
-        // Detect collision between ball and paddle
-        if (paddle != null && ball.collide(paddle)) {
-          collisions.add(paddle.bounds());
-          bounceStrategy = paddle.bounceStrategy;
-        }
+      // Detect collision between ball and paddle
+      if (ball.collide(paddle)) {
+        collisions.add(paddle.bounds());
+        bounceStrategy = paddle.bounceStrategy;
+      }
 
-        // Determine new angle for ball
-        if (!collisions.isEmpty()) {
-          ball.velocity.angle = (collisions.length == 1 && bounceStrategy != null)
-            ? bounceStrategy(ball, collisions.first())
-            : BounceStrategies.bounceStrategy(ball, collisions);
-        }
+      // Determine new angle for ball
+      if (!collisions.isEmpty()) {
+        ball.velocity.angle = (collisions.length == 1 && bounceStrategy != null)
+          ? bounceStrategy(ball, collisions.first())
+          : BounceStrategies.bounceStrategy(ball, collisions);
+      }
 
-        // Determine new speed for ball
-        if (collisions.isEmpty()) {
-          ball.velocity.speed += (ball.velocity.speed > ballBaseSpeed) ? -ballSpeedNormalisationRate : ballSpeedNormalisationRate;
-        }
-        else {
-          ball.velocity.speed = Math.min(ball.velocity.speed + speed, BALL_TOP_SPEED);
-        }
+      // Determine new speed for ball
+      if (collisions.isEmpty()) {
+        ball.velocity.speed += (ball.velocity.speed > ballBaseSpeed) ? -ballSpeedNormalisationRate : ballSpeedNormalisationRate;
+      }
+      else {
+        ball.velocity.speed = Math.min(ball.velocity.speed + speed, BALL_TOP_SPEED);
       }
     }
 
