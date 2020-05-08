@@ -7,6 +7,7 @@ import kha.graphics2.Graphics;
 
 import components.BounceStrategy;
 import components.Bounds;
+import components.PowerupType;
 import world.Entity;
 import world.World;
 using AnimationExtension;
@@ -46,6 +47,8 @@ class Round {
   static inline var POWERUP_SPEED = 3.0;
   // The value of the powerup.
   static inline var POWERUP_VALUE = 1000;
+
+  var currentPowerupType:Null<PowerupType> = null;
 
   var ballBaseSpeed:Float = BALL_BASE_SPEED;
   var ballSpeedNormalisationRate:Float = BALL_SPEED_NORMALISATION_RATE;
@@ -158,6 +161,11 @@ class Round {
       for (powerup in world.collidables(Powerup)) {
         if (paddle.collide(powerup)) {
           game.score += powerup.value;
+          if (currentPowerupType != null) {
+            deactivatePowerup(currentPowerupType);
+          }
+          currentPowerupType = powerup.powerupType;
+          activatePowerup(currentPowerupType);
           powerup.remove();
         }
       }
@@ -236,7 +244,8 @@ class Round {
     for (e in world.drawables()) {
       g2.drawImage(e.image, e.position.x, e.position.y);
       if (game.debugMode && e.kind == Brick && e.powerupType != null) {
-        var image = Assets.images.get('powerup_${Std.string(e.powerupType).toLowerCase()}_1');
+        var name = e.powerupType.getName().toLowerCase();
+        var image = Assets.images.get('powerup_${name}_1');
         g2.drawImage(image, e.position.x, e.position.y);
       }
     }
@@ -315,6 +324,9 @@ class Round {
     };
     paddle.bounceStrategy = BounceStrategies.bounceStrategyPaddle;
 
+    // Reset effects
+    currentPowerupType = null;
+
     // Move your body!
     freezePaddle = false;
     moveLeft = false;
@@ -337,10 +349,34 @@ class Round {
 
   function createPowerup(brick:Entity):Void {
     var e = world.add(Powerup);
-    e.animation = 'powerup_${Std.string(brick.powerupType).toLowerCase()}'.loadAnimation(4);
+    var name = brick.powerupType.getName().toLowerCase();
+    e.animation = 'powerup_$name'.loadAnimation(4);
     e.position = brick.position;
     e.powerupType = brick.powerupType;
     e.velocity = {speed:POWERUP_SPEED, angle:90.toRadians()};
     e.value = POWERUP_VALUE;
+  }
+
+  function activatePowerup(powerupType:PowerupType):Void {
+    switch powerupType {
+      case Catch:
+      case Duplicate:
+      case Expand:
+      case Laser:
+      case Life:
+        lives++;
+      case Slow:
+    }
+  }
+
+  function deactivatePowerup(powerupType:PowerupType):Void {
+    switch powerupType {
+      case Catch:
+      case Duplicate:
+      case Expand:
+      case Laser:
+      case Life:
+      case Slow:
+    }
   }
 }
