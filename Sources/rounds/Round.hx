@@ -44,6 +44,8 @@ class Round {
   static inline var PADDLE_SPEED = 10.0;
   // The speed the powerup moves.
   static inline var POWERUP_SPEED = 3.0;
+  // The value of the powerup.
+  static inline var POWERUP_VALUE = 1000;
 
   var ballBaseSpeed:Float = BALL_BASE_SPEED;
   var ballSpeedNormalisationRate:Float = BALL_SPEED_NORMALISATION_RATE;
@@ -157,6 +159,14 @@ class Round {
       }
 
       paddle.position.x += dx;
+
+      // Detect collision between paddle and powerups
+      for (powerup in world.collidables(KIND_POWERUP)) {
+        if (paddle.collide(powerup)) {
+          game.score += powerup.value;
+          powerup.remove();
+        }
+      }
     }
 
     // Detect balls collisions
@@ -337,5 +347,6 @@ class Round {
     e.position = brick.position;
     e.powerupType = brick.powerupType;
     e.velocity = {speed:POWERUP_SPEED, angle:90.toRadians()};
+    e.value = POWERUP_VALUE;
   }
 }
