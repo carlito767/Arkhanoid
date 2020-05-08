@@ -32,6 +32,7 @@ class GameStartState extends RoundState {
       (_)->{ round.moveRight = true; },
       (_)->{ round.moveRight = false; }
     );
+    game.input.bind(Key(Space), (_)->{ round.releaseBalls(); });
   }
 
   override function postUpdate():Void {

@@ -14,9 +14,27 @@ class Entity {
   inline function get_anchor() { return world.anchors.get(id); }
   inline function set_anchor(value) { world.anchors.set(id, value); return anchor = value; }
 
-  public inline function anchorTo(e:Entity, ?offset:Position):Void {
-    if (offset == null) offset = {x:0.0, y:0.0};
+  public inline function anchorTo(e:Entity):Void {
+    var offset:Position = {x:0.0, y:0.0};
+    if (position != null && e.position != null && e.image != null) {
+      var middle = e.image.width * 0.5;
+      offset.x = position.x - e.position.x - middle;
+    }
     anchor = {e:e, offset:offset};
+    position = null;
+  }
+
+  public inline function anchorPosition():Null<Position> {
+    if (anchor == null || image == null) return null;
+    if (anchor.e.position == null || anchor.e.image == null) return null;
+
+    var offset = anchor.offset;
+    var middle = anchor.e.image.width * 0.5;
+    var dx = Math.min(Math.abs(offset.x), middle);
+    var x = anchor.e.position.x + middle + ((offset.x > 0) ? dx : -dx);
+    var y = anchor.e.position.y - image.height;
+
+    return {x:x, y:y};
   }
 
   @:isVar public var animation(get,set):Null<Animation>;

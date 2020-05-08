@@ -61,7 +61,7 @@ class World {
 
   public function drawables(?kind:Kind):Entities {
     return filter((e)->{
-      e.position != null && e.image != null;
+      e.position != null && e.image != null && e.anchor == null;
     }, kind);
   }
 

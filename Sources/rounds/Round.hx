@@ -105,6 +105,9 @@ class Round {
   public function reset():Void {
     world.removeAll(Ball);
     paddle.reset();
+
+    // Reset effects
+    currentPowerupType = null;
   }
 
   public function update(game:Game):Void {
@@ -122,20 +125,6 @@ class Round {
     // Animate entities
     for (e in world.animatables()) {
       e.image = e.animation.tick();
-    }
-
-    // Update anchored entities
-    for (e in world.anchoredTo()) {
-      e.position = null;
-      var anchor = e.anchor.e;
-      if (anchor.position != null && anchor.image != null && e.image != null) {
-        var offset = e.anchor.offset;
-        var dx = Math.min(Math.abs(offset.x), anchor.image.width * 0.5);
-        e.position = {
-          x:anchor.position.x + anchor.image.width * 0.5 + ((offset.x > 0) ? dx : -dx),
-          y:anchor.position.y - e.image.height,
-        };
-      }
     }
 
     // Move entities
@@ -204,7 +193,8 @@ class Round {
       }
 
       // Detect collision between ball and paddle
-      if (ball.collide(paddle)) {
+      var collideWithPaddle = ball.collide(paddle);
+      if (collideWithPaddle) {
         collisions.add(paddle.bounds());
         bounceStrategy = paddle.bounceStrategy;
       }
@@ -222,6 +212,10 @@ class Round {
       }
       else {
         ball.velocity.speed = Math.min(ball.velocity.speed + speed, BALL_TOP_SPEED);
+      }
+
+      if (collideWithPaddle && currentPowerupType == Catch) {
+        ball.anchorTo(paddle);
       }
     }
 
@@ -247,6 +241,12 @@ class Round {
         var name = e.powerupType.getName().toLowerCase();
         var image = Assets.images.get('powerup_${name}_1');
         g2.drawImage(image, e.position.x, e.position.y);
+      }
+      for (anchored in world.anchoredTo(e)) {
+        var position = anchored.anchorPosition();
+        if (position != null) {
+          g2.drawImage(anchored.image, position.x, position.y);
+        }
       }
     }
 
@@ -283,8 +283,6 @@ class Round {
   function createBall():Entity {
     var e = world.add(Ball);
     e.image = Assets.images.ball;
-    e.position = {x:0, y:0};
-    e.velocity = {angle:BALL_START_ANGLE_RAD, speed:ballBaseSpeed};
     return e;
   }
 
@@ -292,8 +290,10 @@ class Round {
   function releaseBalls():Void {
     for (ball in world.all(Ball)) {
       if (ball.anchor != null) {
+        ball.position = ball.anchorPosition();
+        var angle = (ball.velocity == null) ? BALL_START_ANGLE_RAD : ball.velocity.angle;
+        ball.velocity = {speed:ballBaseSpeed, angle:angle};
         ball.anchor = null;
-        ball.velocity = {speed:ballBaseSpeed, angle:BALL_START_ANGLE_RAD};
       }
     }
   }
@@ -323,9 +323,6 @@ class Round {
       y:worldBounds.bottom - paddle.image.height - 30
     };
     paddle.bounceStrategy = BounceStrategies.bounceStrategyPaddle;
-
-    // Reset effects
-    currentPowerupType = null;
 
     // Move your body!
     freezePaddle = false;
@@ -372,6 +369,7 @@ class Round {
   function deactivatePowerup(powerupType:PowerupType):Void {
     switch powerupType {
       case Catch:
+        releaseBalls();
       case Duplicate:
       case Expand:
       case Laser:
