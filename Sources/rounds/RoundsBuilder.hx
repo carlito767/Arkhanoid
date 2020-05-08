@@ -54,20 +54,21 @@ class RoundsBuilder {
       for (x in 0...row.length) {
         var value = row.charAt(x);
         var color:Null<BrickColor> = switch value {
-          case 'B': blue;
-          case 'C': cyan;
-          case '*': gold;
-          case 'G': green;
-          case 'O': orange;
-          case 'P': pink;
-          case 'R': red;
-          case 'S': silver;
-          case 'W': white;
-          case 'Y': yellow;
+          case 'B': Blue;
+          case 'C': Cyan;
+          case '*': Gold;
+          case 'G': Green;
+          case 'O': Orange;
+          case 'P': Pink;
+          case 'R': Red;
+          case 'S': Silver;
+          case 'W': White;
+          case 'Y': Yellow;
           case _: null;
         };
         if (color != null) {
-          var animation = 'brick_${color}'.loadAnimation(4, -1);
+          var name = color.getName().toLowerCase();
+          var animation = 'brick_${name}'.loadAnimation(4, -1);
           var image = animation.tick();
           animation.paused = true;
           bricks.push({
@@ -103,24 +104,24 @@ class RoundsBuilder {
 
   static function brickLife(id:Int, color:BrickColor):Int {
     return switch color {
-      case gold: 0; // indestructable
-      case silver: Math.ceil(id / 8) + 1;
+      case Gold: 0; // indestructable
+      case Silver: Math.ceil(id / 8) + 1;
       case _: 1;
     }
   }
 
   static function brickValue(id:Int, color:BrickColor):Int {
     return switch color {
-      case blue: 100;
-      case cyan: 70;
-      case gold: 0;
-      case green: 80;
-      case orange: 60;
-      case pink: 110;
-      case red: 90;
-      case silver: 50 * id;
-      case white: 50;
-      case yellow: 120;
+      case Blue: 100;
+      case Cyan: 70;
+      case Gold: 0;
+      case Green: 80;
+      case Orange: 60;
+      case Pink: 110;
+      case Red: 90;
+      case Silver: 50 * id;
+      case White: 50;
+      case Yellow: 120;
     }
   }
 }

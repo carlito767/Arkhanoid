@@ -51,8 +51,9 @@ class DemoAnimationState implements State {
     ];
 
     bricks = [];
-    for (color in AbstractEnumTools.getValues(BrickColor)) {
-      bricks.push({anim:'brick_$color'.loadAnimation(4), name:color});
+    for (color in Type.allEnums(BrickColor)) {
+      var name = color.getName().toLowerCase();
+      bricks.push({anim:'brick_$name'.loadAnimation(4), name:name});
     }
 
     nextDemo();
