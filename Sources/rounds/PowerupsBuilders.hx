@@ -5,7 +5,7 @@ import components.Brick;
 import components.PowerupType;
 
 class PowerupBuilders {
-  static final POWERUP_TYPES = AbstractEnumTools.getValues(PowerupType);
+  static final POWERUP_TYPES = Type.allEnums(PowerupType);
 
   public static function fullRandom(bricks:Array<Brick>):Void {
     for (brick in bricks) {
