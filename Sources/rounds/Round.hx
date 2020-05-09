@@ -57,7 +57,7 @@ class Round {
   var edgeRight:Entity;
   var edgeTop:Entity;
 
-  @:allow(states.State)
+  @:allow(states.RoundState)
   var paddle:Entity;
 
   var world:World = new World();
@@ -279,14 +279,14 @@ class Round {
   // Ball
   //
 
-  @:allow(states.State)
+  @:allow(states.RoundState)
   function createBall():Entity {
     var e = world.add(Ball);
     e.image = Assets.images.ball;
     return e;
   }
 
-  @:allow(states.State)
+  @:allow(states.RoundState)
   function releaseBalls():Void {
     for (ball in world.all(Ball)) {
       if (ball.anchor != null) {
@@ -302,7 +302,7 @@ class Round {
   // Bricks
   //
 
-  @:allow(states.State)
+  @:allow(states.RoundState)
   function animateBricks():Void {
     for (brick in world.all(Brick)) {
       brick.animation.reset();
@@ -313,7 +313,7 @@ class Round {
   // Paddle
   //
 
-  @:allow(states.State)
+  @:allow(states.RoundState)
   function createPaddle():Entity {
     paddle.reset();
     paddle.animation = 'paddle_materialize'.loadAnimation(2, -1);
@@ -332,7 +332,7 @@ class Round {
     return paddle;
   }
 
-  @:allow(states.State)
+  @:allow(states.RoundState)
   function destroyPaddle():Void {
     // Don't move...
     freezePaddle = true;

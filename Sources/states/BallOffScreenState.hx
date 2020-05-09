@@ -1,40 +1,25 @@
 package states;
 
-import kha.graphics2.Graphics;
-
-import rounds.Round;
+import scenes.RoundScene;
 using AnimationExtension;
 
-class BallOffScreenState implements State {
-  var round:Round;
+class BallOffScreenState extends RoundState {
+  public function new(scene:RoundScene) {
+    super(scene);
 
-  public function new(round:Round) {
-    this.round = round;
-  }
-
-  public function enter(game:Game):Void {
     round.destroyPaddle();
   }
 
-  public function exit(game:Game):Void {
-  }
-
-  public function update(game:Game):Void {
-    round.update(game);
-
+  override function update():Void {
     if (round.paddle.animation.over()) {
       if (round.lives > 1) {
         // Try again!
-        game.state = new RoundRestartState(round);
+        scene.state = new RoundRestartState(scene);
       }
       else {
         // Game over!
-        game.state = new GameOverState(round);
+        scene.state = new GameOverState(scene);
       }
     }
-  }
-
-  public function render(game:Game, g2:Graphics):Void {
-    round.render(game, g2);
   }
 }

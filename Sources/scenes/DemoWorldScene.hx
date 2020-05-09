@@ -1,4 +1,4 @@
-package states;
+package scenes;
 
 import kha.Assets;
 import kha.Color;
@@ -11,25 +11,21 @@ import world.World;
 using AnimationExtension;
 using MathExtension;
 
-class DemoWorldState implements State {
+class DemoWorldScene extends Scene {
   var world:World = new World();
   var worldBounds:Bounds = {left:0.0, top:0.0, right:System.windowWidth(), bottom:System.windowHeight()};
 
-  public function new() {
-  }
+  public function new(game:Game) {
+    super(game);
 
-  public function enter(game:Game):Void {
-    game.resetBindings();
+    // Input bindings
     game.input.bind(Key(Backspace), (_)->{ game.backToTitle(); });
     game.input.bind(Key(B), (_)->{ newBalls(); });
     game.input.bind(Key(N), (_)->{ newPaddle(); });
     game.input.bind(Key(S), (_)->{ switchPaddlesVelocity(); });
   }
 
-  public function exit(game:Game):Void {
-  }
-
-  public function update(game:Game):Void {
+  override function update():Void {
     // Animate entities
     for (e in world.animatables()) {
       e.image = e.animation.tick();
@@ -53,7 +49,7 @@ class DemoWorldState implements State {
     }
   }
 
-  public function render(game:Game, g2:Graphics):Void {
+  override function render(g2:Graphics):Void {
     g2.color = Color.White;
     for (e in world.drawables()) {
       g2.drawImage(e.image, e.position.x - e.image.width * 0.5, e.position.y - e.image.height * 0.5);

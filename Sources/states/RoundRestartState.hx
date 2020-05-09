@@ -1,39 +1,24 @@
 package states;
 
-import kha.graphics2.Graphics;
+import scenes.RoundScene;
 
-import rounds.Round;
-
-class RoundRestartState implements State {
+class RoundRestartState extends RoundState {
   static inline var RESTART_FRAME = 50;
 
   var updateCount:Int = 0;
 
-  var round:Round;
+  public function new(scene:RoundScene) {
+    super(scene);
 
-  public function new(round:Round) {
-    this.round = round;
-  }
-
-  public function enter(game:Game):Void {
     round.reset();
   }
 
-  public function exit(game:Game):Void {
-  }
-
-  public function update(game:Game):Void {
-    round.update(game);
-
+  override function update():Void {
     if (updateCount == RESTART_FRAME) {
       if (!game.godMode) round.lives--;
-      game.state = new RoundStartState(round);
+      scene.state = new RoundStartState(scene);
     }
 
     updateCount++;
-  }
-
-  public function render(game:Game, g2:Graphics):Void {
-    round.render(game, g2);
   }
 }

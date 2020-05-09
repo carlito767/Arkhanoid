@@ -1,18 +1,21 @@
-package states;
+package scenes;
 
 import kha.graphics2.Graphics;
 
 import rounds.Round;
+import states.RoundState;
+import states.RoundStartState;
 
-class GameStartState implements State {
-  var round:Round;
+class RoundScene extends Scene {
+  public var round(default,null):Round;
+  public var state:RoundState;
 
-  public function new(round:Round) {
+  public function new(game:Game, round:Round) {
+    super(game);
+
     this.round = round;
-  }
 
-  public function enter(game:Game):Void {
-    game.resetBindings();
+    // Input bindings
     #if debug
     game.input.bind(Key(Backspace), (_)->{ game.backToTitle(); });
     game.input.bind(Key(Subtract), (_)->{
@@ -37,18 +40,18 @@ class GameStartState implements State {
       (_)->{ round.moveRight = true; },
       (_)->{ round.moveRight = false; }
     );
+
+    // Initialize state
+    state = new RoundStartState(this);
   }
 
-  public function exit(game:Game):Void {
-  }
-
-  public function update(game:Game):Void {
+  override function update():Void {
     round.update(game);
-
-    game.state = new RoundStartState(round);
+    state.update();
   }
 
-  public function render(game:Game, g2:Graphics):Void {
+  override function render(g2:Graphics):Void {
     round.render(game, g2);
+    state.render(g2);
   }
 }

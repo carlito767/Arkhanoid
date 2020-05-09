@@ -1,4 +1,4 @@
-package states;
+package scenes;
 
 import kha.Color;
 import kha.System;
@@ -14,7 +14,7 @@ typedef Demo = {
   name:String,
 }
 
-class DemoAnimationState implements State {
+class DemoAnimationScene extends Scene {
   var n:Int = 0;
 
   var paddles:Array<Demo>;
@@ -27,7 +27,9 @@ class DemoAnimationState implements State {
   var dy1:Int;
   var dy2:Int;
 
-  public function new() {
+  public function new(game:Game) {
+    super(game);
+
     paddles = [
       {anim:'paddle_materialize'.loadAnimation(4), name:'materialize'},
       {anim:'paddle_pulsate'.pulsateAnimation(4, 80), name:'normal (pulsate)'},
@@ -53,23 +55,15 @@ class DemoAnimationState implements State {
     }
 
     nextDemo();
-  }
 
-  public function enter(game:Game):Void {
-    game.resetBindings();
+    // Input bindings
     game.input.bind(Key(Backspace), (_)->{ game.backToTitle(); });
     game.input.bind(Key(A), (_)->{ nextDemo(); });
   }
 
-  public function exit(game:Game):Void {
-  }
-
-  public function update(game:Game):Void {
-  }
-
-  public function render(game:Game, g2:Graphics):Void {
+  override function render(g2:Graphics):Void {
     g2.color = Color.White;
-    g2.font = game.ALT_FONT;
+    g2.font = ALT_FONT;
     g2.fontSize = 46;
     g2.centerString(id, 200);
     g2.fontSize = fontSize;

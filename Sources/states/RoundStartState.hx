@@ -3,11 +3,11 @@ package states;
 import kha.Color;
 import kha.graphics2.Graphics;
 
-import rounds.Round;
+import scenes.RoundScene;
 using AnimationExtension;
 using Graphics2Extension;
 
-class RoundStartState implements State {
+class RoundStartState extends RoundState {
   static inline var DISPLAY_ROUND_FRAME = 60;
   static inline var DISPLAY_READY_FRAME = DISPLAY_ROUND_FRAME + 60;
   static inline var NO_DISPLAY_FRAME = DISPLAY_READY_FRAME + 50;
@@ -16,27 +16,13 @@ class RoundStartState implements State {
 
   var displayCount:Int = 0;
 
-  var round:Round;
-
-  public function new(round:Round) {
-    this.round = round;
+  public function new(scene:RoundScene) {
+    super(scene);
   }
 
-  public function enter(game:Game):Void {
-  }
-
-  public function exit(game:Game):Void {
-  }
-
-  public function update(game:Game):Void {
-    round.update(game);
-  }
-
-  public function render(game:Game, g2:Graphics):Void {
-    round.render(game, g2);
-
+  override function render(g2:Graphics):Void {
     g2.color = Color.White;
-    g2.font = game.MAIN_FONT;
+    g2.font = scene.MAIN_FONT;
     g2.fontSize = 18;
     // Display round name
     if (displayCount >= DISPLAY_ROUND_FRAME && displayCount < NO_DISPLAY_FRAME) {
@@ -64,7 +50,7 @@ class RoundStartState implements State {
       // Release the anchor
       round.releaseBalls();
       // Normal gameplay begins
-      game.state = new RoundPlayState(round);
+      scene.state = new RoundPlayState(scene);
     }
 
     // Update display count

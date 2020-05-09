@@ -8,11 +8,10 @@ import input.Input;
 import rounds.Round;
 import rounds.RoundDataFactory;
 import rounds.RoundsBuilder;
-import states.DemoAnimationState;
-import states.DemoWorldState;
-import states.GameStartState;
-import states.StartState;
-import states.State;
+import scenes.DemoAnimationScene;
+import scenes.DemoWorldScene;
+import scenes.RoundScene;
+import scenes.TitleScene;
 using Graphics2Extension;
 
 class Game {
@@ -20,23 +19,8 @@ class Game {
   public static inline var HEIGHT = 800;
   public static inline var FPS = 60;
 
-  public final MAIN_FONT = Assets.fonts.generation;
-  public final ALT_FONT = Assets.fonts.optimus;
-
   public var input(default,null):Input = new Input();
   public var rounds(default,never):Array<RoundDataFactory> = RoundsBuilder.rounds();
-
-  public var state(default,set):State;
-  function set_state(value:State) {
-    pause = false;
-
-    if (state != null) {
-      state.exit(this);
-    }
-    value.enter(this);
-
-    return state = value;
-  }
 
   public var score(default,set):Int = 0;
   function set_score(value) {
@@ -53,6 +37,8 @@ class Game {
   public var godMode:Bool = false;
   public var pause:Bool = false;
 
+  public var scene:Scene;
+
   static inline var SETTINGS_FILENAME = 'settings';
   var settings:GameSettings;
 
@@ -68,7 +54,7 @@ class Game {
       highScore:0,
     });
 
-    // Initialize state
+    // Initialize scene
     backToTitle();
 
     // Initialize game loop
@@ -106,19 +92,19 @@ class Game {
   }
 
   //
-  // Callbacks
+  // Scenes
   //
 
   public function backToTitle():Void {
-    state = new StartState();
+    scene = new TitleScene(this);
   }
 
   public function showDemoAnimation():Void {
-    state = new DemoAnimationState();
+    scene = new DemoAnimationScene(this);
   }
 
   public function showDemoWorld():Void {
-    state = new DemoWorldState();
+    scene = new DemoWorldScene(this);
   }
 
   public function switchToRound(id:Int, lives:Int = 3):Void {
@@ -129,7 +115,7 @@ class Game {
     var roundDataFactory = rounds[id - 1];
     if (roundDataFactory != null) {
       var round = new Round(id, lives, roundDataFactory());
-      state = new GameStartState(round);
+      scene = new RoundScene(this, round);
     }
   }
 
@@ -140,7 +126,7 @@ class Game {
   function update():Void {
     input.update();
     if (!pause) {
-      state.update(this);
+      scene.update();
     }
   }
 
@@ -153,7 +139,7 @@ class Game {
     g2.drawImage(Assets.images.logo, 5, 0);
 
     // Display scores
-    g2.font = MAIN_FONT;
+    g2.font = Assets.fonts.generation;
     g2.fontSize = 18;
 
     g2.color = Color.fromBytes(230, 0, 0);
@@ -170,8 +156,8 @@ class Game {
       g2.rightString('GOD MODE', WIDTH - 10, 125);
     }
 
-    // Display state
-    state.render(this, g2);
+    // Display scene
+    scene.render(g2);
 
     g2.end();
   }

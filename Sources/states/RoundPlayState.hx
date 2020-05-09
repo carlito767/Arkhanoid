@@ -1,36 +1,20 @@
 package states;
 
-import kha.graphics2.Graphics;
+import scenes.RoundScene;
 
-import rounds.Round;
-
-class RoundPlayState implements State {
-  var round:Round;
-
-  public function new(round:Round) {
-    this.round = round;
+class RoundPlayState extends RoundState {
+  public function new(scene:RoundScene) {
+    super(scene);
   }
 
-  public function enter(game:Game):Void {
-  }
-
-  public function exit(game:Game):Void {
-  }
-
-  public function update(game:Game):Void {
-    round.update(game);
-
+  override function update():Void {
     if (round.win()) {
       // You win!
-      game.state = new RoundEndState(round);
+      scene.state = new RoundEndState(scene);
     }
     else if (round.lose()) {
       // You lose!
-      game.state = new BallOffScreenState(round);
+      scene.state = new BallOffScreenState(scene);
     }
-  }
-
-  public function render(game:Game, g2:Graphics):Void {
-    round.render(game, g2);
   }
 }

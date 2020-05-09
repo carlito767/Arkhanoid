@@ -1,4 +1,4 @@
-package states;
+package scenes;
 
 import kha.Color;
 import kha.graphics2.Graphics;
@@ -15,13 +15,15 @@ typedef PowerupData = {
   desc:String,
 }
 
-class StartState implements State {
+class TitleScene extends Scene {
   var displayCount:Int = 0;
 
   var powerups:Array<PowerupData>;
   var roundId:Int;
 
-  public function new() {
+  public function new(game:Game) {
+    super(game);
+
     powerups = [
       {anim:'powerup_laser'.loadAnimation(4), name:'laser', desc:'enables the vaus\nto fire a laser'},
       {anim:'powerup_slow'.loadAnimation(4), name:'slow', desc:'slow down the\nenergy ball'},
@@ -31,10 +33,8 @@ class StartState implements State {
       {anim:'powerup_duplicate'.loadAnimation(4), name:'duplicate', desc:'duplicates the energy\nball'},
     ];
     roundId = 0;
-  }
 
-  public function enter(game:Game):Void {
-    game.resetBindings();
+    // Input bindings
     #if debug
     game.input.bind(Key(A), (_)->{ game.showDemoAnimation(); });
     game.input.bind(Key(W), (_)->{ game.showDemoWorld(); });
@@ -62,14 +62,8 @@ class StartState implements State {
     });
   }
 
-  public function exit(game:Game):Void {
-  }
-
-  public function update(game:Game):Void {
-  }
-
-  public function render(game:Game, g2:Graphics):Void {
-    g2.font = game.ALT_FONT;
+  override function render(g2:Graphics):Void {
+    g2.font = ALT_FONT;
 
     // Display powerups
     g2.color = Color.White;
