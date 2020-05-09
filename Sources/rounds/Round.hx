@@ -286,6 +286,14 @@ class Round {
     return e;
   }
 
+  function cloneBall(e:Entity):Entity {
+    var clone = world.add(Ball);
+    clone.image = e.image;
+    clone.position = {x:e.position.x, y:e.position.y};
+    clone.velocity = {speed:e.velocity.speed, angle:e.velocity.angle};
+    return clone;
+  }
+
   @:allow(states.RoundState)
   function releaseBalls():Void {
     for (ball in world.all(Ball)) {
@@ -359,6 +367,19 @@ class Round {
       case Catch:
         game.input.bind(Key(Space), (_)->{ releaseBalls(); });
       case Duplicate:
+        var splitAngle = 0.4; // radians
+        for (ball in world.all(Ball)) {
+          var angle = ball.velocity.angle + splitAngle;
+          if (angle > 2 * Math.PI) {
+            angle -= 2 * Math.PI;
+          }
+
+          var clone1 = cloneBall(ball);
+          clone1.velocity.angle = angle;
+
+          var clone2 = cloneBall(ball);
+          clone2.velocity.angle = Math.abs(ball.velocity.angle - splitAngle);
+        }
       case Expand:
       case Laser:
       case Life:
@@ -373,6 +394,7 @@ class Round {
         game.input.bind(Key(Space));
         releaseBalls();
       case Duplicate:
+        // Nothing
       case Expand:
       case Laser:
       case Life:
