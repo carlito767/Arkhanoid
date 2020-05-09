@@ -5,7 +5,6 @@ import kha.Scheduler;
 import kha.System;
 
 import input.Input;
-import rounds.Round;
 import rounds.RoundDataFactory;
 import rounds.RoundsBuilder;
 import scenes.DemoAnimationScene;
@@ -112,11 +111,7 @@ class Game {
       backToTitle();
       return;
     }
-    var roundDataFactory = rounds[id - 1];
-    if (roundDataFactory != null) {
-      var round = new Round(id, lives, roundDataFactory());
-      scene = new RoundScene(this, round);
-    }
+    scene = new RoundScene(this, id, lives);
   }
 
   //

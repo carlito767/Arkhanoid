@@ -10,10 +10,11 @@ class RoundScene extends Scene {
   public var round(default,null):Round;
   public var state:RoundState;
 
-  public function new(game:Game, round:Round) {
+  public function new(game:Game, id:Int, lives:Int) {
     super(game);
 
-    this.round = round;
+    var roundDataFactory = game.rounds[id - 1];
+    round = new Round(id, lives, roundDataFactory());
 
     // Input bindings
     #if debug
