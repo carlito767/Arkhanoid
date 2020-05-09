@@ -15,8 +15,6 @@ typedef Demo = {
 }
 
 class DemoAnimationState implements State {
-  var game:Game;
-
   var n:Int = 0;
 
   var paddles:Array<Demo>;
@@ -29,9 +27,7 @@ class DemoAnimationState implements State {
   var dy1:Int;
   var dy2:Int;
 
-  public function new(game:Game) {
-    this.game = game;
-
+  public function new() {
     paddles = [
       {anim:'paddle_materialize'.loadAnimation(4), name:'materialize'},
       {anim:'paddle_pulsate'.pulsateAnimation(4, 80), name:'normal (pulsate)'},
@@ -57,17 +53,21 @@ class DemoAnimationState implements State {
     }
 
     nextDemo();
+  }
 
-    // Input bindings
+  public function enter(game:Game):Void {
     game.resetBindings();
     game.input.bind(Key(Backspace), (_)->{ game.backToTitle(); });
     game.input.bind(Key(A), (_)->{ nextDemo(); });
   }
 
-  public function update():Void {
+  public function exit(game:Game):Void {
   }
 
-  public function render(g2:Graphics):Void {
+  public function update(game:Game):Void {
+  }
+
+  public function render(game:Game, g2:Graphics):Void {
     g2.color = Color.White;
     g2.font = game.ALT_FONT;
     g2.fontSize = 46;
@@ -87,7 +87,7 @@ class DemoAnimationState implements State {
   }
 
   function nextDemo():Void {
-    n++;
+    n = (n % 3) + 1;
     switch n {
       case 1:
         id = 'PADDLES';
@@ -108,7 +108,7 @@ class DemoAnimationState implements State {
         dy1 = 25;
         dy2 = 52;
       default:
-        game.backToTitle();
+        // Should never happen
     }
   }
 }

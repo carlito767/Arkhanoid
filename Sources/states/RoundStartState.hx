@@ -7,7 +7,7 @@ import rounds.Round;
 using AnimationExtension;
 using Graphics2Extension;
 
-class RoundStartState extends RoundState {
+class RoundStartState implements State {
   static inline var DISPLAY_ROUND_FRAME = 60;
   static inline var DISPLAY_READY_FRAME = DISPLAY_ROUND_FRAME + 60;
   static inline var NO_DISPLAY_FRAME = DISPLAY_READY_FRAME + 50;
@@ -16,11 +16,25 @@ class RoundStartState extends RoundState {
 
   var displayCount:Int = 0;
 
-  public function new(game:Game, round:Round) {
-    super(game, round);
+  var round:Round;
+
+  public function new(round:Round) {
+    this.round = round;
   }
 
-  override function postRender(g2:Graphics):Void {
+  public function enter(game:Game):Void {
+  }
+
+  public function exit(game:Game):Void {
+  }
+
+  public function update(game:Game):Void {
+    round.update(game);
+  }
+
+  public function render(game:Game, g2:Graphics):Void {
+    round.render(game, g2);
+
     g2.color = Color.White;
     g2.font = game.MAIN_FONT;
     g2.fontSize = 18;
@@ -50,7 +64,7 @@ class RoundStartState extends RoundState {
       // Release the anchor
       round.releaseBalls();
       // Normal gameplay begins
-      game.state = new RoundPlayState(game, round);
+      game.state = new RoundPlayState(round);
     }
 
     // Update display count

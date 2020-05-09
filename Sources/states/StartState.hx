@@ -16,16 +16,12 @@ typedef PowerupData = {
 }
 
 class StartState implements State {
-  var game:Game;
-
   var displayCount:Int = 0;
 
   var powerups:Array<PowerupData>;
   var roundId:Int;
 
-  public function new(game:Game) {
-    this.game = game;
-
+  public function new() {
     powerups = [
       {anim:'powerup_laser'.loadAnimation(4), name:'laser', desc:'enables the vaus\nto fire a laser'},
       {anim:'powerup_slow'.loadAnimation(4), name:'slow', desc:'slow down the\nenergy ball'},
@@ -35,8 +31,9 @@ class StartState implements State {
       {anim:'powerup_duplicate'.loadAnimation(4), name:'duplicate', desc:'duplicates the energy\nball'},
     ];
     roundId = 0;
+  }
 
-    // Input bindings
+  public function enter(game:Game):Void {
     game.resetBindings();
     #if debug
     game.input.bind(Key(A), (_)->{ game.showDemoAnimation(); });
@@ -65,10 +62,13 @@ class StartState implements State {
     });
   }
 
-  public function update():Void {
+  public function exit(game:Game):Void {
   }
 
-  public function render(g2:Graphics):Void {
+  public function update(game:Game):Void {
+  }
+
+  public function render(game:Game, g2:Graphics):Void {
     g2.font = game.ALT_FONT;
 
     // Display powerups

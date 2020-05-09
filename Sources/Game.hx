@@ -27,8 +27,14 @@ class Game {
   public var rounds(default,never):Array<RoundDataFactory> = RoundsBuilder.rounds();
 
   public var state(default,set):State;
-  function set_state(value) {
+  function set_state(value:State) {
     pause = false;
+
+    if (state != null) {
+      state.exit(this);
+    }
+    value.enter(this);
+
     return state = value;
   }
 
@@ -104,15 +110,15 @@ class Game {
   //
 
   public function backToTitle():Void {
-    state = new StartState(this);
+    state = new StartState();
   }
 
   public function showDemoAnimation():Void {
-    state = new DemoAnimationState(this);
+    state = new DemoAnimationState();
   }
 
   public function showDemoWorld():Void {
-    state = new DemoWorldState(this);
+    state = new DemoWorldState();
   }
 
   public function switchToRound(id:Int, lives:Int = 3):Void {
@@ -123,7 +129,7 @@ class Game {
     var roundDataFactory = rounds[id - 1];
     if (roundDataFactory != null) {
       var round = new Round(id, lives, roundDataFactory());
-      state = new GameStartState(this, round);
+      state = new GameStartState(round);
     }
   }
 
@@ -134,7 +140,7 @@ class Game {
   function update():Void {
     input.update();
     if (!pause) {
-      state.update();
+      state.update(this);
     }
   }
 
@@ -165,7 +171,7 @@ class Game {
     }
 
     // Display state
-    state.render(g2);
+    state.render(this, g2);
 
     g2.end();
   }
