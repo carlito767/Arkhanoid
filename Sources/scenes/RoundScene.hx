@@ -3,6 +3,7 @@ package scenes;
 import kha.graphics2.Graphics;
 
 import rounds.Round;
+import states.BallOffScreenState;
 import states.RoundState;
 import states.RoundStartState;
 
@@ -18,7 +19,6 @@ class RoundScene extends Scene {
 
     // Input bindings
     #if debug
-    game.input.bind(Key(Backspace), (_)->{ game.backToTitle(); });
     game.input.bind(Key(Subtract), (_)->{
       if (round.id > 1) {
         game.switchToRound(round.id - 1, round.lives);
@@ -33,6 +33,7 @@ class RoundScene extends Scene {
       game.switchToRound(round.id, round.lives);
     });
     #end
+    game.input.bind(Key(Backspace), (_)->{ game.backToTitle(); });
     game.input.bind(Key(Left),
       (_)->{ round.moveLeft = true; },
       (_)->{ round.moveLeft = false; }
@@ -41,6 +42,9 @@ class RoundScene extends Scene {
       (_)->{ round.moveRight = true; },
       (_)->{ round.moveRight = false; }
     );
+    game.input.bind(Key(K), (_)->{
+      state = new BallOffScreenState(this);
+    });
 
     // Initialize state
     state = new RoundStartState(this);
