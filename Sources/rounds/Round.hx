@@ -4,7 +4,7 @@ import kha.Color;
 
 import components.Brick;
 
-typedef RoundData = {
+typedef Round = {
   id:Int,
   backgroundColor:Color,
   ?ballBaseSpeedAdjust:Float,

@@ -27,7 +27,7 @@ class RoundStartState extends RoundState {
     g2.fontSize = 18;
     // Display round name
     if (displayCount >= DISPLAY_ROUND_FRAME && displayCount < NO_DISPLAY_FRAME) {
-      g2.centerString('Round ${roundData.id}', 600);
+      g2.centerString('Round ${round.id}', 600);
     }
     // Display 'Ready'
     if (displayCount >= DISPLAY_READY_FRAME && displayCount < NO_DISPLAY_FRAME) {

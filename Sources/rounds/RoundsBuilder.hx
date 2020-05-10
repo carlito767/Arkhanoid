@@ -19,7 +19,7 @@ typedef RawRound = {
 
 class RoundsBuilder {
   public static function rounds() {
-    var rounds:Array<RoundDataFactory> = [];
+    var rounds:Array<RoundFactory> = [];
 
     // Load rounds from JSON files (Assets/round*.json)
     var id = 1;
@@ -48,7 +48,7 @@ class RoundsBuilder {
     return rounds;
   }
 
-  static function cook(rawRound:RawRound):RoundData {
+  static function cook(rawRound:RawRound):Round {
     // Bricks
     var bricks:Array<Brick> = [];
     for (y in 0...rawRound.bricks.length) {

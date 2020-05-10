@@ -8,7 +8,7 @@ import kha.graphics2.Graphics;
 import components.BounceStrategy;
 import components.Bounds;
 import components.PowerupType;
-import rounds.RoundData;
+import rounds.Round;
 import states.BallOffScreenState;
 import states.RoundState;
 import states.RoundStartState;
@@ -46,7 +46,7 @@ class RoundScene extends Scene {
   static inline var POWERUP_VALUE = 1000;
 
   public var lives:Int;
-  public var roundData(default,null):RoundData;
+  public var round(default,null):Round;
   public var state:RoundState;
 
   public var freezePaddle:Bool = false;
@@ -70,17 +70,17 @@ class RoundScene extends Scene {
   public var world(default,never):World = new World();
   public var worldBounds(default,never):Bounds = {left:0.0, top:TOP_OFFSET, right:System.windowWidth(), bottom:System.windowHeight()};
 
-  public function new(game:Game, roundData:RoundData, lives:Int) {
+  public function new(game:Game, round:Round, lives:Int) {
     super(game);
 
     this.lives = lives;
-    this.roundData = roundData;
+    this.round = round;
 
-    if (roundData.ballBaseSpeedAdjust != null) {
-      ballBaseSpeedAdjust = roundData.ballBaseSpeedAdjust;
+    if (round.ballBaseSpeedAdjust != null) {
+      ballBaseSpeedAdjust = round.ballBaseSpeedAdjust;
     }
-    if (roundData.ballSpeedNormalisationRateAdjust != null) {
-      ballSpeedNormalisationRate += roundData.ballSpeedNormalisationRateAdjust;
+    if (round.ballSpeedNormalisationRateAdjust != null) {
+      ballSpeedNormalisationRate += round.ballSpeedNormalisationRateAdjust;
     }
     ballBaseSpeed += ballBaseSpeedAdjust;
 
@@ -105,7 +105,7 @@ class RoundScene extends Scene {
     edgeTop.y = worldBounds.top;
 
     // Create bricks
-    for (brick in roundData.bricks) {
+    for (brick in round.bricks) {
       var e = world.add(Brick);
       e.animation = brick.animation;
       e.image = brick.image;
@@ -125,17 +125,17 @@ class RoundScene extends Scene {
 
     #if debug
     game.input.bind(Key(Subtract), (_)->{
-      if (roundData.id > 1) {
-        game.switchToRound(roundData.id - 1, this.lives);
+      if (round.id > 1) {
+        game.switchToRound(round.id - 1, this.lives);
       }
     });
     game.input.bind(Key(Add), (_)->{
-      if (roundData.id < game.rounds.length) {
-        game.switchToRound(roundData.id + 1, this.lives);
+      if (round.id < game.rounds.length) {
+        game.switchToRound(round.id + 1, this.lives);
       }
     });
     game.input.bind(Key(R), (_)->{
-      game.switchToRound(roundData.id, this.lives);
+      game.switchToRound(round.id, this.lives);
     });
     #end
     game.input.bind(Key(Backspace), (_)->{ game.backToTitle(); });
@@ -280,7 +280,7 @@ class RoundScene extends Scene {
 
   override function render(g2:Graphics):Void {
     // Draw background
-    g2.color = roundData.backgroundColor;
+    g2.color = round.backgroundColor;
     g2.fillRect(worldBounds.left, worldBounds.top, worldBounds.right - worldBounds.left, worldBounds.bottom - worldBounds.top);
 
     // Draw entities
