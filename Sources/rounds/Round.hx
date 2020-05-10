@@ -32,6 +32,8 @@ class Round {
   // This is based on a game running at 60fps. You might need to increment it by
   // a couple of notches if you find the ball moves too slowly.
   static inline var BALL_BASE_SPEED = 8.0; // pixels per frame
+  // The ball will assume this base speed when the "Slow" powerup is activated.
+  static inline var BALL_SLOW_SPEED = 6.0; // pixels per frame
   // The max speed of the ball, prevents a runaway speed when lots of rapid
   // collisions.
   static inline var BALL_TOP_SPEED = 15.0; // pixels per frame
@@ -51,7 +53,9 @@ class Round {
   var currentPowerupType:Null<PowerupType> = null;
 
   var ballBaseSpeed:Float = BALL_BASE_SPEED;
+  var ballBaseSpeedAdjust:Float = 0.0;
   var ballSpeedNormalisationRate:Float = BALL_SPEED_NORMALISATION_RATE;
+  var ballTopSpeed:Float = BALL_TOP_SPEED;
 
   var edgeLeft:Entity;
   var edgeRight:Entity;
@@ -68,11 +72,12 @@ class Round {
     this.lives = lives;
     backgroundColor = roundData.backgroundColor;
     if (roundData.ballBaseSpeedAdjust != null) {
-      ballBaseSpeed += roundData.ballBaseSpeedAdjust;
+      ballBaseSpeedAdjust = roundData.ballBaseSpeedAdjust;
     }
     if (roundData.ballSpeedNormalisationRateAdjust != null) {
       ballSpeedNormalisationRate += roundData.ballSpeedNormalisationRateAdjust;
     }
+    ballBaseSpeed += ballBaseSpeedAdjust;
 
     // Create edges
     edgeLeft = world.add(Edge);
@@ -218,7 +223,7 @@ class Round {
         ball.speed += (ball.speed > ballBaseSpeed) ? -ballSpeedNormalisationRate : ballSpeedNormalisationRate;
       }
       else {
-        ball.speed = Math.min(ball.speed + speed, BALL_TOP_SPEED);
+        ball.speed = Math.min(ball.speed + speed, ballTopSpeed);
       }
 
       if (collideWithPaddle && currentPowerupType == Catch) {
@@ -396,6 +401,11 @@ class Round {
       case Life:
         lives++;
       case Slow:
+        ballBaseSpeed = BALL_SLOW_SPEED;
+        ballTopSpeed = BALL_SLOW_SPEED;
+        for (ball in world.all(Ball)) {
+          ball.speed = BALL_SLOW_SPEED;
+        }
     }
   }
 
@@ -411,6 +421,8 @@ class Round {
       case Life:
         // Nothing
       case Slow:
+        ballBaseSpeed = BALL_BASE_SPEED + ballBaseSpeedAdjust;
+        ballTopSpeed = BALL_TOP_SPEED;
     }
   }
 }
