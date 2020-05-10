@@ -33,10 +33,10 @@ class DemoWorldScene extends Scene {
 
     // Move entities
     for (e in world.movables()) {
-      e.position.x += e.velocity.speed * Math.cos(e.velocity.angle);
-      e.position.y += e.velocity.speed * Math.sin(e.velocity.angle);
+      e.x += e.speed * Math.cos(e.angle);
+      e.y += e.speed * Math.sin(e.angle);
 
-      var bounds:Bounds = {left:e.position.x, top:e.position.y, right:e.position.x, bottom:e.position.y};
+      var bounds:Bounds = {left:e.x, top:e.y, right:e.x, bottom:e.y};
       if (e.image != null) {
         bounds.left -= e.image.width * 0.5;
         bounds.top -= e.image.height * 0.5;
@@ -52,7 +52,7 @@ class DemoWorldScene extends Scene {
   override function render(g2:Graphics):Void {
     g2.color = Color.White;
     for (e in world.drawables()) {
-      g2.drawImage(e.image, e.position.x - e.image.width * 0.5, e.position.y - e.image.height * 0.5);
+      g2.drawImage(e.image, e.x - e.image.width * 0.5, e.y - e.image.height * 0.5);
     }
   }
 
@@ -60,27 +60,25 @@ class DemoWorldScene extends Scene {
     for (_ in 0...10) {
       var e = world.add();
       e.image = Assets.images.ball;
-      e.position = {x:System.windowWidth() * 0.5, y:System.windowHeight() * 0.5};
-      var speed = 2.0 + Math.random() * 10;
-      var angle = Math.random() * 360;
-      e.velocity = {speed:speed, angle:angle.toRadians()};
+      e.x = System.windowWidth() * 0.5;
+      e.y = System.windowHeight() * 0.5;
+      e.speed = 2.0 + Math.random() * 10;
+      e.angle = Math.random() * 360;
     }
   }
 
   function newPaddle():Void {
     var paddle = world.add(Paddle);
     paddle.animation = 'paddle_wide'.pulsateAnimation(4);
-    var x = Math.random() * System.windowWidth();
-    var y = Math.random() * System.windowHeight();
-    paddle.position = {x:x, y:y};
-    var speed = Math.random() * 2;
-    var angle = Math.random() * 360;
-    paddle.velocity = {speed:speed, angle:angle.toRadians()};
+    paddle.x = Math.random() * System.windowWidth();
+    paddle.y = Math.random() * System.windowHeight();
+    paddle.speed = Math.random() * 2;
+    paddle.angle = Math.random() * 360;
   }
 
   function switchPaddlesVelocity():Void {
     for (e in world.movables(Paddle)) {
-      e.velocity.angle = 2 * Math.PI - e.velocity.angle;
+      e.angle = 2 * Math.PI - e.angle;
     }
   }
 }

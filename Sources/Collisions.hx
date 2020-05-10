@@ -5,10 +5,10 @@ import world.Entity;
 class Collisions {
   public static function bounds(e:Entity):Bounds {
     return {
-      left:e.position.x,
-      top:e.position.y,
-      right:e.position.x + e.image.width,
-      bottom:e.position.y + e.image.height,
+      left:e.x,
+      top:e.y,
+      right:e.x + e.image.width,
+      bottom:e.y + e.image.height,
     };
   }
 

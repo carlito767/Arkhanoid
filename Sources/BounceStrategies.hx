@@ -13,9 +13,9 @@ class BounceStrategies {
   static inline var RANDOM_RANGE = 0.1; // radians
 
   public static function bounceStrategy(ball:Entity, collisions:List<Bounds>):Float {
-    if (collisions.isEmpty()) return ball.velocity.angle;
+    if (collisions.isEmpty()) return ball.angle;
 
-    var angle = ball.velocity.angle;
+    var angle = ball.angle;
 
     // Determine collide points
     var tl = false;
@@ -135,6 +135,6 @@ class BounceStrategies {
     }
 
     // Should never happen
-    return ball.velocity.angle;
+    return ball.angle;
   }
 }

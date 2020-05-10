@@ -77,23 +77,27 @@ class Round {
     // Create edges
     edgeLeft = world.add(Edge);
     edgeLeft.image = Assets.images.edge_left;
-    edgeLeft.position = {x:worldBounds.left, y:worldBounds.top};
+    edgeLeft.x = worldBounds.left;
+    edgeLeft.y = worldBounds.top;
 
     edgeRight = world.add(Edge);
     edgeRight.image = Assets.images.edge_right;
-    edgeRight.position = {x:worldBounds.right - edgeRight.image.width, y:worldBounds.top};
+    edgeRight.x = worldBounds.right - edgeRight.image.width;
+    edgeRight.y = worldBounds.top;
 
     edgeTop = world.add(Edge);
     edgeTop.image = Assets.images.edge_top;
-    edgeTop.position = {x:edgeLeft.image.width, y:worldBounds.top};
+    edgeTop.x = edgeLeft.image.width;
+    edgeTop.y = worldBounds.top;
 
     // Create bricks
     for (brick in roundData.bricks) {
       var e = world.add(Brick);
       e.animation = brick.animation;
       e.image = brick.image;
-      e.position = {x:brick.x + edgeLeft.image.width, y:brick.y + worldBounds.top};
-      e.life = brick.life;
+      e.x = brick.x + edgeLeft.image.width;
+      e.y = brick.y + worldBounds.top;
+      e.health = brick.health;
       e.value = brick.value;
       e.powerupType = brick.powerupType;
     }
@@ -113,13 +117,16 @@ class Round {
   public function update(game:Game):Void {
     // Detect paddle movement
     if (!freezePaddle && moveLeft && !moveRight) {
-      paddle.velocity = {speed:PADDLE_SPEED, angle:180.toRadians()};
+      paddle.speed = PADDLE_SPEED;
+      paddle.angle = 180.toRadians();
     }
     else if (!freezePaddle && moveRight && !moveLeft) {
-      paddle.velocity = {speed:PADDLE_SPEED, angle:0.0};
+      paddle.speed = PADDLE_SPEED;
+      paddle.angle = 0.0;
     }
     else {
-      paddle.velocity = null;
+      paddle.speed = null;
+      paddle.angle = null;
     }
 
     // Animate entities
@@ -129,8 +136,8 @@ class Round {
 
     // Move entities
     for (e in world.movables()) {
-      e.position.x += e.velocity.speed * Math.cos(e.velocity.angle);
-      e.position.y += e.velocity.speed * Math.sin(e.velocity.angle);
+      e.x += e.speed * Math.cos(e.angle);
+      e.y += e.speed * Math.sin(e.angle);
     }
 
     // Detect paddle collisions
@@ -138,13 +145,13 @@ class Round {
       // Detect collision between paddle and edges
       var dx = 0.0;
       if (paddle.collide(edgeLeft)) {
-        dx = edgeLeft.position.x + edgeLeft.image.width - paddle.position.x;
+        dx = edgeLeft.x + edgeLeft.image.width - paddle.x;
       }
       if (paddle.collide(edgeRight)) {
-        dx = edgeRight.position.x - (paddle.position.x + paddle.image.width);
+        dx = edgeRight.x - (paddle.x + paddle.image.width);
       }
 
-      paddle.position.x += dx;
+      paddle.x += dx;
 
       // Detect collision between paddle and powerups
       for (powerup in world.collidables(Powerup)) {
@@ -179,9 +186,9 @@ class Round {
         if (ball.collide(brick)) {
           collisions.add(brick.bounds());
           speed += BRICK_SPEED_ADJUST;
-          if (brick.life > 0) {
-            brick.life--;
-            if (brick.life == 0) {
+          if (brick.health > 0) {
+            brick.health--;
+            if (brick.health == 0) {
               game.score += brick.value;
               if (brick.powerupType != null) {
                 createPowerup(brick);
@@ -201,17 +208,17 @@ class Round {
 
       // Determine new angle for ball
       if (!collisions.isEmpty()) {
-        ball.velocity.angle = (collisions.length == 1 && bounceStrategy != null)
+        ball.angle = (collisions.length == 1 && bounceStrategy != null)
           ? bounceStrategy(ball, collisions.first())
           : BounceStrategies.bounceStrategy(ball, collisions);
       }
 
       // Determine new speed for ball
       if (collisions.isEmpty()) {
-        ball.velocity.speed += (ball.velocity.speed > ballBaseSpeed) ? -ballSpeedNormalisationRate : ballSpeedNormalisationRate;
+        ball.speed += (ball.speed > ballBaseSpeed) ? -ballSpeedNormalisationRate : ballSpeedNormalisationRate;
       }
       else {
-        ball.velocity.speed = Math.min(ball.velocity.speed + speed, BALL_TOP_SPEED);
+        ball.speed = Math.min(ball.speed + speed, BALL_TOP_SPEED);
       }
 
       if (collideWithPaddle && currentPowerupType == Catch) {
@@ -221,7 +228,7 @@ class Round {
 
     // Remove out of bounds
     for (e in world.drawables()) {
-      if (e.position.y >= worldBounds.bottom) {
+      if (e.y >= worldBounds.bottom) {
         e.remove();
       }
     }
@@ -236,11 +243,11 @@ class Round {
 
     // Draw entities
     for (e in world.drawables()) {
-      g2.drawImage(e.image, e.position.x, e.position.y);
+      g2.drawImage(e.image, e.x, e.y);
       if (game.debugMode && e.kind == Brick && e.powerupType != null) {
         var name = e.powerupType.getName().toLowerCase();
         var image = Assets.images.get('powerup_${name}_1');
-        g2.drawImage(image, e.position.x, e.position.y);
+        g2.drawImage(image, e.x, e.y);
       }
       for (anchored in world.anchoredTo(e)) {
         var position = anchored.anchorPosition();
@@ -252,7 +259,7 @@ class Round {
 
     // Draw lives
     var paddleLife = Assets.images.paddle_life;
-    var x = edgeLeft.position.x + edgeLeft.image.width;
+    var x = edgeLeft.x + edgeLeft.image.width;
     var y = worldBounds.bottom - paddleLife.height - 5;
     for (i in 1...lives) {
       g2.drawImage(paddleLife, x, y);
@@ -289,8 +296,10 @@ class Round {
   function cloneBall(e:Entity):Entity {
     var clone = world.add(Ball);
     clone.image = e.image;
-    clone.position = {x:e.position.x, y:e.position.y};
-    clone.velocity = {speed:e.velocity.speed, angle:e.velocity.angle};
+    clone.x = e.x;
+    clone.y = e.y;
+    clone.speed = e.speed;
+    clone.angle = e.angle;
     return clone;
   }
 
@@ -298,9 +307,11 @@ class Round {
   function releaseBalls():Void {
     for (ball in world.all(Ball)) {
       if (ball.anchor != null) {
-        ball.position = ball.anchorPosition();
-        var angle = (ball.velocity == null) ? BALL_START_ANGLE_RAD : ball.velocity.angle;
-        ball.velocity = {speed:ballBaseSpeed, angle:angle};
+        var position = ball.anchorPosition();
+        ball.x = position.x;
+        ball.y = position.y;
+        ball.speed = ballBaseSpeed;
+        if (ball.angle == null) ball.angle = BALL_START_ANGLE_RAD;
         ball.anchor = null;
       }
     }
@@ -326,10 +337,8 @@ class Round {
     paddle.reset();
     paddle.animation = 'paddle_materialize'.loadAnimation(2, -1);
     paddle.image = paddle.animation.tick();
-    paddle.position = {
-      x:(worldBounds.right + worldBounds.left - paddle.image.width) * 0.5,
-      y:worldBounds.bottom - paddle.image.height - 30
-    };
+    paddle.x = (worldBounds.right + worldBounds.left - paddle.image.width) * 0.5;
+    paddle.y = worldBounds.bottom - paddle.image.height - 30;
     paddle.bounceStrategy = BounceStrategies.bounceStrategyPaddle;
 
     // Move your body!
@@ -356,9 +365,11 @@ class Round {
     var e = world.add(Powerup);
     var name = brick.powerupType.getName().toLowerCase();
     e.animation = 'powerup_$name'.loadAnimation(4);
-    e.position = brick.position;
+    e.x = brick.x;
+    e.y = brick.y;
     e.powerupType = brick.powerupType;
-    e.velocity = {speed:POWERUP_SPEED, angle:90.toRadians()};
+    e.speed = POWERUP_SPEED;
+    e.angle = 90.toRadians();
     e.value = POWERUP_VALUE;
   }
 
@@ -369,16 +380,16 @@ class Round {
       case Duplicate:
         var splitAngle = 0.4; // radians
         for (ball in world.all(Ball)) {
-          var angle = ball.velocity.angle + splitAngle;
+          var angle = ball.angle + splitAngle;
           if (angle > 2 * Math.PI) {
             angle -= 2 * Math.PI;
           }
 
           var clone1 = cloneBall(ball);
-          clone1.velocity.angle = angle;
+          clone1.angle = angle;
 
           var clone2 = cloneBall(ball);
-          clone2.velocity.angle = Math.abs(ball.velocity.angle - splitAngle);
+          clone2.angle = Math.abs(ball.angle - splitAngle);
         }
       case Expand:
       case Laser:

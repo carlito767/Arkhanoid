@@ -76,7 +76,7 @@ class RoundsBuilder {
             image:image,
             x:x * image.width,
             y:y * image.height,
-            life:brickLife(id, color),
+            health:brickHealth(id, color),
             value:brickValue(id, color),
           });
         }
@@ -108,7 +108,7 @@ class RoundsBuilder {
     };
   }
 
-  static function brickLife(id:Int, color:BrickColor):Int {
+  static function brickHealth(id:Int, color:BrickColor):Int {
     return switch color {
       case Gold: 0; // indestructable
       case Silver: Math.ceil(id / 8) + 1;

@@ -4,7 +4,7 @@ typedef Brick = {
   > Position,
   animation:Animation,
   image:Image,
-  life:Int,
+  health:Int,
   value:Int,
   ?powerupType:PowerupType,
 }
