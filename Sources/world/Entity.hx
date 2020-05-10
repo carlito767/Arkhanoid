@@ -6,7 +6,6 @@ import components.BounceStrategy;
 import components.Image;
 import components.Position;
 import components.PowerupType;
-import components.Velocity;
 
 class Entity {
   @:isVar public var anchor(get,set):Null<Anchor>;
