@@ -8,13 +8,28 @@ class RoundPlayState extends RoundState {
   }
 
   override function update():Void {
-    if (round.win()) {
+    if (win()) {
       // You win!
       scene.state = new RoundEndState(scene);
     }
-    else if (round.lose()) {
+    else if (lose()) {
       // You lose!
       scene.state = new BallOffScreenState(scene);
     }
+  }
+
+  //
+  // Win/Lose conditions
+  //
+
+  function win():Bool {
+    for (brick in world.all(Brick)) {
+      if (brick.value > 0) return false;
+    }
+    return true;
+  }
+
+  function lose():Bool {
+    return world.all(Ball).length == 0;
   }
 }

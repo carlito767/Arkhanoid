@@ -10,7 +10,7 @@ class GameOverState extends RoundState {
   public function new(scene:RoundScene) {
     super(scene);
 
-    round.reset();
+    scene.reset();
   }
 
   override function update():Void {

@@ -1,5 +1,6 @@
 package states;
 
+import kha.Assets;
 import kha.Color;
 import kha.graphics2.Graphics;
 
@@ -26,7 +27,7 @@ class RoundStartState extends RoundState {
     g2.fontSize = 18;
     // Display round name
     if (displayCount >= DISPLAY_ROUND_FRAME && displayCount < NO_DISPLAY_FRAME) {
-      g2.centerString('Round ${round.id}', 600);
+      g2.centerString('Round ${roundData.id}', 600);
     }
     // Display 'Ready'
     if (displayCount >= DISPLAY_READY_FRAME && displayCount < NO_DISPLAY_FRAME) {
@@ -34,21 +35,35 @@ class RoundStartState extends RoundState {
     }
     if (displayCount == PADDLE_FRAME) {
       // Create paddle
-      var paddle = round.createPaddle();
+      var paddle = scene.paddle;
+      paddle.reset();
+      paddle.animation = 'paddle_materialize'.loadAnimation(2, -1);
+      paddle.image = paddle.animation.tick();
+      paddle.x = (worldBounds.right + worldBounds.left - paddle.image.width) * 0.5;
+      paddle.y = worldBounds.bottom - paddle.image.height - 30;
+      paddle.bounceStrategy = BounceStrategies.bounceStrategyPaddle;
+
+      // Move your body!
+      scene.freezePaddle = false;
+      scene.moveLeft = false;
+      scene.moveRight = false;
 
       // Create ball
-      var ball = round.createBall();
+      var ball = world.add(Ball);
+      ball.image = Assets.images.ball;
       ball.anchorTo(paddle);
 
       // Animate the bricks
-      round.animateBricks();
+      for (brick in world.all(Brick)) {
+        brick.animation.reset();
+      }
     }
-    if (displayCount > PADDLE_FRAME && round.paddle.animation.over()) {
-      round.paddle.animation = 'paddle_pulsate'.pulsateAnimation(4, 80);
+    if (displayCount > PADDLE_FRAME && scene.paddle.animation.over()) {
+      scene.paddle.animation = 'paddle_pulsate'.pulsateAnimation(4, 80);
     }
     if (displayCount == START_FRAME) {
       // Release the anchor
-      round.releaseBalls();
+      scene.releaseBalls();
       // Normal gameplay begins
       scene.state = new RoundPlayState(scene);
     }

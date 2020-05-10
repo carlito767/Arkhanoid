@@ -7,12 +7,15 @@ class BallOffScreenState extends RoundState {
   public function new(scene:RoundScene) {
     super(scene);
 
-    round.destroyPaddle();
+    // Don't move...
+    scene.freezePaddle = true;
+    // ...my deadly love!
+    scene.paddle.animation = 'paddle_explode'.loadAnimation(4, -1);
   }
 
   override function update():Void {
-    if (round.paddle.animation.over()) {
-      if (round.lives > 1) {
+    if (scene.paddle.animation.over()) {
+      if (scene.lives > 1) {
         // Try again!
         scene.state = new RoundRestartState(scene);
       }

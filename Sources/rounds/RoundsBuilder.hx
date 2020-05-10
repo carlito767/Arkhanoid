@@ -9,6 +9,7 @@ import rounds.PowerupsBuilders;
 using AnimationExtension;
 
 typedef RawRound = {
+  id:Int,
   backgroundColor:Int,
   ?ballBaseSpeedAdjust:Float,
   ?ballSpeedNormalisationRateAdjust:Float,
@@ -38,7 +39,8 @@ class RoundsBuilder {
       }
       if (data == null) break;
 
-      rounds.push(()->{ return cook(id, data); });
+      data.id = id;
+      rounds.push(()->{ return cook(data); });
 
       id++;
     }
@@ -46,7 +48,7 @@ class RoundsBuilder {
     return rounds;
   }
 
-  static function cook(id:Int, rawRound:RawRound):RoundData {
+  static function cook(rawRound:RawRound):RoundData {
     // Bricks
     var bricks:Array<Brick> = [];
     for (y in 0...rawRound.bricks.length) {
@@ -76,8 +78,8 @@ class RoundsBuilder {
             image:image,
             x:x * image.width,
             y:y * image.height,
-            health:brickHealth(id, color),
-            value:brickValue(id, color),
+            health:brickHealth(rawRound.id, color),
+            value:brickValue(rawRound.id, color),
           });
         }
       }
@@ -101,6 +103,7 @@ class RoundsBuilder {
     powerupsBuilder(bricks);
 
     return {
+      id:rawRound.id,
       backgroundColor:rawRound.backgroundColor,
       ballBaseSpeedAdjust:rawRound.ballBaseSpeedAdjust,
       ballSpeedNormalisationRateAdjust:rawRound.ballSpeedNormalisationRateAdjust,

@@ -111,7 +111,7 @@ class Game {
       backToTitle();
       return;
     }
-    scene = new RoundScene(this, id, lives);
+    scene = new RoundScene(this, rounds[id - 1](), lives);
   }
 
   //
