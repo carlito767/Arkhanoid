@@ -41,6 +41,10 @@ class Game {
   static inline var SETTINGS_FILENAME = 'settings';
   var settings:GameSettings;
 
+  var fps:Int = 0;
+  var frame:Int = 0;
+  var previousTime:Float = Scheduler.realTime();
+
   public function new() {
     // Hide mouse
     if (input.mouse != null) {
@@ -127,6 +131,16 @@ class Game {
   }
 
   function render(framebuffers:Array<Framebuffer>):Void {
+    // FPS
+    frame++;
+    if (frame % FPS == 0) {
+      frame = 0;
+      var time = Scheduler.realTime();
+      var dt = (time - previousTime) / FPS;
+      fps = Math.round(1 / dt);
+      previousTime = time;
+    }
+
     final g2 = framebuffers[0].g2;
     g2.begin();
 
@@ -154,6 +168,14 @@ class Game {
 
     // Display scene
     scene.render(g2);
+
+    // Display FPS
+    if (debugMode) {
+      g2.color = Color.Yellow;
+      g2.font = Assets.fonts.optimus;
+      g2.fontSize = 30;
+      g2.rightString('FPS:$fps', WIDTH - 10, 10);
+    }
 
     g2.end();
   }
