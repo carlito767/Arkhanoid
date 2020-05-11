@@ -7,6 +7,7 @@ import kha.graphics2.Graphics;
 import scenes.RoundScene;
 using AnimationExtension;
 using Graphics2Extension;
+using world.EntityExtension;
 
 class RoundStartState extends RoundState {
   static inline var DISPLAY_ROUND_FRAME = 50;

@@ -74,7 +74,7 @@ class DemoWorldScene extends Scene {
       if (e.image != null) {
         var bounds:Bounds = e.bounds();
         if (!bounds.isIntersecting(worldBounds)) {
-          e.remove();
+          world.remove(e);
         }
       }
     }

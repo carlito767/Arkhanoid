@@ -17,6 +17,7 @@ import world.World;
 using AnimationExtension;
 using Collisions;
 using MathExtension;
+using world.EntityExtension;
 
 class RoundScene extends Scene {
   // The number of pixels from the top of the screen before the top edge starts.
@@ -206,7 +207,7 @@ class RoundScene extends Scene {
         if (paddle.collide(powerup)) {
           game.score += powerup.value;
           currentPowerupType = powerup.powerupType;
-          powerup.remove();
+          world.remove(powerup);
         }
       }
     }
@@ -237,7 +238,7 @@ class RoundScene extends Scene {
               if (brick.powerupType != null) {
                 createPowerup(brick);
               }
-              brick.remove();
+              world.remove(brick);
             }
           }
         }
@@ -273,7 +274,7 @@ class RoundScene extends Scene {
     // Remove out of bounds
     for (e in world.drawables()) {
       if (e.y >= worldBounds.bottom) {
-        e.remove();
+        world.remove(e);
       }
     }
 

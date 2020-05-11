@@ -1,40 +1,14 @@
 package world;
 
-import components.Anchor;
-import components.Animation;
-import components.BounceStrategy;
-import components.Image;
-import components.PowerupType;
+using world.EntityExtension;
 
 typedef Entities = Array<Entity>;
 
 class World {
-  // Views
-  public inline function all(?kind:Kind):Entities {
-    return filter((_)->{ return true; }, kind);
-  }
-
-  // Components
-  // Position
-  public var x:Map<EntityId,Float> = new Map();
-  public var y:Map<EntityId,Float> = new Map();
-
-  // Velocity
-  public var speed:Map<EntityId,Float> = new Map();
-  public var angle:Map<EntityId,Float> = new Map();
-
-  public var anchor:Map<EntityId,Anchor> = new Map();
-  public var animation:Map<EntityId,Animation> = new Map();
-  public var bounceStrategy:Map<EntityId,BounceStrategy> = new Map();
-  public var health:Map<EntityId,Int> = new Map();
-  public var image:Map<EntityId,Image> = new Map();
-  public var powerupType:Map<EntityId,PowerupType> = new Map();
-  public var value:Map<EntityId,Int> = new Map();
-
   public var kinds:Map<EntityId,Kind> = new Map();
 
-  // Entities
-  var entities:List<EntityId> = new List();
+  var entities:Map<EntityId,Entity> = new Map();
+  var entitiesIds:List<EntityId> = new List();
   var idCounter:EntityId = 0;
 
   public function new() {
@@ -74,57 +48,46 @@ class World {
     }, kind);
   }
 
+  public inline function all(?kind:Kind):Entities {
+    return filter((_)->{ return true; }, kind);
+  }
+
+  inline function filter(f:Entity->Bool, ?kind:Kind):Entities {
+    var v:Entities = [];
+    for (id in entitiesIds) {
+      if (kind == null || kinds.get(id) == kind) {
+        var e = entities.get(id);
+        if (f(e)) v.push(e);
+      }
+    }
+    return v;
+  }
+
   //
   // Entities
   //
 
   public function add(?kind:Kind):Entity {
     var id = ++idCounter;
-    entities.add(id);
+    entitiesIds.add(id);
 
     if (kind != null) {
       kinds.set(id, kind);
     }
 
-    return new Entity(this, id);
+    var e:Entity = { id:id, kind:kind };
+    entities.set(id, e);
+
+    return e;
   }
 
-  public function remove(id:EntityId):Void {
-    reset(id);
-    kinds.remove(id);
-    entities.remove(id);
+  public function remove(e:Entity):Void {
+    kinds.remove(e.id);
+    entities.remove(e.id);
+    entitiesIds.remove(e.id);
   }
 
   public function removeAll(?kind:Kind):Void {
-    for (e in all(kind)) remove(e.id);
-  }
-
-  public function reset(id:EntityId):Void {
-    // Position
-    x.remove(id);
-    y.remove(id);
-
-    // Velocity
-    speed.remove(id);
-    angle.remove(id);
-
-    anchor.remove(id);
-    animation.remove(id);
-    bounceStrategy.remove(id);
-    health.remove(id);
-    image.remove(id);
-    powerupType.remove(id);
-    value.remove(id);
-  }
-
-  function filter(f:Entity->Bool, ?kind:Kind):Entities {
-    var v:Entities = [];
-    for (id in entities) {
-      if (kind == null || kinds.get(id) == kind) {
-        var e = new Entity(this, id);
-        if (f(e)) v.push(e);
-      }
-    }
-    return v;
+    for (e in all(kind)) remove(e);
   }
 }
