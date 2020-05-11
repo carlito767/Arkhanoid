@@ -210,14 +210,14 @@ class RoundScene extends Scene {
 
     // Detect balls collisions
     for (ball in world.collidables(Ball)) {
-      var collisions = new List<Bounds>();
+      var collisions:Array<Bounds> = [];
       var bounceStrategy:Null<BounceStrategy> = null;
       var speed = 0.0;
 
       // Detect collision between ball and edges
         for (edge in [edgeLeft, edgeRight, edgeTop]) {
         if (ball.collide(edge)) {
-          collisions.add(edge.bounds());
+          collisions.push(edge.bounds());
           speed += WALL_SPEED_ADJUST;
         }
       }
@@ -225,7 +225,7 @@ class RoundScene extends Scene {
       // Detect collision between ball and bricks
       for (brick in world.collidables(Brick)) {
         if (ball.collide(brick)) {
-          collisions.add(brick.bounds());
+          collisions.push(brick.bounds());
           speed += BRICK_SPEED_ADJUST;
           if (brick.health > 0) {
             brick.health--;
@@ -243,19 +243,19 @@ class RoundScene extends Scene {
       // Detect collision between ball and paddle
       var collideWithPaddle = ball.collide(paddle);
       if (collideWithPaddle) {
-        collisions.add(paddle.bounds());
+        collisions.push(paddle.bounds());
         bounceStrategy = paddle.bounceStrategy;
       }
 
       // Determine new angle for ball
-      if (!collisions.isEmpty()) {
+      if (collisions.length > 0) {
         ball.angle = (collisions.length == 1 && bounceStrategy != null)
-          ? bounceStrategy(ball, collisions.first())
+          ? bounceStrategy(ball, collisions[0])
           : BounceStrategies.bounceStrategy(ball, collisions);
       }
 
       // Determine new speed for ball
-      if (collisions.isEmpty()) {
+      if (collisions.length == 0) {
         ball.speed += (ball.speed > ballBaseSpeed) ? -ballSpeedNormalisationRate : ballSpeedNormalisationRate;
       }
       else {

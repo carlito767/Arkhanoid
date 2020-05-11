@@ -12,8 +12,8 @@ class BounceStrategies {
   // to apply to the angle of bounce for top/bottom/side collisions of the ball
   static inline var RANDOM_RANGE = 0.1; // radians
 
-  public static function bounceStrategy(ball:Entity, collisions:List<Bounds>):Float {
-    if (collisions.isEmpty()) return ball.angle;
+  public static function bounceStrategy(ball:Entity, collisions:Array<Bounds>):Float {
+    if (collisions.length == 0) return ball.angle;
 
     var angle = ball.angle;
 
