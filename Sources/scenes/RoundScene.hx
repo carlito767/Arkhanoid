@@ -58,7 +58,12 @@ class RoundScene extends Scene {
   var ballSpeedNormalisationRate:Float = BALL_SPEED_NORMALISATION_RATE;
   var ballTopSpeed:Float = BALL_TOP_SPEED;
 
-  var currentPowerupType:Null<PowerupType> = null;
+  var currentPowerupType(default,set):Null<PowerupType>;
+  inline function set_currentPowerupType(value:PowerupType) {
+    if (currentPowerupType != null) deactivatePowerup(game, currentPowerupType);
+    if (value != null) activatePowerup(game, value);
+    return currentPowerupType = value;
+  }
 
   var edgeLeft:Entity;
   var edgeRight:Entity;
@@ -83,6 +88,8 @@ class RoundScene extends Scene {
       ballSpeedNormalisationRate += round.ballSpeedNormalisationRateAdjust;
     }
     ballBaseSpeed += ballBaseSpeedAdjust;
+
+    currentPowerupType = null;
 
     //
     // World
@@ -198,11 +205,7 @@ class RoundScene extends Scene {
       for (powerup in world.collidables(Powerup)) {
         if (paddle.collide(powerup)) {
           game.score += powerup.value;
-          if (currentPowerupType != null) {
-            deactivatePowerup(game, currentPowerupType);
-          }
           currentPowerupType = powerup.powerupType;
-          activatePowerup(game, currentPowerupType);
           powerup.remove();
         }
       }
