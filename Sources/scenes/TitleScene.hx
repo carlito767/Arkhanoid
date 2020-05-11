@@ -4,10 +4,10 @@ import kha.Color;
 import kha.graphics2.Graphics;
 import kha.input.KeyCode;
 
-import components.Animation;
-import input.InputEventType;
 using AnimationExtension;
 using Graphics2Extension;
+import components.Animation;
+import input.InputEventType;
 
 typedef PowerupData = {
   anim:Animation,

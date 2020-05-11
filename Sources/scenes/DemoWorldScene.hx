@@ -5,10 +5,10 @@ import kha.Color;
 import kha.System;
 import kha.graphics2.Graphics;
 
-import components.Bounds;
-import world.World;
 using AnimationExtension;
 using Collisions;
+import components.Bounds;
+import world.World;
 
 class DemoWorldScene extends Scene {
   static inline var TOP_OFFSET = 150.0;
@@ -35,7 +35,7 @@ class DemoWorldScene extends Scene {
     edgeTop.x = edgeLeft.image.width;
     edgeTop.y = worldBounds.top;
 
-    // Wall
+    // Create bottom wall
     var brick = Assets.images.brick_gold;
     var x = edgeLeft.x + edgeLeft.image.width;
     var y = worldBounds.bottom - brick.height;
@@ -47,7 +47,7 @@ class DemoWorldScene extends Scene {
       x += brick.width;
     }
 
-    // Paddle
+    // Create paddle
     var paddle = world.add();
     paddle.animation = 'paddle_pulsate'.pulsateAnimation(4, 80);
     paddle.image = paddle.animation.tick();

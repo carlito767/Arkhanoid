@@ -2,11 +2,11 @@ package rounds;
 
 import kha.Assets;
 
+using AnimationExtension;
 import components.Brick;
 import components.BrickColor;
 import components.PowerupsBuilder;
 import rounds.PowerupsBuilders;
-using AnimationExtension;
 
 class RoundsBuilder {
   public static function rounds():Array<RawRound> {

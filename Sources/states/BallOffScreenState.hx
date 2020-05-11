@@ -1,7 +1,7 @@
 package states;
 
-import scenes.RoundScene;
 using AnimationExtension;
+import scenes.RoundScene;
 
 class BallOffScreenState extends RoundState {
   public function new(scene:RoundScene) {

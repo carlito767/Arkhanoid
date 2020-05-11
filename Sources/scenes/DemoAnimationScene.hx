@@ -4,10 +4,10 @@ import kha.Color;
 import kha.System;
 import kha.graphics2.Graphics;
 
-import components.Animation;
-import components.BrickColor;
 using AnimationExtension;
 using Graphics2Extension;
+import components.Animation;
+import components.BrickColor;
 
 typedef Demo = {
   anim:Animation,

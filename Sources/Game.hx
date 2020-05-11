@@ -4,6 +4,7 @@ import kha.Framebuffer;
 import kha.Scheduler;
 import kha.System;
 
+using Graphics2Extension;
 import input.Input;
 import rounds.RawRound;
 import rounds.RoundsBuilder;
@@ -11,7 +12,6 @@ import scenes.DemoAnimationScene;
 import scenes.DemoWorldScene;
 import scenes.RoundScene;
 import scenes.TitleScene;
-using Graphics2Extension;
 
 class Game {
   public static inline var WIDTH = 600;

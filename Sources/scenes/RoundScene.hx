@@ -5,6 +5,9 @@ import kha.Color;
 import kha.System;
 import kha.graphics2.Graphics;
 
+using AnimationExtension;
+using Collisions;
+using MathExtension;
 import components.BounceStrategy;
 import components.Bounds;
 import components.PowerupType;
@@ -13,11 +16,8 @@ import states.BallOffScreenState;
 import states.RoundState;
 import states.RoundStartState;
 import world.Entity;
-import world.World;
-using AnimationExtension;
-using Collisions;
-using MathExtension;
 using world.EntityExtension;
+import world.World;
 
 class RoundScene extends Scene {
   // The number of pixels from the top of the screen before the top edge starts.
@@ -92,10 +92,6 @@ class RoundScene extends Scene {
 
     currentPowerupType = null;
 
-    //
-    // World
-    //
-
     // Create edges
     edgeLeft = world.add(Edge);
     edgeLeft.image = Assets.images.edge_left;
@@ -127,10 +123,10 @@ class RoundScene extends Scene {
     // Create paddle
     paddle = world.add(Paddle);
 
-    //
-    // Input bindings
-    //
+    // Initialize state
+    state = new RoundStartState(this);
 
+    // Input bindings
     #if debug
     game.input.bind(Key(Subtract), (_)->{
       if (round.id > 1) {
@@ -158,9 +154,6 @@ class RoundScene extends Scene {
     game.input.bind(Key(K), (_)->{
       state = new BallOffScreenState(this);
     });
-
-    // Initialize state
-    state = new RoundStartState(this);
   }
 
   override function update():Void {

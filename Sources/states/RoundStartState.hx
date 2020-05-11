@@ -4,9 +4,9 @@ import kha.Assets;
 import kha.Color;
 import kha.graphics2.Graphics;
 
-import scenes.RoundScene;
 using AnimationExtension;
 using Graphics2Extension;
+import scenes.RoundScene;
 using world.EntityExtension;
 
 class RoundStartState extends RoundState {

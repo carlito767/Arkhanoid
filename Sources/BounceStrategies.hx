@@ -1,8 +1,8 @@
 import Math.PI;
 
+using Collisions;
 import components.Bounds;
 import world.Entity;
-using Collisions;
 
 class BounceStrategies {
   static var HALF_PI(get,never):Float; static inline function get_HALF_PI() { return PI * 0.5; };

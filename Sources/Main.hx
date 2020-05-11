@@ -1,9 +1,9 @@
+import haxe.macro.Compiler;
+
 import kha.Assets;
 import kha.Color;
 import kha.Framebuffer;
 import kha.System;
-
-import haxe.macro.Compiler;
 
 class Main {
   public static function main() {
