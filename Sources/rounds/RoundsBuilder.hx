@@ -8,18 +8,9 @@ import components.PowerupsBuilder;
 import rounds.PowerupsBuilders;
 using AnimationExtension;
 
-typedef RawRound = {
-  id:Int,
-  backgroundColor:Int,
-  ?ballBaseSpeedAdjust:Float,
-  ?ballSpeedNormalisationRateAdjust:Float,
-  bricks:Array<String>,
-  powerupsBuilder:String,
-}
-
 class RoundsBuilder {
-  public static function rounds() {
-    var rounds:Array<RoundFactory> = [];
+  public static function rounds():Array<RawRound> {
+    var rounds:Array<RawRound> = [];
 
     // Load rounds from JSON files (Assets/round*.json)
     var id = 1;
@@ -40,7 +31,7 @@ class RoundsBuilder {
       if (data == null) break;
 
       data.id = id;
-      rounds.push(()->{ return cook(data); });
+      rounds.push(data);
 
       id++;
     }
@@ -48,7 +39,7 @@ class RoundsBuilder {
     return rounds;
   }
 
-  static function cook(rawRound:RawRound):Round {
+  public static function cook(rawRound:RawRound):Round {
     // Bricks
     var bricks:Array<Brick> = [];
     for (y in 0...rawRound.bricks.length) {

@@ -5,7 +5,7 @@ import kha.Scheduler;
 import kha.System;
 
 import input.Input;
-import rounds.RoundFactory;
+import rounds.RawRound;
 import rounds.RoundsBuilder;
 import scenes.DemoAnimationScene;
 import scenes.DemoWorldScene;
@@ -19,7 +19,7 @@ class Game {
   public static inline var FPS = 60;
 
   public var input(default,null):Input = new Input();
-  public var rounds(default,never):Array<RoundFactory> = RoundsBuilder.rounds();
+  public var rounds(default,never):Array<RawRound> = RoundsBuilder.rounds();
 
   public var score(default,set):Int = 0;
   function set_score(value) {
@@ -111,7 +111,8 @@ class Game {
       backToTitle();
       return;
     }
-    scene = new RoundScene(this, rounds[id - 1](), lives);
+    var round = RoundsBuilder.cook(rounds[id - 1]);
+    scene = new RoundScene(this, round, lives);
   }
 
   //
