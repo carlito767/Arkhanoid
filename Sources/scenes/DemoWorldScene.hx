@@ -5,24 +5,59 @@ import kha.Color;
 import kha.System;
 import kha.graphics2.Graphics;
 
-import Collisions.isIntersecting;
 import components.Bounds;
 import world.World;
 using AnimationExtension;
-using MathExtension;
+using Collisions;
 
 class DemoWorldScene extends Scene {
+  static inline var TOP_OFFSET = 150.0;
+
   var world:World = new World();
-  var worldBounds:Bounds = {left:0.0, top:0.0, right:System.windowWidth(), bottom:System.windowHeight()};
+  var worldBounds:Bounds = {left:0.0, top:TOP_OFFSET, right:System.windowWidth(), bottom:System.windowHeight()};
 
   public function new(game:Game) {
     super(game);
 
+    // Create edges
+    var edgeLeft = world.add(Edge);
+    edgeLeft.image = Assets.images.edge_left;
+    edgeLeft.x = worldBounds.left;
+    edgeLeft.y = worldBounds.top;
+
+    var edgeRight = world.add(Edge);
+    edgeRight.image = Assets.images.edge_right;
+    edgeRight.x = worldBounds.right - edgeRight.image.width;
+    edgeRight.y = worldBounds.top;
+
+    var edgeTop = world.add(Edge);
+    edgeTop.image = Assets.images.edge_top;
+    edgeTop.x = edgeLeft.image.width;
+    edgeTop.y = worldBounds.top;
+
+    // Wall
+    var brick = Assets.images.brick_gold;
+    var x = edgeLeft.x + edgeLeft.image.width;
+    var y = worldBounds.bottom - brick.height;
+    for (i in 0...13) {
+      var e = world.add();
+      e.image = brick;
+      e.x = x;
+      e.y = y;
+      x += brick.width;
+    }
+
+    // Paddle
+    var paddle = world.add();
+    paddle.animation = 'paddle_pulsate'.pulsateAnimation(4, 80);
+    paddle.image = paddle.animation.tick();
+    paddle.x = (System.windowWidth() - paddle.image.width) * 0.5;
+    paddle.y = (System.windowHeight() - paddle.image.height + TOP_OFFSET) * 0.5;
+
     // Input bindings
     game.input.bind(Key(Backspace), (_)->{ game.backToTitle(); });
+    game.input.bind(Key(Delete), (_)->{ world.removeAll(Ball); });
     game.input.bind(Key(B), (_)->{ newBalls(); });
-    game.input.bind(Key(N), (_)->{ newPaddle(); });
-    game.input.bind(Key(S), (_)->{ switchPaddlesVelocity(); });
   }
 
   override function update():Void {
@@ -36,49 +71,49 @@ class DemoWorldScene extends Scene {
       e.x += e.speed * Math.cos(e.angle);
       e.y += e.speed * Math.sin(e.angle);
 
-      var bounds:Bounds = {left:e.x, top:e.y, right:e.x, bottom:e.y};
       if (e.image != null) {
-        bounds.left -= e.image.width * 0.5;
-        bounds.top -= e.image.height * 0.5;
-        bounds.right += e.image.width;
-        bounds.bottom += e.image.height;
+        var bounds:Bounds = e.bounds();
+        if (!bounds.isIntersecting(worldBounds)) {
+          e.remove();
+        }
       }
-      if (!isIntersecting(worldBounds, bounds)) {
-        e.remove();
+    }
+
+    // Detect collisions
+    for (ball in world.collidables(Ball)) {
+      for (e in world.collidables()) {
+        if (e.kind == Ball) continue;
+
+        if (ball.collide(e)) {
+          ball.angle = BounceStrategies.bounceStrategy(ball, [e.bounds()]);
+        }
       }
     }
   }
 
   override function render(g2:Graphics):Void {
+    // Draw debug informations
+    g2.color = Color.Yellow;
+    g2.font = Assets.fonts.optimus;
+    g2.fontSize = 30;
+    var n = world.drawables(Ball).length;
+    g2.drawString('Balls:$n', 10, 10);
+
+    // Draw entities
     g2.color = Color.White;
     for (e in world.drawables()) {
-      g2.drawImage(e.image, e.x - e.image.width * 0.5, e.y - e.image.height * 0.5);
+      g2.drawImage(e.image, e.x, e.y);
     }
   }
 
   function newBalls():Void {
     for (_ in 0...10) {
-      var e = world.add();
+      var e = world.add(Ball);
       e.image = Assets.images.ball;
       e.x = System.windowWidth() * 0.5;
       e.y = System.windowHeight() * 0.5;
       e.speed = 2.0 + Math.random() * 10;
       e.angle = Math.random() * 360;
-    }
-  }
-
-  function newPaddle():Void {
-    var paddle = world.add(Paddle);
-    paddle.animation = 'paddle_wide'.pulsateAnimation(4);
-    paddle.x = Math.random() * System.windowWidth();
-    paddle.y = Math.random() * System.windowHeight();
-    paddle.speed = Math.random() * 2;
-    paddle.angle = Math.random() * 360;
-  }
-
-  function switchPaddlesVelocity():Void {
-    for (e in world.movables(Paddle)) {
-      e.angle = 2 * Math.PI - e.angle;
     }
   }
 }
