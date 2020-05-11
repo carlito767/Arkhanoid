@@ -9,11 +9,11 @@ using AnimationExtension;
 using Graphics2Extension;
 
 class RoundStartState extends RoundState {
-  static inline var DISPLAY_ROUND_FRAME = 60;
-  static inline var DISPLAY_READY_FRAME = DISPLAY_ROUND_FRAME + 60;
-  static inline var NO_DISPLAY_FRAME = DISPLAY_READY_FRAME + 50;
+  static inline var DISPLAY_ROUND_FRAME = 50;
+  static inline var DISPLAY_READY_FRAME = DISPLAY_ROUND_FRAME + 50;
+  static inline var NO_DISPLAY_FRAME = DISPLAY_READY_FRAME + 40;
   static inline var PADDLE_FRAME = NO_DISPLAY_FRAME + 10;
-  static inline var START_FRAME = PADDLE_FRAME + 60;
+  static inline var START_FRAME = PADDLE_FRAME + 50;
 
   var displayCount:Int = 0;
 

@@ -61,7 +61,7 @@ class RoundsBuilder {
         };
         if (color != null) {
           var name = color.getName().toLowerCase();
-          var animation = 'brick_${name}'.loadAnimation(4, -1);
+          var animation = 'brick_${name}'.loadAnimation(2, -1);
           var image = animation.tick();
           animation.paused = true;
           bricks.push({

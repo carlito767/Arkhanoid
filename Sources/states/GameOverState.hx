@@ -3,7 +3,7 @@ package states;
 import scenes.RoundScene;
 
 class GameOverState extends RoundState {
-  static inline var BACK_TO_TITLE_FRAME = 60;
+  static inline var BACK_TO_TITLE_FRAME = 50;
 
   var updateCount:Int = 0;
 

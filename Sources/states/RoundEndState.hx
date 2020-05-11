@@ -3,7 +3,7 @@ package states;
 import scenes.RoundScene;
 
 class RoundEndState extends RoundState {
-  static inline var NEXT_ROUND_FRAME = 60;
+  static inline var NEXT_ROUND_FRAME = 50;
 
   var updateCount:Int = 0;
 
