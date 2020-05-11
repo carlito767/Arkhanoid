@@ -248,14 +248,14 @@ class RoundScene extends Scene {
       }
 
       // Determine new angle for ball
-      if (collisions.length > 0) {
+      if (!collisions.isEmpty()) {
         ball.angle = (collisions.length == 1 && bounceStrategy != null)
           ? bounceStrategy(ball, collisions[0])
           : BounceStrategies.bounceStrategy(ball, collisions);
       }
 
       // Determine new speed for ball
-      if (collisions.length == 0) {
+      if (collisions.isEmpty()) {
         ball.speed += (ball.speed > ballBaseSpeed) ? -ballSpeedNormalisationRate : ballSpeedNormalisationRate;
       }
       else {

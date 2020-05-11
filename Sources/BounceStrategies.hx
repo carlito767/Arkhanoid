@@ -13,7 +13,7 @@ class BounceStrategies {
   static inline var RANDOM_RANGE = 0.1; // radians
 
   public static function bounceStrategy(ball:Entity, collisions:Array<Bounds>):Float {
-    if (collisions.length == 0) return ball.angle;
+    if (collisions.isEmpty()) return ball.angle;
 
     var angle = ball.angle;
 

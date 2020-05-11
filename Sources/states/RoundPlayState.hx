@@ -30,6 +30,6 @@ class RoundPlayState extends RoundState {
   }
 
   function lose():Bool {
-    return world.all(Ball).length == 0;
+    return world.all(Ball).isEmpty();
   }
 }

@@ -15,7 +15,7 @@ class AnimationExtension {
       images.push(image);
     }
     // Backup strategy: id.png
-    if (images.length == 0) {
+    if (images.isEmpty()) {
       var image = Assets.images.get(id);
       if (image != null) {
         images.push(image);
@@ -49,7 +49,7 @@ class AnimationExtension {
   }
 
   public static function tick(animation:Animation):Null<Image> {
-    if (animation.images.length == 0) return null;
+    if (animation.images.isEmpty()) return null;
 
     // Cycle?
     if ((animation.cycle > 0 && animation.heartbeat == animation.cycle) ||
