@@ -78,12 +78,6 @@ class RoundsBuilder {
 
     // Powerups
     var powerupsBuilder:PowerupsBuilder = switch rawRound.powerupsBuilder {
-      case 'fullPowerupCatch': PowerupBuilders.fullPowerupCatch;
-      case 'fullPowerupDuplicate': PowerupBuilders.fullPowerupDuplicate;
-      case 'fullPowerupExpand': PowerupBuilders.fullPowerupExpand;
-      case 'fullPowerupLaser': PowerupBuilders.fullPowerupLaser;
-      case 'fullPowerupLife': PowerupBuilders.fullPowerupLife;
-      case 'fullPowerupSlow': PowerupBuilders.fullPowerupSlow;
       case 'round1': PowerupBuilders.round1;
       case 'round2': PowerupBuilders.round2;
       case 'round3': PowerupBuilders.round3;

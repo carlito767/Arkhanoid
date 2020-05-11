@@ -9,19 +9,6 @@ typedef Bricks = Array<Brick>;
 class PowerupBuilders {
   static final POWERUP_TYPES = Type.allEnums(PowerupType);
 
-  public static function fullPowerup(bricks:Bricks, powerupType:PowerupType):Void {
-    for (brick in bricks) {
-      brick.powerupType = powerupType;
-    }
-  }
-
-  public static function fullPowerupCatch(bricks:Bricks):Void { fullPowerup(bricks, Catch); }
-  public static function fullPowerupDuplicate(bricks:Bricks):Void { fullPowerup(bricks, Duplicate); }
-  public static function fullPowerupExpand(bricks:Bricks):Void { fullPowerup(bricks, Expand); }
-  public static function fullPowerupLaser(bricks:Bricks):Void { fullPowerup(bricks, Laser); }
-  public static function fullPowerupLife(bricks:Bricks):Void { fullPowerup(bricks, Life); }
-  public static function fullPowerupSlow(bricks:Bricks):Void { fullPowerup(bricks, Slow); }
-
   public static function fullRandom(bricks:Bricks):Void {
     for (brick in bricks) {
       var powerupType = Std.random(POWERUP_TYPES.length);
