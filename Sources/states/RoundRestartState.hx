@@ -9,8 +9,6 @@ class RoundRestartState extends RoundState {
 
   public function new(scene:RoundScene) {
     super(scene);
-
-    scene.reset();
   }
 
   override function update():Void {

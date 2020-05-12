@@ -36,18 +36,12 @@ class RoundStartState extends RoundState {
     }
     if (displayCount == PADDLE_FRAME) {
       // Create paddle
-      var paddle = scene.paddle;
       paddle.reset();
       paddle.animation = 'paddle_materialize'.loadAnimation(2, -1);
       paddle.image = paddle.animation.tick();
       paddle.x = (worldBounds.right + worldBounds.left - paddle.image.width) * 0.5;
       paddle.y = worldBounds.bottom - paddle.image.height - 30;
       paddle.bounceStrategy = BounceStrategies.bounceStrategyPaddle;
-
-      // Move your body!
-      scene.freezePaddle = false;
-      scene.moveLeft = false;
-      scene.moveRight = false;
 
       // Create ball
       var ball = world.add(Ball);
@@ -59,12 +53,10 @@ class RoundStartState extends RoundState {
         brick.animation.reset();
       }
     }
-    if (displayCount > PADDLE_FRAME && scene.paddle.animation.over()) {
-      scene.paddle.animation = 'paddle_pulsate'.pulsateAnimation(4, 80);
+    if (displayCount > PADDLE_FRAME && paddle.animation.over()) {
+      paddle.animation = 'paddle_pulsate'.pulsateAnimation(4, 80);
     }
     if (displayCount == START_FRAME) {
-      // Release the anchor
-      scene.releaseBalls();
       // Normal gameplay begins
       scene.state = new RoundPlayState(scene);
     }

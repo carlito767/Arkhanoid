@@ -2,19 +2,18 @@ package states;
 
 using AnimationExtension;
 import scenes.RoundScene;
+using world.EntityExtension;
 
 class BallOffScreenState extends RoundState {
   public function new(scene:RoundScene) {
     super(scene);
 
-    // Don't move...
-    scene.freezePaddle = true;
-    // ...my deadly love!
-    scene.paddle.animation = 'paddle_explode'.loadAnimation(4, -1);
+    paddle.animation = 'paddle_explode'.loadAnimation(4, -1);
   }
 
   override function update():Void {
-    if (scene.paddle.animation.over()) {
+    if (paddle.animation.over()) {
+      paddle.reset();
       if (scene.lives > 1) {
         // Try again!
         scene.state = new RoundRestartState(scene);
