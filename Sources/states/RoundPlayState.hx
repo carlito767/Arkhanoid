@@ -1,5 +1,9 @@
 package states;
 
+import kha.Assets;
+import kha.Color;
+import kha.graphics2.Graphics;
+
 using AnimationExtension;
 using Collisions;
 using MathExtension;
@@ -180,16 +184,28 @@ class RoundPlayState extends RoundState {
       }
     }
 
-    if (win()) {
-      // You win!
-      world.removeAll(Ball);
-      paddle.speed = null;
-      scene.state = new RoundEndState(scene);
+    if (round.id != null) {
+      if (win()) {
+        // You win!
+        world.removeAll(Ball);
+        paddle.speed = null;
+        scene.state = new RoundEndState(scene);
+      }
+      else if (lose()) {
+        // You lose!
+        paddle.speed = null;
+        scene.state = new BallOffScreenState(scene);
+      }
     }
-    else if (lose()) {
-      // You lose!
-      paddle.speed = null;
-      scene.state = new BallOffScreenState(scene);
+  }
+
+  override function render(g2:Graphics):Void {
+    if (game.debugMode) {
+      g2.color = Color.Yellow;
+      g2.font = Assets.fonts.optimus;
+      g2.fontSize = 30;
+      var n = world.drawables(Ball).length;
+      g2.drawString('Balls:$n', 10, 10);
     }
   }
 

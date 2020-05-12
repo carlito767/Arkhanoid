@@ -9,7 +9,7 @@ using AnimationExtension;
 using Collisions;
 import components.Bounds;
 import rounds.Round;
-import states.DemoState;
+import states.DemoStartState;
 import states.RoundState;
 import states.RoundStartState;
 import world.Entity;
@@ -71,7 +71,7 @@ class RoundScene extends Scene {
     paddle = world.add(Paddle);
 
     // Initialize state
-    state = (round.id == null) ? new DemoState(this) : new RoundStartState(this);
+    state = (round.id == null) ? new DemoStartState(this) : new RoundStartState(this);
 
     // Input bindings
     if (round.id != null) {

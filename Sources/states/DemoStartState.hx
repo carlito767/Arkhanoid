@@ -1,16 +1,13 @@
 package states;
 
 import kha.Assets;
-import kha.Color;
 import kha.System;
-import kha.graphics2.Graphics;
 
 using AnimationExtension;
-using Collisions;
 import scenes.RoundScene;
 using world.EntityExtension;
 
-class DemoState extends RoundState {
+class DemoStartState extends RoundState {
   public function new(scene:RoundScene) {
     super(scene);
 
@@ -27,25 +24,7 @@ class DemoState extends RoundState {
   }
 
   override function update():Void {
-    // Detect collisions
-    for (ball in world.collidables(Ball)) {
-      for (e in world.collidables()) {
-        if (e.kind == Ball) continue;
-
-        if (ball.collide(e)) {
-          ball.angle = BounceStrategies.bounceStrategy(ball, [e.bounds()]);
-        }
-      }
-    }
-  }
-
-  override function render(g2:Graphics):Void {
-    // Draw debug informations
-    g2.color = Color.Yellow;
-    g2.font = Assets.fonts.optimus;
-    g2.fontSize = 30;
-    var n = world.drawables(Ball).length;
-    g2.drawString('Balls:$n', 10, 10);
+    scene.state = new RoundPlayState(scene);
   }
 
   function newBalls():Void {
