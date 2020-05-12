@@ -7,15 +7,6 @@ import components.PowerupType;
 typedef Bricks = Array<Brick>;
 
 class PowerupBuilders {
-  static final POWERUP_TYPES = Type.allEnums(PowerupType);
-
-  public static function fullRandom(bricks:Bricks):Void {
-    for (brick in bricks) {
-      var powerupType = Std.random(POWERUP_TYPES.length);
-      brick.powerupType = POWERUP_TYPES[powerupType];
-    }
-  }
-
   public static function round1(bricks:Bricks):Void {
     var p:Array<PowerupType> = [
       Catch, Catch, Catch,

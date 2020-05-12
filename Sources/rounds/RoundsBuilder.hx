@@ -81,15 +81,15 @@ class RoundsBuilder {
     }
 
     // Powerups
-    var powerupsBuilder:PowerupsBuilder = switch rawRound.powerupsBuilder {
+    var powerupsBuilder:Null<PowerupsBuilder> = switch rawRound.powerupsBuilder {
       case 'round1': PowerupBuilders.round1;
       case 'round2': PowerupBuilders.round2;
       case 'round3': PowerupBuilders.round3;
       case 'round4': PowerupBuilders.round4;
       case 'round5': PowerupBuilders.round5;
-      case _: PowerupBuilders.fullRandom;
+      case _: null;
     }
-    powerupsBuilder(bricks);
+    if (powerupsBuilder != null) powerupsBuilder(bricks);
 
     return {
       id:rawRound.id,
