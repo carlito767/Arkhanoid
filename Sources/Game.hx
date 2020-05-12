@@ -25,15 +25,12 @@ class Game {
   function set_score(value) {
     if (value > settings.highScore) {
       settings.highScore = value;
-      if (!godMode) {
-        Settings.write(SETTINGS_FILENAME, settings);
-      }
+      Settings.write(SETTINGS_FILENAME, settings);
     }
     return score = value;
   }
 
   public var debugMode:Bool = false;
-  public var godMode:Bool = false;
   public var pause:Bool = false;
 
   public var scene:Scene;
@@ -74,7 +71,6 @@ class Game {
 
     #if debug
     input.bind(Key(D), (_)->{ debugMode = !debugMode; });
-    input.bind(Key(G), (_)->{ godMode = !godMode; });
     input.bind(Key(H), (_)->{
       settings.highScore = 0;
       Settings.write(SETTINGS_FILENAME, settings);
@@ -159,12 +155,6 @@ class Game {
     g2.color = Color.White;
     g2.rightString(Std.string(score), WIDTH - 10, 35);
     g2.rightString(Std.string(settings.highScore), WIDTH - 10, 100);
-
-    // Display "God Mode"
-    if (godMode) {
-      g2.color = Color.Yellow;
-      g2.rightString('GOD MODE', WIDTH - 10, 125);
-    }
 
     // Display scene
     scene.render(g2);
