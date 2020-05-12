@@ -9,7 +9,6 @@ import input.Input;
 import rounds.RawRound;
 import rounds.RoundsBuilder;
 import scenes.DemoAnimationScene;
-import scenes.DemoWorldScene;
 import scenes.RoundScene;
 import scenes.TitleScene;
 
@@ -103,7 +102,9 @@ class Game {
   }
 
   public function showDemoWorld():Void {
-    scene = new DemoWorldScene(this);
+    var data = RoundsBuilder.load('demo_world');
+    var round = RoundsBuilder.cook(data);
+    scene = new RoundScene(this, round, 0);
   }
 
   public function switchToRound(id:Int, lives:Int = 3):Void {

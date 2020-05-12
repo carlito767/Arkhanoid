@@ -180,13 +180,6 @@ class RoundPlayState extends RoundState {
       }
     }
 
-    // Remove out of bounds
-    for (e in world.drawables()) {
-      if (e.y >= worldBounds.bottom) {
-        world.remove(e);
-      }
-    }
-
     if (win()) {
       // You win!
       world.removeAll(Ball);

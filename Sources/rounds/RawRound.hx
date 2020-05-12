@@ -1,7 +1,7 @@
 package rounds;
 
 typedef RawRound = {
-  id:Int,
+  ?id:Int,
   backgroundColor:Int,
   ?ballBaseSpeedAdjust:Float,
   ?ballSpeedNormalisationRateAdjust:Float,

@@ -15,19 +15,7 @@ class RoundsBuilder {
     // Load rounds from JSON files (Assets/round*.json)
     var id = 1;
     while (true) {
-      var blob = Assets.blobs.get('round${id}_json');
-      if (blob == null) break;
-      trace('Loading round $id...');
-
-      // TODO: check data
-      var data = null;
-      try {
-        data = haxe.Json.parse(blob.toString());
-      }
-      catch (e:Dynamic) {
-        trace('Parsing error: $e');
-        break;
-      }
+      var data = load('round$id');
       if (data == null) break;
 
       data.id = id;
@@ -37,6 +25,22 @@ class RoundsBuilder {
     }
 
     return rounds;
+  }
+
+  public static function load(round:String):Null<RawRound> {
+    var blob = Assets.blobs.get('${round}_json');
+    if (blob == null) return null;
+    trace('Loading $round');
+
+    // TODO: check data
+    var data:Null<RawRound> = null;
+    try {
+      data = haxe.Json.parse(blob.toString());
+    }
+    catch (e:Dynamic) {
+      trace('Parsing error: $e');
+    }
+    return data;
   }
 
   public static function cook(rawRound:RawRound):Round {

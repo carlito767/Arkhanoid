@@ -6,8 +6,10 @@ import kha.System;
 import kha.graphics2.Graphics;
 
 using AnimationExtension;
+using Collisions;
 import components.Bounds;
 import rounds.Round;
+import states.DemoState;
 import states.RoundState;
 import states.RoundStartState;
 import world.Entity;
@@ -30,6 +32,8 @@ class RoundScene extends Scene {
 
   public var world(default,never):World = new World();
   public var worldBounds(default,never):Bounds = {left:0.0, top:TOP_OFFSET, right:System.windowWidth(), bottom:System.windowHeight()};
+
+  var demo:Bool;
 
   public function new(game:Game, round:Round, lives:Int) {
     super(game);
@@ -69,24 +73,27 @@ class RoundScene extends Scene {
     paddle = world.add(Paddle);
 
     // Initialize state
-    state = new RoundStartState(this);
+    var demo = (round.id == null);
+    state = (demo) ? new DemoState(this) : new RoundStartState(this);
 
     // Input bindings
-    #if debug
-    game.input.bind(Key(Subtract), (_)->{
-      if (round.id > 1) {
-        game.switchToRound(round.id - 1, this.lives);
-      }
-    });
-    game.input.bind(Key(Add), (_)->{
-      if (round.id < game.rounds.length) {
-        game.switchToRound(round.id + 1, this.lives);
-      }
-    });
-    game.input.bind(Key(R), (_)->{
-      game.switchToRound(round.id, this.lives);
-    });
-    #end
+    if (!demo) {
+      #if debug
+      game.input.bind(Key(Subtract), (_)->{
+        if (round.id > 1) {
+          game.switchToRound(round.id - 1, this.lives);
+        }
+      });
+      game.input.bind(Key(Add), (_)->{
+        if (round.id < game.rounds.length) {
+          game.switchToRound(round.id + 1, this.lives);
+        }
+      });
+      game.input.bind(Key(R), (_)->{
+        game.switchToRound(round.id, this.lives);
+      });
+      #end
+    }
     game.input.bind(Key(Backspace), (_)->{ game.backToTitle(); });
   }
 
@@ -104,6 +111,14 @@ class RoundScene extends Scene {
 
     // Update state
     state.update();
+
+    // Remove out of bounds
+    for (e in world.drawables()) {
+      var bounds:Bounds = e.bounds();
+      if (!bounds.isIntersecting(worldBounds)) {
+        world.remove(e);
+      }
+    }
   }
 
   override function render(g2:Graphics):Void {
@@ -129,12 +144,14 @@ class RoundScene extends Scene {
     }
 
     // Draw lives
-    var paddleLife = Assets.images.paddle_life;
-    var x = edgeLeft.x + edgeLeft.image.width;
-    var y = worldBounds.bottom - paddleLife.height - 5;
-    for (i in 1...lives) {
-      g2.drawImage(paddleLife, x, y);
-      x += paddleLife.width + 5;
+    if (!demo) {
+      var paddleLife = Assets.images.paddle_life;
+      var x = edgeLeft.x + edgeLeft.image.width;
+      var y = worldBounds.bottom - paddleLife.height - 5;
+      for (i in 1...lives) {
+        g2.drawImage(paddleLife, x, y);
+        x += paddleLife.width + 5;
+      }
     }
 
     // Render state
