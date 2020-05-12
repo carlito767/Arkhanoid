@@ -69,7 +69,7 @@ class Game {
     input.clearBindings();
 
     #if debug
-    input.bind(Key(D), (_)->{ debugMode = !debugMode; });
+    input.bind(Key(Decimal), (_)->{ debugMode = !debugMode; });
     input.bind(Key(H), (_)->{
       settings.highScore = 0;
       Settings.write(SETTINGS_FILENAME, settings);
@@ -86,7 +86,7 @@ class Game {
         }
       }
     });
-    input.bind(Key(P), (_)->{ pause = !pause; });
+    input.bind(Key(Pause), (_)->{ pause = !pause; });
   }
 
   //
