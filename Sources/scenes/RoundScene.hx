@@ -33,8 +33,6 @@ class RoundScene extends Scene {
   public var world(default,never):World = new World();
   public var worldBounds(default,never):Bounds = {left:0.0, top:TOP_OFFSET, right:System.windowWidth(), bottom:System.windowHeight()};
 
-  var demo:Bool;
-
   public function new(game:Game, round:Round, lives:Int) {
     super(game);
 
@@ -73,11 +71,10 @@ class RoundScene extends Scene {
     paddle = world.add(Paddle);
 
     // Initialize state
-    var demo = (round.id == null);
-    state = (demo) ? new DemoState(this) : new RoundStartState(this);
+    state = (round.id == null) ? new DemoState(this) : new RoundStartState(this);
 
     // Input bindings
-    if (!demo) {
+    if (round.id != null) {
       #if debug
       game.input.bind(Key(Subtract), (_)->{
         if (round.id > 1) {
@@ -144,7 +141,7 @@ class RoundScene extends Scene {
     }
 
     // Draw lives
-    if (!demo) {
+    if (lives > 0) {
       var paddleLife = Assets.images.paddle_life;
       var x = edgeLeft.x + edgeLeft.image.width;
       var y = worldBounds.bottom - paddleLife.height - 5;
