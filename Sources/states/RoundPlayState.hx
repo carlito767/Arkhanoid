@@ -79,9 +79,13 @@ class RoundPlayState extends RoundState {
       (_)->{ moveRight = false; }
     );
     game.input.bind(Key(K));
-    game.input.bind(Key(K), (_)->{
-      scene.state = new BallOffScreenState(scene);
-    });
+    if (round.id != null) {
+      game.input.bind(Key(K), (_)->{
+        world.removeAll(Ball);
+        paddle.speed = null;
+        scene.state = new BallOffScreenState(scene);
+      });
+    }
 
     // Here we go!
     releaseBalls();

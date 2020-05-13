@@ -154,11 +154,11 @@ class RoundScene extends Scene {
     }
 
     // Draw lives
-    if (lives > 0) {
+    if (round.id != null) {
       var paddleLife = Assets.images.paddle_life;
       var x = edgeLeft.x + edgeLeft.image.width;
       var y = worldBounds.bottom - paddleLife.height - 5;
-      for (i in 1...lives) {
+      for (_ in 1...lives) {
         g2.drawImage(paddleLife, x, y);
         x += paddleLife.width + 5;
       }
