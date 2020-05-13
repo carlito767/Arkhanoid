@@ -210,6 +210,8 @@ class RoundPlayState extends RoundState {
       g2.fontSize = 30;
       var n = world.drawables(Ball).length;
       g2.drawString('Balls:$n', 10, 10);
+      g2.drawString('Ball Base Speed:$ballBaseSpeed', 10, 40);
+      g2.drawString('Ball Top Speed:$ballTopSpeed', 10, 70);
     }
   }
 

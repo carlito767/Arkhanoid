@@ -141,32 +141,33 @@ class Game {
     final g2 = framebuffers[0].g2;
     g2.begin();
 
-    // Display logo
-    g2.color = Color.White;
-    g2.drawImage(Assets.images.logo, 5, 0);
-
-    // Display scores
-    g2.font = Assets.fonts.generation;
-    g2.fontSize = 18;
-
-    g2.color = Color.fromBytes(230, 0, 0);
-    g2.rightString('1UP', WIDTH - 10, 10);
-    g2.rightString('HIGH SCORE', WIDTH - 10, 75);
-
-    g2.color = Color.White;
-    g2.rightString(Std.string(score), WIDTH - 10, 35);
-    g2.rightString(Std.string(settings.highScore), WIDTH - 10, 100);
-
-    // Display scene
-    scene.render(g2);
-
-    // Display FPS
     if (debugMode) {
+      // Display debug informations
       g2.color = Color.Yellow;
       g2.font = Assets.fonts.optimus;
       g2.fontSize = 30;
       g2.rightString('FPS:$fps', WIDTH - 10, 10);
     }
+    else {
+      // Display logo
+      g2.color = Color.White;
+      g2.drawImage(Assets.images.logo, 5, 0);
+
+      // Display scores
+      g2.font = Assets.fonts.generation;
+      g2.fontSize = 18;
+
+      g2.color = Color.fromBytes(230, 0, 0);
+      g2.rightString('1UP', WIDTH - 10, 10);
+      g2.rightString('HIGH SCORE', WIDTH - 10, 75);
+
+      g2.color = Color.White;
+      g2.rightString(Std.string(score), WIDTH - 10, 35);
+      g2.rightString(Std.string(settings.highScore), WIDTH - 10, 100);
+    }
+
+    // Display scene
+    scene.render(g2);
 
     g2.end();
   }
