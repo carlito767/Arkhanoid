@@ -83,6 +83,7 @@ class RoundPlayState extends RoundState {
       game.input.bind(Key(K), (_)->{
         world.removeAll(Ball);
         paddle.speed = null;
+        currentPowerupType = null;
         scene.state = new BallOffScreenState(scene);
       });
     }
@@ -198,6 +199,7 @@ class RoundPlayState extends RoundState {
       else if (lose()) {
         // You lose!
         paddle.speed = null;
+        currentPowerupType = null;
         scene.state = new BallOffScreenState(scene);
       }
     }
