@@ -1,5 +1,6 @@
 package world;
 
+using AnimationExtension;
 using world.EntityExtension;
 
 typedef Entities = Array<Entity>;
@@ -26,7 +27,7 @@ class World {
 
   public function animatables(?kind:Kind):Entities {
     return filter((e)->{
-      e.animation != null;
+      e.animation != null && !e.animation.over();
     }, kind);
   }
 

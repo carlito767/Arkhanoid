@@ -7,6 +7,7 @@ import kha.graphics2.Graphics;
 using AnimationExtension;
 using Collisions;
 using MathExtension;
+import components.Animation;
 import components.BounceStrategy;
 import components.Bounds;
 import components.PowerupType;
@@ -49,8 +50,7 @@ class RoundPlayState extends RoundState {
 
   var currentPowerupType(default,set):Null<PowerupType>;
   inline function set_currentPowerupType(value:PowerupType) {
-    if (currentPowerupType != null) deactivatePowerup(game, currentPowerupType);
-    if (value != null) activatePowerup(game, value);
+    transitionPowerup(game, currentPowerupType, value);
     return currentPowerupType = value;
   }
 
@@ -267,51 +267,66 @@ class RoundPlayState extends RoundState {
     e.value = POWERUP_VALUE;
   }
 
-  function activatePowerup(game:Game, powerupType:PowerupType):Void {
-    switch powerupType {
-      case Catch:
-        game.input.bind(Key(Space), (_)->{ releaseBalls(); });
-      case Duplicate:
-        var splitAngle = 0.4; // radians
-        for (ball in world.all(Ball)) {
-          var angle = ball.angle + splitAngle;
-          if (angle > 2 * Math.PI) {
-            angle -= 2 * Math.PI;
+  function transitionPowerup(game:Game, from:Null<PowerupType>, to:Null<PowerupType>):Void {
+    // Deactivate the previous powerup
+    if (from != null) {
+      switch from {
+        case Catch:
+          game.input.bind(Key(Space));
+          releaseBalls();
+        case Duplicate:
+          // Nothing
+        case Expand:
+          if (to != Expand) {
+            if (paddle.animation.cycle >= 0) {
+              paddle.animation = 'paddle_wide'.loadAnimation(4, -1);
+            }
+            paddle.animation.reverse();
+            paddle.pendingAnimation = 'paddle_pulsate'.pulsateAnimation(4, 80);
           }
-
-          var clone1 = cloneBall(ball);
-          clone1.angle = angle;
-
-          var clone2 = cloneBall(ball);
-          clone2.angle = Math.abs(ball.angle - splitAngle);
-        }
-      case Expand:
-      case Laser:
-      case Life:
-        scene.lives++;
-      case Slow:
-        ballBaseSpeed = BALL_SLOW_SPEED;
-        ballTopSpeed = BALL_SLOW_SPEED;
-        for (ball in world.all(Ball)) {
-          ball.speed = BALL_SLOW_SPEED;
-        }
+        case Laser:
+        case Life:
+          // Nothing
+        case Slow:
+          ballBaseSpeed = BALL_BASE_SPEED + ballBaseSpeedAdjust;
+          ballTopSpeed = BALL_TOP_SPEED;
+      }
     }
-  }
 
-  function deactivatePowerup(game:Game, powerupType:PowerupType):Void {
-    switch powerupType {
-      case Catch:
-        game.input.bind(Key(Space));
-        releaseBalls();
-      case Duplicate:
-        // Nothing
-      case Expand:
-      case Laser:
-      case Life:
-        // Nothing
-      case Slow:
-        ballBaseSpeed = BALL_BASE_SPEED + ballBaseSpeedAdjust;
-        ballTopSpeed = BALL_TOP_SPEED;
+    // Activate the new powerup
+    if (to != null) {
+      switch to {
+        case Catch:
+          game.input.bind(Key(Space), (_)->{ releaseBalls(); });
+        case Duplicate:
+          var splitAngle = 0.4; // radians
+          for (ball in world.all(Ball)) {
+            var angle = ball.angle + splitAngle;
+            if (angle > 2 * Math.PI) {
+              angle -= 2 * Math.PI;
+            }
+
+            var clone1 = cloneBall(ball);
+            clone1.angle = angle;
+
+            var clone2 = cloneBall(ball);
+            clone2.angle = Math.abs(ball.angle - splitAngle);
+          }
+        case Expand:
+          if (from != Expand) {
+            paddle.animation = 'paddle_wide'.loadAnimation(4, -1);
+            paddle.pendingAnimation = 'paddle_wide_pulsate'.pulsateAnimation(4, 80);
+          }
+        case Laser:
+        case Life:
+          scene.lives++;
+        case Slow:
+          ballBaseSpeed = BALL_SLOW_SPEED;
+          ballTopSpeed = BALL_SLOW_SPEED;
+          for (ball in world.all(Ball)) {
+            ball.speed = BALL_SLOW_SPEED;
+          }
+      }
     }
   }
 }

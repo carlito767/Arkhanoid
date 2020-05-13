@@ -48,6 +48,15 @@ class AnimationExtension {
     animation.paused = false;
   }
 
+  public static function reverse(animation:Animation):Void {
+    if (animation.cycle >= 0) return;
+
+    animation.images.reverse();
+    if (animation.heartbeat > 0) {
+      animation.heartbeat = animation.images.length * animation.step - animation.heartbeat;
+    }
+  }
+
   public static function tick(animation:Animation):Null<Image> {
     if (animation.images.isEmpty()) return null;
 

@@ -96,8 +96,21 @@ class RoundScene extends Scene {
 
   override function update():Void {
     // Animate entities
+    for (e in world.all()) {
+      if (e.pendingAnimation != null && (e.animation == null || e.animation.over())) {
+        e.animation = e.pendingAnimation;
+        e.pendingAnimation = null;
+      }
+    }
+
     for (e in world.animatables()) {
+      var image = e.image;
       e.image = e.animation.tick();
+      // Center image
+      if (image != null && e.hasPosition()) {
+        e.x += (image.width - e.image.width) * 0.5;
+        e.y += (image.height - e.image.height) * 0.5;
+      }
     }
 
     // Move entities
