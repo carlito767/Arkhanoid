@@ -38,6 +38,7 @@ class RoundStartState extends RoundState {
       // Create paddle
       paddle.reset();
       paddle.animation = 'paddle_materialize'.loadAnimation(2, -1);
+      paddle.pendingAnimation = 'paddle_pulsate'.pulsateAnimation(4, 80);
       paddle.image = paddle.animation.tick();
       paddle.x = (worldBounds.right + worldBounds.left - paddle.image.width) * 0.5;
       paddle.y = worldBounds.bottom - paddle.image.height - 30;
@@ -52,9 +53,6 @@ class RoundStartState extends RoundState {
       for (brick in world.all(Brick)) {
         brick.animation.reset();
       }
-    }
-    if (displayCount > PADDLE_FRAME && paddle.animation.over()) {
-      paddle.animation = 'paddle_pulsate'.pulsateAnimation(4, 80);
     }
     if (displayCount == START_FRAME) {
       // Normal gameplay begins
