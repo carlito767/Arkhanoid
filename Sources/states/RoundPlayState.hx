@@ -287,6 +287,7 @@ class RoundPlayState extends RoundState {
             }
             paddle.animation.reverse();
             paddle.pendingAnimation = 'paddle_pulsate'.pulsateAnimation(4, 80);
+            ballBaseSpeed = BALL_BASE_SPEED + ballBaseSpeedAdjust;
           }
         case Laser:
         case Life:
@@ -320,6 +321,7 @@ class RoundPlayState extends RoundState {
           if (from != Expand) {
             paddle.animation = 'paddle_wide'.loadAnimation(4, -1);
             paddle.pendingAnimation = 'paddle_wide_pulsate'.pulsateAnimation(4, 80);
+            ballBaseSpeed = BALL_BASE_SPEED + ballBaseSpeedAdjust + 1;
           }
         case Laser:
         case Life:
