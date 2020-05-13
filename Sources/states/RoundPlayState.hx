@@ -7,7 +7,6 @@ import kha.graphics2.Graphics;
 using AnimationExtension;
 using Collisions;
 using MathExtension;
-import components.Animation;
 import components.BounceStrategy;
 import components.Bounds;
 import components.PowerupType;
@@ -31,6 +30,8 @@ class RoundPlayState extends RoundState {
   static inline var BALL_SPEED_NORMALISATION_RATE = 0.02;
   // Increase in speed caused by colliding with a brick.
   static inline var BRICK_SPEED_ADJUST = 0.5;
+  // The speed the laser bullet moves.
+  static inline var BULLET_SPEED = 15.0;
   // Increase in speed caused by colliding with a wall.
   static inline var WALL_SPEED_ADJUST = 0.2;
   // The speed the paddle moves.
@@ -126,6 +127,29 @@ class RoundPlayState extends RoundState {
           game.score += powerup.value;
           currentPowerupType = powerup.powerupType;
           world.remove(powerup);
+        }
+      }
+    }
+
+    // Detect bullets collisions
+    for (bullet in world.collidables(Bullet)) {
+      // Detect collision between bullet and edges
+      if (bullet.collide(edgeTop)) {
+        world.remove(bullet);
+      }
+
+      // Detect collision between bullet and bricks
+      for (brick in world.collidables(Brick)) {
+        if (bullet.collide(brick)) {
+          if (brick.health > 0) {
+            brick.health--;
+            if (brick.health == 0) {
+              // The game's score is not increased and the powerup
+              // is not released when laser destroys a brick
+              world.remove(brick);
+            }
+          }
+          world.remove(bullet);
         }
       }
     }
@@ -260,6 +284,33 @@ class RoundPlayState extends RoundState {
   }
 
   //
+  // Bullet
+  //
+
+  function fire():Void {
+    // Paddle ready?
+    if (paddle.animation.cycle == 0 || (paddle.pendingAnimations != null && !paddle.pendingAnimations.isEmpty())) return;
+    // Only allowing max 4 bulets in the air at once
+    if (world.all(Bullet).length > 2) return;
+
+    var image = Assets.images.laser_bullet;
+
+    var bullet1 = world.add(Bullet);
+    bullet1.image = image;
+    bullet1.x = paddle.x + 10;
+    bullet1.y = paddle.y;
+    bullet1.speed = BULLET_SPEED;
+    bullet1.angle = 270.toRadians();
+
+    var bullet2 = world.add(Bullet);
+    bullet2.image = image;
+    bullet2.x = paddle.x + paddle.image.width - 10;
+    bullet2.y = paddle.y;
+    bullet2.speed = BULLET_SPEED;
+    bullet2.angle = 270.toRadians();
+  }
+
+  //
   // Powerup
   //
 
@@ -295,6 +346,7 @@ class RoundPlayState extends RoundState {
           }
         case Laser:
           if (to != Laser) {
+            game.input.bind(Key(Space));
             if (paddle.animation.cycle >= 0) {
               paddle.animation = 'paddle_laser'.loadAnimation(2, -1);
             }
@@ -338,6 +390,7 @@ class RoundPlayState extends RoundState {
           }
         case Laser:
           if (from != Laser) {
+            game.input.bind(Key(Space), (_)->{ fire(); });
             if (paddle.animation.cycle >= 0) {
               paddle.animation = null;
             }
