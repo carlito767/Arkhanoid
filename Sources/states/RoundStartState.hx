@@ -38,7 +38,7 @@ class RoundStartState extends RoundState {
       // Create paddle
       paddle.reset();
       paddle.animation = 'paddle_materialize'.loadAnimation(2, -1);
-      paddle.pendingAnimation = 'paddle_pulsate'.pulsateAnimation(4, 80);
+      paddle.pendingAnimations = ['paddle_pulsate'.pulsateAnimation(4, 80)];
       paddle.image = paddle.animation.tick();
       paddle.x = (worldBounds.right + worldBounds.left - paddle.image.width) * 0.5;
       paddle.y = worldBounds.bottom - paddle.image.height - 30;

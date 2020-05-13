@@ -285,13 +285,20 @@ class RoundPlayState extends RoundState {
         case Expand:
           if (to != Expand) {
             if (paddle.animation.cycle >= 0) {
-              paddle.animation = 'paddle_wide'.loadAnimation(4, -1);
+              paddle.animation = 'paddle_wide'.loadAnimation(2, -1);
             }
             paddle.animation.reverse();
-            paddle.pendingAnimation = 'paddle_pulsate'.pulsateAnimation(4, 80);
+            paddle.pendingAnimations = ['paddle_pulsate'.pulsateAnimation(4, 80)];
             ballBaseSpeed = BALL_BASE_SPEED + ballBaseSpeedAdjust;
           }
         case Laser:
+          if (to != Laser) {
+            if (paddle.animation.cycle >= 0) {
+              paddle.animation = 'paddle_laser'.loadAnimation(2, -1);
+            }
+            paddle.animation.reverse();
+            paddle.pendingAnimations = ['paddle_pulsate'.pulsateAnimation(4, 80)];
+          }
         case Life:
           // Nothing
         case Slow:
@@ -321,11 +328,19 @@ class RoundPlayState extends RoundState {
           }
         case Expand:
           if (from != Expand) {
-            paddle.animation = 'paddle_wide'.loadAnimation(4, -1);
-            paddle.pendingAnimation = 'paddle_wide_pulsate'.pulsateAnimation(4, 80);
+            if (paddle.animation.cycle >= 0) {
+              paddle.animation = null;
+            }
+            paddle.pendingAnimations = ['paddle_wide'.loadAnimation(2, -1), 'paddle_wide_pulsate'.pulsateAnimation(4, 80)];
             ballBaseSpeed = BALL_BASE_SPEED + ballBaseSpeedAdjust + 1;
           }
         case Laser:
+          if (from != Laser) {
+            if (paddle.animation.cycle >= 0) {
+              paddle.animation = null;
+            }
+            paddle.pendingAnimations = ['paddle_laser'.loadAnimation(2, -1), 'paddle_laser_pulsate'.pulsateAnimation(4, 80)];
+          }
         case Life:
           scene.lives++;
         case Slow:

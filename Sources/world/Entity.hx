@@ -23,7 +23,7 @@ typedef Entity = {
   ?bounceStrategy:BounceStrategy,
   ?health:Int,
   ?image:Image,
-  ?pendingAnimation:Animation,
+  ?pendingAnimations:Array<Animation>,
   ?powerupType:PowerupType,
   ?value:Int,
 }

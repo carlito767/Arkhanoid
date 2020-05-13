@@ -49,7 +49,7 @@ class EntityExtension {
     e.bounceStrategy = null;
     e.health = null;
     e.image = null;
-    e.pendingAnimation = null;
+    e.pendingAnimations = null;
     e.powerupType = null;
     e.value = null;
   }

@@ -97,9 +97,8 @@ class RoundScene extends Scene {
   override function update():Void {
     // Animate entities
     for (e in world.all()) {
-      if (e.pendingAnimation != null && (e.animation == null || e.animation.over())) {
-        e.animation = e.pendingAnimation;
-        e.pendingAnimation = null;
+      if ((e.animation == null || e.animation.over()) && e.pendingAnimations != null && !e.pendingAnimations.isEmpty()) {
+        e.animation = e.pendingAnimations.shift();
       }
     }
 
