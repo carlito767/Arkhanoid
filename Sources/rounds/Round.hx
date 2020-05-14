@@ -1,13 +1,12 @@
 package rounds;
 
-import kha.Color;
+import world.Entity;
 
-import components.Brick;
-
-typedef Round = {
-  id:Int,
-  backgroundColor:Color,
-  ?ballBaseSpeedAdjust:Float,
-  ?ballSpeedNormalisationRateAdjust:Float,
-  bricks:Array<Brick>,
+interface Round {
+  public var id:Int;
+  public var backgroundColor:Int;
+  public var ballBaseSpeedAdjust:Null<Float>;
+  public var ballSpeedNormalisationRateAdjust:Null<Float>;
+  public var bricks:Array<String>;
+  public function powerupBuilder(bricks:Array<Entity>):Void;
 }

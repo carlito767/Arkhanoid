@@ -80,7 +80,7 @@ class RoundPlayState extends RoundState {
       (_)->{ moveRight = false; }
     );
     game.input.bind(Key(K));
-    if (round.id != null) {
+    if (round.id > 0) {
       game.input.bind(Key(K), (_)->{
         world.removeAll(Ball);
         paddle.speed = null;
@@ -213,7 +213,7 @@ class RoundPlayState extends RoundState {
       }
     }
 
-    if (round.id != null) {
+    if (round.id > 0) {
       if (win()) {
         // You win!
         world.removeAll(Ball);

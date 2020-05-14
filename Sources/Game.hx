@@ -6,8 +6,7 @@ import kha.System;
 
 using Graphics2Extension;
 import input.Input;
-import rounds.RawRound;
-import rounds.RoundsBuilder;
+import rounds.Round;
 import scenes.DemoAnimationScene;
 import scenes.RoundScene;
 import scenes.TitleScene;
@@ -17,8 +16,13 @@ class Game {
   public static inline var HEIGHT = 800;
   public static inline var FPS = 60;
 
-  public var input(default,null):Input = new Input();
-  public var rounds(default,never):Array<RawRound> = RoundsBuilder.rounds();
+  public final rounds:Array<Round> = [
+    new rounds.Round1(),
+    new rounds.Round2(),
+    new rounds.Round3(),
+    new rounds.Round4(),
+    new rounds.Round5(),
+  ];
 
   public var score(default,set):Int = 0;
   function set_score(value) {
@@ -36,6 +40,8 @@ class Game {
 
   static inline var SETTINGS_FILENAME = 'settings';
   var settings:GameSettings;
+
+  public final input:Input = new Input();
 
   var fps:Int = 0;
   var frame:Int = 0;
@@ -102,9 +108,7 @@ class Game {
   }
 
   public function showDemoWorld():Void {
-    var data = RoundsBuilder.load('demo_world');
-    var round = RoundsBuilder.cook(data);
-    scene = new RoundScene(this, round, 0);
+    scene = new RoundScene(this, new rounds.DemoWorld(), 0);
   }
 
   public function switchToRound(id:Int, lives:Int = 3):Void {
@@ -112,8 +116,7 @@ class Game {
       backToTitle();
       return;
     }
-    var round = RoundsBuilder.cook(rounds[id - 1]);
-    scene = new RoundScene(this, round, lives);
+    scene = new RoundScene(this, rounds[id - 1], lives);
   }
 
   //

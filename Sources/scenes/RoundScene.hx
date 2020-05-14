@@ -8,6 +8,7 @@ import kha.graphics2.Graphics;
 using AnimationExtension;
 using Collisions;
 import components.Bounds;
+import components.BrickColor;
 import rounds.Round;
 import states.DemoStartState;
 import states.RoundState;
@@ -21,7 +22,7 @@ class RoundScene extends Scene {
   static inline var TOP_OFFSET = 150.0;
 
   public var lives:Int;
-  public var round(default,null):Round;
+  public var round:Round;
   public var state:RoundState;
 
   public var edgeLeft(default,null):Entity;
@@ -56,25 +57,54 @@ class RoundScene extends Scene {
     edgeTop.y = worldBounds.top;
 
     // Create bricks
-    for (brick in round.bricks) {
-      var e = world.add(Brick);
-      e.animation = brick.animation;
-      e.image = brick.image;
-      e.x = brick.x + edgeLeft.image.width;
-      e.y = brick.y + worldBounds.top;
-      e.health = brick.health;
-      e.value = brick.value;
-      e.powerupType = brick.powerupType;
+    var bricks:Array<Entity> = [];
+    for (y in 0...round.bricks.length) {
+      var row = round.bricks[y];
+      for (x in 0...row.length) {
+        var value = row.charAt(x);
+        var color:Null<BrickColor> = switch value {
+          case 'B': Blue;
+          case 'C': Cyan;
+          case '*': Gold;
+          case 'G': Green;
+          case 'O': Orange;
+          case 'P': Pink;
+          case 'R': Red;
+          case 'S': Silver;
+          case 'W': White;
+          case 'Y': Yellow;
+          case _: null;
+        };
+        if (color != null) {
+          var name = color.getName().toLowerCase();
+          var animation = 'brick_${name}'.loadAnimation(2, -1);
+          var image = animation.tick();
+          animation.paused = true;
+
+          var brick = world.add(Brick);
+          brick.animation = animation;
+          brick.image = image;
+          brick.x = x * image.width + edgeLeft.image.width;
+          brick.y = y * image.height + worldBounds.top;
+          brick.health = brickHealth(round.id, color);
+          brick.value = brickValue(round.id, color);
+    
+          bricks.push(brick);
+        }
+      }
     }
+
+    // Add powerups
+    round.powerupBuilder(bricks);
 
     // Create paddle
     paddle = world.add(Paddle);
 
     // Initialize state
-    state = (round.id == null) ? new DemoStartState(this) : new RoundStartState(this);
+    state = (round.id == 0) ? new DemoStartState(this) : new RoundStartState(this);
 
     // Input bindings
-    if (round.id != null) {
+    if (round.id > 0) {
       #if debug
       game.input.bind(Key(Subtract), (_)->{
         if (round.id > 1) {
@@ -153,7 +183,7 @@ class RoundScene extends Scene {
     }
 
     // Draw lives
-    if (round.id != null) {
+    if (round.id > 0) {
       var paddleLife = Assets.images.paddle_life;
       var x = edgeLeft.x + edgeLeft.image.width;
       var y = worldBounds.bottom - paddleLife.height - 5;
@@ -165,5 +195,32 @@ class RoundScene extends Scene {
 
     // Render state
     state.render(g2);
+  }
+
+  //
+  // Bricks
+  //
+
+  function brickHealth(id:Int, color:BrickColor):Int {
+    return switch color {
+      case Gold: 0; // indestructable
+      case Silver: Math.ceil(id / 8) + 1;
+      case _: 1;
+    }
+  }
+
+  function brickValue(id:Int, color:BrickColor):Int {
+    return switch color {
+      case Blue: 100;
+      case Cyan: 70;
+      case Gold: 0;
+      case Green: 80;
+      case Orange: 60;
+      case Pink: 110;
+      case Red: 90;
+      case Silver: 50 * id;
+      case White: 50;
+      case Yellow: 120;
+    }
   }
 }
