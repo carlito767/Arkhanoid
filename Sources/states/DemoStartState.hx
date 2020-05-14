@@ -23,7 +23,10 @@ class DemoStartState extends RoundState {
     paddle.y = (System.windowHeight() - paddle.image.height + worldBounds.top) * 0.5;
 
     // Input bindings
-    game.input.bind(Key(Delete), (_)->{ world.removeAll(Ball); });
+    game.input.bind(Key(Delete), (_)->{
+      world.removeAll(Ball);
+      world.removeAll(Enemy);
+    });
     game.input.bind(Key(B), (_)->{ newBalls(); });
     game.input.bind(Key(C), (_)->{ newPowerup(Catch); });
     game.input.bind(Key(D), (_)->{ newPowerup(Duplicate); });

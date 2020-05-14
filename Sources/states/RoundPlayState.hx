@@ -32,19 +32,23 @@ class RoundPlayState extends RoundState {
   // Increase in speed caused by colliding with a brick.
   static inline var BRICK_SPEED_ADJUST = 0.5;
   // The speed the laser bullet moves.
-  static inline var BULLET_SPEED = 15.0;
+  static inline var BULLET_SPEED = 15.0; // pixels per frame
   // Minimum delay before opening a top door.
   static inline var DOOR_OPEN_DELAY_MIN = 60; // frames
   // Maximum delay before opening a top door.
   static inline var DOOR_OPEN_DELAY_MAX = 600; // frames
   // The time the door remains open.
   static inline var DOOR_OPEN_TIME = 20; // frames
+  // The speed the laser bullet moves.
+  static inline var ENEMY_SPEED = 2.0; // pixels per frame
+  // The initial direction of the enemy.
+  static inline var ENEMY_START_ANGLE_RAD = 1.57; // radians
   // Increase in speed caused by colliding with a wall.
   static inline var WALL_SPEED_ADJUST = 0.2;
   // The speed the paddle moves.
-  static inline var PADDLE_SPEED = 10.0;
+  static inline var PADDLE_SPEED = 10.0; // pixels per frame
   // The speed the powerup moves.
-  static inline var POWERUP_SPEED = 3.0;
+  static inline var POWERUP_SPEED = 3.0; // pixels per frame
   // The value of the powerup.
   static inline var POWERUP_VALUE = 1000;
 
@@ -62,8 +66,9 @@ class RoundPlayState extends RoundState {
     return currentPowerupType = value;
   }
 
-  var door:Null<Entity> = null;
+  var door:Entity;
   var doorDelay:Null<Int> = null;
+  var doorSide:String;
 
   public function new(scene:RoundScene) {
     super(scene);
@@ -77,6 +82,7 @@ class RoundPlayState extends RoundState {
     ballBaseSpeed += ballBaseSpeedAdjust;
 
     currentPowerupType = null;
+    door = world.add();
 
     // Input bindings
     game.input.bind(Key(Left));
@@ -105,7 +111,7 @@ class RoundPlayState extends RoundState {
 
   override function update():Void {
     // Check top door
-    if (door == null) {
+    if (door.animation == null) {
       if (doorDelay == null) {
         // Delay before opening the top door
         if (world.all(Enemy).length < round.enemiesNumber) {
@@ -116,38 +122,46 @@ class RoundPlayState extends RoundState {
         doorDelay--;
       }
       else {
+        doorDelay = null;
+
         // Open the top door
-        var side = (Std.random(2) == 0) ? 'left' : 'right';
+        doorSide = (Std.random(2) == 0) ? 'left' : 'right';
         door = world.add();
-        door.animation = 'door_top_$side'.loadAnimation(4, -1);
+        door.animation = 'door_top_$doorSide'.loadAnimation(4, -1);
         door.x = edgeTop.x;
         door.y = edgeTop.y;
-
-        doorDelay = null;
       }
     }
-    else {
-      if (door.animation.over()) {
-        if (doorDelay == null) {
-          // The door is just opened
-          // TODO: release an enemy
+    else if (door.animation.over()) {
+      if (doorDelay == null) {
+        // Delay before closing the top door
+        doorDelay = DOOR_OPEN_TIME;
 
-          // Delay before closing the top door
-          doorDelay = DOOR_OPEN_TIME;
+        // Release an enemy
+        var animationId = switch round.enemiesType {
+          case Konerd:'cone';
+          case Pyradok:'pyramid';
+          case TriSphere:'molecule';
+          case Opopo:'cube';
+        };
+        var enemy = world.add(Enemy);
+        enemy.animation = 'enemy_$animationId'.loadAnimation(4);
+        enemy.x = ((doorSide == 'left') ? 135 : 435);
+        enemy.y = 150;
+        enemy.speed = ENEMY_SPEED;
+        enemy.angle = ENEMY_START_ANGLE_RAD;
+      }
+      else if (doorDelay > 0) {
+        doorDelay--;
+        if (doorDelay == 0) {
+          // Close the top door
+          door.animation.reverse();
         }
-        else if (doorDelay > 0) {
-          doorDelay--;
-          if (doorDelay == 0) {
-            // Close the top door
-            door.animation.reverse();
-            door.animation.reset();
-          }
-        }
-        else {
-          world.remove(door);
-          door = null;
-          doorDelay = null;
-        }
+      }
+      else {
+        world.remove(door);
+        door.reset();
+        doorDelay = null;
       }
     }
 
