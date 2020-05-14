@@ -43,6 +43,8 @@ class RoundPlayState extends RoundState {
   static inline var ENEMY_SPEED = 2.0; // pixels per frame
   // The initial direction of the enemy.
   static inline var ENEMY_START_ANGLE_RAD = 1.57; // radians
+  // The value of the enemy.
+  static inline var ENEMY_VALUE = 100;
   // Increase in speed caused by colliding with a wall.
   static inline var WALL_SPEED_ADJUST = 0.2;
   // The speed the paddle moves.
@@ -149,6 +151,7 @@ class RoundPlayState extends RoundState {
         enemy.y = 150;
         enemy.speed = ENEMY_SPEED;
         enemy.angle = ENEMY_START_ANGLE_RAD;
+        enemy.value = ENEMY_VALUE;
       }
       else if (doorDelay > 0) {
         doorDelay--;
@@ -190,6 +193,14 @@ class RoundPlayState extends RoundState {
 
       paddle.x += dx;
 
+      // Detect collision between paddle and enemies
+      for (enemy in world.collidables(Enemy)) {
+        if (paddle.collide(enemy)) {
+          game.score += enemy.value;
+          destroyEnemy(enemy);
+        }
+      }
+
       // Detect collision between paddle and powerups
       for (powerup in world.collidables(Powerup)) {
         if (paddle.collide(powerup)) {
@@ -219,6 +230,14 @@ class RoundPlayState extends RoundState {
             }
           }
           world.remove(bullet);
+        }
+      }
+
+      // Detect collision between bullet and enemies
+      for (enemy in world.collidables(Enemy)) {
+        if (bullet.collide(enemy)) {
+          // The game's score is not increased when laser destroys an enemy
+          destroyEnemy(enemy);
         }
       }
     }
@@ -255,6 +274,15 @@ class RoundPlayState extends RoundState {
         }
       }
 
+      // Detect collision between ball and enemies
+      for (enemy in world.collidables(Enemy)) {
+        if (ball.collide(enemy)) {
+          collisions.push(enemy.bounds());
+          game.score += enemy.value;
+          destroyEnemy(enemy);
+        }
+      }
+
       // Detect collision between ball and paddle
       var collideWithPaddle = ball.collide(paddle);
       if (collideWithPaddle) {
@@ -280,6 +308,11 @@ class RoundPlayState extends RoundState {
       if (collideWithPaddle && currentPowerupType == Catch) {
         ball.anchorTo(paddle);
       }
+    }
+
+    // Remove old explosions
+    for (e in world.all(Explosion)) {
+      if (e.animation.over()) world.remove(e);
     }
 
     if (round.id > 0) {
@@ -377,6 +410,18 @@ class RoundPlayState extends RoundState {
     bullet2.y = paddle.y;
     bullet2.speed = BULLET_SPEED;
     bullet2.angle = 270.toRadians();
+  }
+
+  //
+  // Enemy
+  //
+
+  function destroyEnemy(enemy:Entity) {
+    var explosion = world.add(Explosion);
+    explosion.animation = 'enemy_explosion'.loadAnimation(2, -1);
+    explosion.x = enemy.x;
+    explosion.y = enemy.y;
+    world.remove(enemy);
   }
 
   //

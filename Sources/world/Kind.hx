@@ -6,6 +6,7 @@ enum Kind {
   Bullet;
   Edge;
   Enemy;
+  Explosion;
   Paddle;
   Powerup;
 }
