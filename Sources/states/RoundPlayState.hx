@@ -126,7 +126,6 @@ class RoundPlayState extends RoundState {
 
         // Open the top door
         doorSide = (Std.random(2) == 0) ? 'left' : 'right';
-        door = world.add();
         door.animation = 'door_top_$doorSide'.loadAnimation(4, -1);
         door.x = edgeTop.x;
         door.y = edgeTop.y;
@@ -159,7 +158,6 @@ class RoundPlayState extends RoundState {
         }
       }
       else {
-        world.remove(door);
         door.reset();
         doorDelay = null;
       }
