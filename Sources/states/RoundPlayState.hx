@@ -110,6 +110,7 @@ class RoundPlayState extends RoundState {
     game.input.bind(Key(K));
     if (round.id > 0) {
       game.input.bind(Key(K), (_)->{
+        world.remove(door);
         world.removeAll(Ball);
         paddle.speed = null;
         currentPowerupType = null;
@@ -351,6 +352,7 @@ class RoundPlayState extends RoundState {
       }
       else if (lose()) {
         // You lose!
+        world.remove(door);
         paddle.speed = null;
         currentPowerupType = null;
         scene.state = new BallOffScreenState(scene);
