@@ -238,6 +238,7 @@ class RoundPlayState extends RoundState {
         if (bullet.collide(enemy)) {
           // The game's score is not increased when laser destroys an enemy
           destroyEnemy(enemy);
+          world.remove(bullet);
         }
       }
     }
