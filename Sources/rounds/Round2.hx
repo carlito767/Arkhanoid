@@ -1,6 +1,7 @@
 package rounds;
 
 import Random;
+import components.EnemyType;
 import components.PowerupType;
 import world.Entity;
 
@@ -28,6 +29,9 @@ class Round2 implements Round {
     'WOCGRBPYWOCG',
     'SSSSSSSSSSSSR',
   ];
+
+  public var enemiesType:EnemyType = Pyradok;
+  public var enemiesNumber:Int = 3;
 
   public function new() {
   }

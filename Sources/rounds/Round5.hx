@@ -1,6 +1,7 @@
 package rounds;
 
 import Random;
+import components.EnemyType;
 import components.PowerupType;
 import world.Entity;
 
@@ -30,6 +31,9 @@ class Round5 implements Round {
     '    SS SS',
     '    SS SS',
   ];
+
+  public var enemiesType:EnemyType = Konerd;
+  public var enemiesNumber:Int = 3;
 
   public function new() {
   }

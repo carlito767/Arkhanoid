@@ -7,6 +7,7 @@ import kha.graphics2.Graphics;
 using AnimationExtension;
 using Collisions;
 using MathExtension;
+import Random;
 import components.BounceStrategy;
 import components.Bounds;
 import components.PowerupType;
@@ -32,6 +33,12 @@ class RoundPlayState extends RoundState {
   static inline var BRICK_SPEED_ADJUST = 0.5;
   // The speed the laser bullet moves.
   static inline var BULLET_SPEED = 15.0;
+  // Minimum delay before opening a top door.
+  static inline var DOOR_OPEN_DELAY_MIN = 60; // frames
+  // Maximum delay before opening a top door.
+  static inline var DOOR_OPEN_DELAY_MAX = 600; // frames
+  // The time the door remains open.
+  static inline var DOOR_OPEN_TIME = 20; // frames
   // Increase in speed caused by colliding with a wall.
   static inline var WALL_SPEED_ADJUST = 0.2;
   // The speed the paddle moves.
@@ -54,6 +61,9 @@ class RoundPlayState extends RoundState {
     transitionPowerup(game, currentPowerupType, value);
     return currentPowerupType = value;
   }
+
+  var door:Null<Entity> = null;
+  var doorDelay:Null<Int> = null;
 
   public function new(scene:RoundScene) {
     super(scene);
@@ -94,6 +104,53 @@ class RoundPlayState extends RoundState {
   }
 
   override function update():Void {
+    // Check top door
+    if (door == null) {
+      if (doorDelay == null) {
+        // Delay before opening the top door
+        if (world.all(Enemy).length < round.enemiesNumber) {
+          doorDelay = Random.int(DOOR_OPEN_DELAY_MAX, DOOR_OPEN_DELAY_MIN);
+        }
+      }
+      else if (doorDelay > 0) {
+        doorDelay--;
+      }
+      else {
+        // Open the top door
+        var side = (Std.random(2) == 0) ? 'left' : 'right';
+        door = world.add();
+        door.animation = 'door_top_$side'.loadAnimation(4, -1);
+        door.x = edgeTop.x;
+        door.y = edgeTop.y;
+
+        doorDelay = null;
+      }
+    }
+    else {
+      if (door.animation.over()) {
+        if (doorDelay == null) {
+          // The door is just opened
+          // TODO: release an enemy
+
+          // Delay before closing the top door
+          doorDelay = DOOR_OPEN_TIME;
+        }
+        else if (doorDelay > 0) {
+          doorDelay--;
+          if (doorDelay == 0) {
+            // Close the top door
+            door.animation.reverse();
+            door.animation.reset();
+          }
+        }
+        else {
+          world.remove(door);
+          door = null;
+          doorDelay = null;
+        }
+      }
+    }
+
     // Detect paddle movement
     if (moveLeft && !moveRight) {
       paddle.speed = PADDLE_SPEED;

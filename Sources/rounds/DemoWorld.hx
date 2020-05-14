@@ -1,5 +1,6 @@
 package rounds;
 
+import components.EnemyType;
 import world.Entity;
 
 class DemoWorld implements Round {
@@ -42,6 +43,9 @@ class DemoWorld implements Round {
     '',
     '*************',
   ];
+
+  public var enemiesType:EnemyType = Konerd;
+  public var enemiesNumber:Int = 3;
 
   public function new() {
   }

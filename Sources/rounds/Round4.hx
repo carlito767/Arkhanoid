@@ -1,5 +1,6 @@
 package rounds;
 
+import components.EnemyType;
 import world.Entity;
 
 class Round4 implements Round {
@@ -28,6 +29,9 @@ class Round4 implements Round {
     ' BPYWO GSBPY',
     ' PYWOC SBPYW',
   ];
+
+  public var enemiesType:EnemyType = Opopo;
+  public var enemiesNumber:Int = 3;
 
   public function new() {
   }

@@ -5,6 +5,7 @@ enum Kind {
   Brick;
   Bullet;
   Edge;
+  Enemy;
   Paddle;
   Powerup;
 }

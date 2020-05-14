@@ -1,5 +1,6 @@
 package rounds;
 
+import components.EnemyType;
 import world.Entity;
 
 class Round3 implements Round {
@@ -29,6 +30,9 @@ class Round3 implements Round {
     '',
     '**********CCC',
   ];
+
+  public var enemiesType:EnemyType = TriSphere;
+  public var enemiesNumber:Int = 3;
 
   public function new() {
   }

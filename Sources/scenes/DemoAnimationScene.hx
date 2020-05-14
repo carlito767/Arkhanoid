@@ -41,10 +41,10 @@ class DemoAnimationScene extends Scene {
     ];
 
     enemies = [
-      {anim:'enemy_cone'.loadAnimation(4), name:'konerds'},
-      {anim:'enemy_pyramid'.loadAnimation(4), name:'pyradoks'},
-      {anim:'enemy_molecule'.loadAnimation(4), name:'tri-spheres'},
-      {anim:'enemy_cube'.loadAnimation(4), name:'opopos'},
+      {anim:'enemy_cone'.loadAnimation(4), name:'konerd'},
+      {anim:'enemy_pyramid'.loadAnimation(4), name:'pyradok'},
+      {anim:'enemy_molecule'.loadAnimation(4), name:'tri-sphere'},
+      {anim:'enemy_cube'.loadAnimation(4), name:'opopo'},
       {anim:'enemy_explosion'.loadAnimation(4), name:'explosion'},
     ];
 

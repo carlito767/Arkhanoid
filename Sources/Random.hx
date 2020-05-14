@@ -1,4 +1,9 @@
 class Random {
+  // Generate a random integer between 'min' (included) and 'max' (excluded)
+  public static function int(max:Int, ?min:Int = 0):Int {
+    return Std.random(max - min) + min;
+  }
+
   // Generate 'n' random unique numbers between 'from' (included) and 'to' (excluded)
   public static function sample(n:Int, to:Int, ?from:Int = 0):Array<Int> {
     var r:Array<Int> = [];
