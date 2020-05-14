@@ -51,6 +51,7 @@ class EntityExtension {
     e.image = null;
     e.pendingAnimations = null;
     e.powerupType = null;
+    e.travel = null;
     e.value = null;
   }
 }

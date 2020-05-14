@@ -1,4 +1,9 @@
 class Random {
+  // Generate a random float between 'min' (included) and 'max' (excluded)
+  public static function float(max:Float, ?min:Float = 0.0):Float {
+    return Math.random() * (max - min) + min;
+  }
+
   // Generate a random integer between 'min' (included) and 'max' (excluded)
   public static function int(max:Int, ?min:Int = 0):Int {
     return Std.random(max - min) + min;

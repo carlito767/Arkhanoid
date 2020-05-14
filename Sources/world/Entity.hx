@@ -3,6 +3,7 @@ package world;
 import components.Anchor;
 import components.Animation;
 import components.BounceStrategy;
+import components.Travel;
 import components.Image;
 import components.PowerupType;
 
@@ -25,5 +26,6 @@ typedef Entity = {
   ?image:Image,
   ?pendingAnimations:Array<Animation>,
   ?powerupType:PowerupType,
+  ?travel:Travel,
   ?value:Int,
 }

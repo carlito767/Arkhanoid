@@ -39,10 +39,16 @@ class RoundPlayState extends RoundState {
   static inline var DOOR_OPEN_DELAY_MAX = 600; // frames
   // The time the door remains open.
   static inline var DOOR_OPEN_TIME = 20; // frames
+  // A value between this and its negative will be chosen at random and then
+  // added to the direction of the enemy. This ensures some erraticness in the
+  // enemy movement.
+  static inline var ENEMY_RANDOM_RANGE = 1.5; // radians
   // The speed the laser bullet moves.
   static inline var ENEMY_SPEED = 2.0; // pixels per frame
   // The initial direction of the enemy.
   static inline var ENEMY_START_ANGLE_RAD = 1.57; // radians
+  // The enemy travels in the start direction for this duration.
+  static inline var ENEMY_START_DURATION = 75; // frames
   // The value of the enemy.
   static inline var ENEMY_VALUE = 100;
   // Increase in speed caused by colliding with a wall.
@@ -53,6 +59,10 @@ class RoundPlayState extends RoundState {
   static inline var POWERUP_SPEED = 3.0; // pixels per frame
   // The value of the powerup.
   static inline var POWERUP_VALUE = 1000;
+  // A value between these two bounds will be randomly selected for the
+  // duration of travel (i.e. number of frames) in a given direction.
+  static inline var TRAVEL_MIN_DURATION = 30; // frames
+  static inline var TRAVEL_MAX_DURATION = 60; // frames
 
   var moveLeft:Bool = false;
   var moveRight:Bool = false;
@@ -152,6 +162,7 @@ class RoundPlayState extends RoundState {
         enemy.speed = ENEMY_SPEED;
         enemy.angle = ENEMY_START_ANGLE_RAD;
         enemy.value = ENEMY_VALUE;
+        enemy.travel = { duration:ENEMY_START_DURATION, lastContact:0 };
       }
       else if (doorDelay > 0) {
         doorDelay--;
@@ -309,6 +320,21 @@ class RoundPlayState extends RoundState {
       if (collideWithPaddle && currentPowerupType == Catch) {
         ball.anchorTo(paddle);
       }
+    }
+
+    // Detect enemies collisions
+    for (enemy in world.collidables(Enemy)) {
+      // TODO: handle collisions with bricks and edges
+      if (enemy.travel.lastContact >= enemy.travel.duration) {
+        if (paddle.x != null && paddle.y != null && paddle.image != null) {
+          var x = paddle.x + paddle.image.width * 0.5;
+          var y = paddle.y + paddle.image.height * 0.5;
+          enemy.angle = Math.atan2(y - enemy.y, x - enemy.x) + Random.float(-ENEMY_RANDOM_RANGE, ENEMY_RANDOM_RANGE);
+          enemy.travel.duration = Random.int(TRAVEL_MAX_DURATION, TRAVEL_MIN_DURATION);
+          enemy.travel.lastContact = 0;
+        }
+      }
+      enemy.travel.lastContact++;
     }
 
     // Remove old explosions
