@@ -523,19 +523,19 @@ class RoundPlayState extends RoundState {
           }
         case Expand:
           if (from != Expand) {
-            if (paddle.animation.cycle >= 0) {
-              paddle.animation = null;
-            }
             paddle.pendingAnimations = ['paddle_wide'.loadAnimation(2, -1), 'paddle_wide_pulsate'.pulsateAnimation(4, 80)];
+            if (paddle.animation.cycle >= 0) {
+              paddle.animation = paddle.pendingAnimations.shift();
+            }
             ballBaseSpeed = BALL_BASE_SPEED + ballBaseSpeedAdjust + 1;
           }
         case Laser:
           if (from != Laser) {
             game.input.bind(Key(Space), (_)->{ fire(); });
-            if (paddle.animation.cycle >= 0) {
-              paddle.animation = null;
-            }
             paddle.pendingAnimations = ['paddle_laser'.loadAnimation(2, -1), 'paddle_laser_pulsate'.pulsateAnimation(4, 80)];
+            if (paddle.animation.cycle >= 0) {
+              paddle.animation = paddle.pendingAnimations.shift();
+            }
           }
         case Life:
           scene.lives++;

@@ -8,10 +8,10 @@ class BallOffScreenState extends RoundState {
   public function new(scene:RoundScene) {
     super(scene);
 
-    if (paddle.animation.cycle >= 0) {
-      paddle.animation = null;
-    }
     paddle.pendingAnimations = ['paddle_explode'.loadAnimation(4, -1)];
+    if (paddle.animation.cycle >= 0) {
+      paddle.animation = paddle.pendingAnimations.shift();
+    }
   }
 
   override function update():Void {
