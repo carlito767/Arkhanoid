@@ -1,8 +1,11 @@
 import kha.Assets;
 import kha.Color;
 import kha.Framebuffer;
+import kha.Image;
+import kha.Scaler;
 import kha.Scheduler;
 import kha.System;
+import kha.graphics2.ImageScaleQuality;
 
 using Graphics2Extension;
 import input.Input;
@@ -46,6 +49,8 @@ class Game {
   var fps:Int = 0;
   var frame:Int = 0;
   var previousTime:Float = Scheduler.realTime();
+
+  var backbuffer = Image.createRenderTarget(WIDTH, HEIGHT);
 
   public function new() {
     // Hide mouse
@@ -131,6 +136,10 @@ class Game {
   }
 
   function render(framebuffers:Array<Framebuffer>):Void {
+    //
+    // Create frame
+    //
+
     // FPS
     frame++;
     if (frame % FPS == 0) {
@@ -141,7 +150,7 @@ class Game {
       previousTime = time;
     }
 
-    final g2 = framebuffers[0].g2;
+    final g2 = backbuffer.g2;
     g2.begin();
 
     if (debugMode) {
@@ -173,5 +182,15 @@ class Game {
     scene.render(g2);
 
     g2.end();
+
+    //
+    // Render frame
+    //
+
+    var framebuffer = framebuffers[0];
+    framebuffer.g2.imageScaleQuality = ImageScaleQuality.High;
+    framebuffer.g2.begin();
+    Scaler.scale(backbuffer, framebuffer, System.screenRotation);
+    framebuffer.g2.end();
   }
 }

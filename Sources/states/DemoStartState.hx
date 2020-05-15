@@ -1,7 +1,6 @@
 package states;
 
 import kha.Assets;
-import kha.System;
 
 using AnimationExtension;
 using MathExtension;
@@ -19,8 +18,8 @@ class DemoStartState extends RoundState {
     paddle.reset();
     paddle.animation = 'paddle_pulsate'.pulsateAnimation(4, 80);
     paddle.image = paddle.animation.tick();
-    paddle.x = (System.windowWidth() - paddle.image.width) * 0.5;
-    paddle.y = (System.windowHeight() - paddle.image.height + worldBounds.top) * 0.5;
+    paddle.x = (Game.WIDTH - paddle.image.width) * 0.5;
+    paddle.y = (Game.HEIGHT - paddle.image.height + worldBounds.top) * 0.5;
 
     // Input bindings
     game.input.bind(Key(Delete), (_)->{
@@ -44,8 +43,8 @@ class DemoStartState extends RoundState {
     for (_ in 0...10) {
       var e = world.add(Ball);
       e.image = Assets.images.ball;
-      e.x = System.windowWidth() * 0.5;
-      e.y = System.windowHeight() * 0.5;
+      e.x = Game.WIDTH * 0.5;
+      e.y = Game.HEIGHT * 0.5;
       e.speed = 2.0 + Math.random() * 10;
       e.angle = Math.random() * 360;
     }
@@ -55,7 +54,7 @@ class DemoStartState extends RoundState {
     var e = world.add(Powerup);
     var name = powerupType.getName().toLowerCase();
     e.animation = 'powerup_$name'.loadAnimation(4);
-    e.x = System.windowWidth() * 0.5;
+    e.x = Game.WIDTH * 0.5;
     e.y = worldBounds.top;
     e.powerupType = powerupType;
     e.speed = POWERUP_SPEED;

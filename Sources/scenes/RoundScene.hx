@@ -2,7 +2,6 @@ package scenes;
 
 import kha.Assets;
 import kha.Color;
-import kha.System;
 import kha.graphics2.Graphics;
 
 using AnimationExtension;
@@ -32,7 +31,7 @@ class RoundScene extends Scene {
   public var paddle(default,null):Entity;
 
   public var world(default,never):World = new World();
-  public var worldBounds(default,never):Bounds = {left:0.0, top:TOP_OFFSET, right:System.windowWidth(), bottom:System.windowHeight()};
+  public var worldBounds(default,never):Bounds = {left:0.0, top:TOP_OFFSET, right:Game.WIDTH, bottom:Game.HEIGHT};
 
   public function new(game:Game, round:Round, lives:Int) {
     super(game);
