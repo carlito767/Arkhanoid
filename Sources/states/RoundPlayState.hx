@@ -110,16 +110,22 @@ class RoundPlayState extends RoundState {
     game.input.bind(Key(K));
     if (round.id > 0) {
       game.input.bind(Key(K), (_)->{
-        world.remove(door);
-        world.removeAll(Ball);
-        paddle.speed = null;
-        currentPowerupType = null;
+        clear();
         scene.state = new BallOffScreenState(scene);
       });
     }
 
     // Here we go!
     releaseBalls();
+  }
+
+  function clear():Void {
+    world.remove(door);
+    world.removeAll(Ball);
+    world.removeAll(Bullet);
+    world.removeAll(Enemy);
+    paddle.speed = null;
+    currentPowerupType = null;
   }
 
   override function update():Void {
@@ -399,15 +405,12 @@ class RoundPlayState extends RoundState {
     if (round.id > 0) {
       if (win()) {
         // You win!
-        world.removeAll(Ball);
-        paddle.speed = null;
+        clear();
         scene.state = new RoundEndState(scene);
       }
       else if (lose()) {
         // You lose!
-        world.remove(door);
-        paddle.speed = null;
-        currentPowerupType = null;
+        clear();
         scene.state = new BallOffScreenState(scene);
       }
     }
