@@ -151,11 +151,6 @@ class RoundScene extends Scene {
     // Update state
     state.update();
 
-    // Remove old explosions
-    for (e in world.all(Explosion)) {
-      if (e.animation.over()) world.remove(e);
-    }
-
     // Remove out of bounds
     for (e in world.drawables()) {
       var bounds:Bounds = e.bounds();

@@ -124,6 +124,7 @@ class RoundPlayState extends RoundState {
     world.removeAll(Ball);
     world.removeAll(Bullet);
     world.removeAll(Enemy);
+    world.removeAll(Explosion);
     paddle.speed = null;
     currentPowerupType = null;
   }
