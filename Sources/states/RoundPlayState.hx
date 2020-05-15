@@ -325,17 +325,75 @@ class RoundPlayState extends RoundState {
 
     // Detect enemies collisions
     for (enemy in world.collidables(Enemy)) {
-      // TODO: handle collisions with bricks and edges
-      if (enemy.travel.lastContact >= enemy.travel.duration) {
-        if (paddle.x != null && paddle.y != null && paddle.image != null) {
-          var x = paddle.x + paddle.image.width * 0.5;
-          var y = paddle.y + paddle.image.height * 0.5;
-          enemy.angle = Math.atan2(y - enemy.y, x - enemy.x) + Random.float(-ENEMY_RANDOM_RANGE, ENEMY_RANDOM_RANGE);
-          enemy.travel.duration = Random.int(TRAVEL_MAX_DURATION, TRAVEL_MIN_DURATION);
-          enemy.travel.lastContact = 0;
+      // Detect collisions with bricks and edges
+
+      var A = enemy.bounds();
+      var cleft = false;
+      var ctop = false;
+      var cright = false;
+      var cbottom = false;
+
+      for (brick in world.collidables(Brick)) {
+        var B = brick.bounds();
+        var overloapLeft = A.left >= B.left && A.left <= B.right;
+        var overloapTop = A.top >= B.top && A.top <= B.bottom;
+        var overloapRight = A.right >= B.left && A.right <= B.right;
+        var overloapBottom = A.bottom >= B.top && A.bottom <= B.bottom;
+        if (overloapLeft && overloapTop) { cleft = true; ctop = true; };
+        if (overloapLeft && overloapBottom) { cleft = true; cbottom = true; };
+        if (overloapRight && overloapTop) { cright = true; ctop = true; };
+        if (overloapRight && overloapBottom) { cright = true; cbottom = true; };
+      }
+
+      for (edge in world.collidables(Edge)) {
+        var B = edge.bounds();
+        var overloapLeft = A.left >= B.left && A.left <= B.right;
+        var overloapTop = A.top >= B.top && A.top <= B.bottom;
+        var overloapRight = A.right >= B.left && A.right <= B.right;
+        var overloapBottom = A.bottom >= B.top && A.bottom <= B.bottom;
+        if (overloapLeft && overloapTop) { cleft = true; ctop = true; };
+        if (overloapLeft && overloapBottom) { cleft = true; cbottom = true; };
+        if (overloapRight && overloapTop) { cright = true; ctop = true; };
+        if (overloapRight && overloapBottom) { cright = true; cbottom = true; };
+      }
+
+      if (cleft || ctop || cright || cbottom) {
+        // At least one collision
+        if (cleft && ctop && cright && cbottom) {
+          enemy.angle = -enemy.angle;
+        }
+        else if (cleft && cright && cbottom) {
+          enemy.angle = Math.PI * 1.5;
+        }
+        else if (cleft && cright && ctop) {
+          enemy.angle = Math.PI * 0.5;
+        }
+        else if (cleft && cbottom) {
+          enemy.angle = 0.0;
+        }
+        else if (cright && cbottom) {
+          enemy.angle = Math.PI;
+        }
+        else if (cbottom) {
+          if (enemy.angle >= 0.0 && enemy.angle <= Math.PI) enemy.angle = 0.0;
+        }
+        else {
+          enemy.angle = Math.PI * 0.5;
         }
       }
-      enemy.travel.lastContact++;
+      else {
+        // No collision
+        if (enemy.travel.lastContact >= enemy.travel.duration) {
+          if (paddle.x != null && paddle.y != null && paddle.image != null) {
+            var x = paddle.x + paddle.image.width * 0.5;
+            var y = paddle.y + paddle.image.height * 0.5;
+            enemy.angle = Math.atan2(y - enemy.y, x - enemy.x) + Random.float(-ENEMY_RANDOM_RANGE, ENEMY_RANDOM_RANGE);
+            enemy.travel.duration = Random.int(TRAVEL_MAX_DURATION, TRAVEL_MIN_DURATION);
+            enemy.travel.lastContact = 0;
+          }
+        }
+        enemy.travel.lastContact++;
+      }
     }
 
     if (round.id > 0) {
