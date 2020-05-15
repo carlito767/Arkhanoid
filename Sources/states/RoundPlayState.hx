@@ -338,11 +338,6 @@ class RoundPlayState extends RoundState {
       enemy.travel.lastContact++;
     }
 
-    // Remove old explosions
-    for (e in world.all(Explosion)) {
-      if (e.animation.over()) world.remove(e);
-    }
-
     if (round.id > 0) {
       if (win()) {
         // You win!
